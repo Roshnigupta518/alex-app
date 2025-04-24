@@ -1,0 +1,71 @@
+{
+  "project_info": {
+    "project_number": "859541725168",
+    "firebase_url": "https://tourism-c262b-default-rtdb.firebaseio.com",
+    "project_id": "tourism-c262b",
+    "storage_bucket": "tourism-c262b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:859541725168:android:6c6a744ee182f481cf8735",
+        "android_client_info": {
+          "package_name": "com.alexsocial"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "859541725168-3tl7uovvkfg5fpghr6um9fjjj89di6v2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alexsocial",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "859541725168-iqenon9doqutldbhblhn0t7d1nhka4l5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alexsocial",
+            "certificate_hash": "11210fb174dbdb7d9b655447e97d134f6ca265c9"
+          }
+        },
+        {
+          "client_id": "859541725168-kphc409njsdor0b8fre6lq4jntm0laq5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alexsocial",
+            "certificate_hash": "04ca57925cfb64cdc593d283af734ed6541debaa"
+          }
+        },
+        {
+          "client_id": "859541725168-s116r4rg7fkcn9b6b43a93kcu0k16aoc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsFGDEOyYDSt6P3KioVIUbdZ5sWpbSxgE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "859541725168-s116r4rg7fkcn9b6b43a93kcu0k16aoc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "859541725168-13hn5q2u7cin846emfr4nla8klval08g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.Tourism"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

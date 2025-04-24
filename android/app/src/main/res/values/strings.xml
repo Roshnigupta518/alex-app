@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Alex Social</string>
+    <string name="facebook_app_id">742487000924268</string>
+<string name="facebook_client_token">c030ebaf1ddfd3de9769c226576b16dd</string>
+<string name="fb_login_protocol_scheme">fb742487000924268</string>
+</resources>
