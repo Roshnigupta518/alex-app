@@ -1,0 +1,28 @@
+import {configureStore} from '@reduxjs/toolkit';
+import UserInfoSlice from './Slices/UserInfoSlice';
+import VideoMuteSlice from './Slices/VideoMuteSlice';
+import NearBySlice from './Slices/NearBySlice';
+import TagPeopleSlice from './Slices/TagPeopleSlice';
+import TagBusinessSlice from './Slices/TagBusinessSlice';
+import ChatListSlice from './Slices/ChatListSlice';
+import OnlineUserSlice from './Slices/OnlineUserSlice';
+import NotificationCountSlice from './Slices/NotificationCount';
+import ReelIndexSlice from './Slices/ReelIndexSlice';
+import AddAddressSlice from './Slices/AddAddressSlice';
+
+const Store = configureStore({
+  reducer: {
+    UserInfoSlice,
+    VideoMuteSlice,
+    NearBySlice,
+    TagPeopleSlice,
+    TagBusinessSlice,
+    ChatListSlice,
+    OnlineUserSlice,
+    NotificationCountSlice,
+    ReelIndexSlice,
+    AddAddressSlice,
+  },
+});
+
+export default Store;
