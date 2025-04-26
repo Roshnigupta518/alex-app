@@ -15,7 +15,7 @@ const MobileNoInput = ({
   label = '',
   placeholder = label,
   value = '',
-  maxLength = 16,
+  maxLength = 15,
   onTextChange = txt => {},
   onCountryChange = code => {},
   callingCode = '',
@@ -23,6 +23,8 @@ const MobileNoInput = ({
   const [countryCode, setCountryCode] = useState('');
   const [country, setCountry] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [countryPickerKey, setCountryPickerKey] = useState(0);
+
   const onSelect = country => {
     setCountryCode(country?.dial_code);
     setIsModalVisible(false);
@@ -38,6 +40,7 @@ const MobileNoInput = ({
         <View>
           <CountryPicker
             show={isModalVisible}
+            key={countryPickerKey}
             pickerButtonOnPress={item => onSelect(item)}
             inputPlaceholder={'Select Code'}
             inputPlaceholderTextColor={'#838383'}
@@ -46,7 +49,10 @@ const MobileNoInput = ({
             onBackdropPress={() => setIsModalVisible(false)}
             style={{
               modal: {
-                height: 450,
+                maxHeight: 450,
+              },
+              flatListContainer: {
+                paddingTop: 10,
               },
               textInput: {
                 height: 45,
@@ -66,7 +72,12 @@ const MobileNoInput = ({
           />
           <TouchableOpacity
             style={styles.callingCodeStyle}
-            onPress={() => setIsModalVisible(true)}>
+            // onPress={() => setIsModalVisible(true)}
+            onPress={() => {
+              setCountryPickerKey(prev => prev + 1);
+              setIsModalVisible(true);
+            }}
+            >
             <Text style={styles.callingTxtStyle}>
               {countryCode === '' ? 'Select Code' : countryCode}
             </Text>
@@ -78,10 +89,11 @@ const MobileNoInput = ({
           </TouchableOpacity>
         </View>
 
-        <Image source={ImageConstants.verLine} style={{marginHorizontal: 5}} />
+        <Image source={ImageConstants.verLine} style={{width: 1,marginHorizontal: 5}} />
         <TextInput
           style={styles.inputStyle}
           keyboardType={'number-pad'}
+          textContentType="telephoneNumber"
           placeholder={placeholder}
           placeholderTextColor={colors.black}
           value={value}
@@ -152,6 +164,9 @@ const styles = StyleSheet.create({
 
   downArrowStyle: {
     marginLeft: wp(10),
+    width: wp(12),
+  height: wp(12),
+  resizeMode: 'contain',
   },
 });
 

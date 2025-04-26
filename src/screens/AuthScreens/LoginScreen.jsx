@@ -146,7 +146,7 @@ const LoginScreen = ({navigation}) => {
   style={{flex: 1}}>
      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
      <ScrollView
-      contentContainerStyle={styles.inputSwitchViewStyle}
+      // contentContainerStyle={styles.inputSwitchViewStyle}
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}>
         <View>
@@ -181,7 +181,7 @@ const LoginScreen = ({navigation}) => {
         <View style={styles.inputSwitchViewStyle}>
           {selectedTab == 0 ? (
             <MobileNoInput
-              label="Phone Number"
+              label="Mobile Number"
               callingCode={callingCode}
               value={state.mobileNo}
               onCountryChange={code => setCallingCode(code)}

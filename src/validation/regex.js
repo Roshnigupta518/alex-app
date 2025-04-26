@@ -62,9 +62,10 @@ export const RegexType = {
   },
 
   mobileno: {
-    regex: /^[0-9]\d{5,15}$/,
+    // regex: /^[0-9]\d{5,15}$/,  
+    regex: /^[0-9]{5,15}$/,
     emptyError: 'Please enter mobile number',
-    typeError: 'Please enter mobile number should be between 6 to 15 digits',
+    typeError: 'Please enter mobile number should be between 5 to 15 digits',
   },
 
   accountNumber: {

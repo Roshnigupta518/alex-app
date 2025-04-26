@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
 
       width: WIDTH,
       height: HEIGHT,
-      bottom: condition ? '0%' : '5.4%',
+      // bottom: condition ? '0%' : '5.4%',
     };
   },
   buttons: {

@@ -71,7 +71,7 @@ const SocialLoginScreen = ({navigation}) => {
     {
       type: 'email',
       icon: ImageConstants.person,
-      title: 'Continue with Email',
+      title: 'Continue with Email/Mobile Number',
       action: () => navigation.navigate('LoginScreen'),
     },
     {
