@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,18 +8,20 @@ import {
   ImageBackground,
   StyleSheet,
 } from 'react-native';
-import {colors} from '../../constants';
+import { colors } from '../../constants';
 import styles from './ReelStyle/ReelHeader.Style';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ImageConstants from '../../constants/ImageConstants';
-import {useIsFocused} from '@react-navigation/native';
-import {GetNotificationCountRequest} from '../../services/Utills';
-import {NotificationCountAction} from '../../redux/Slices/NotificationCount';
+import { useIsFocused } from '@react-navigation/native';
+import { GetNotificationCountRequest } from '../../services/Utills';
+import { NotificationCountAction } from '../../redux/Slices/NotificationCount';
 
 const ReelHeader = ({
-  onNearByClick = () => {},
-  onSearchClick = () => {},
-  notificationClick = () => {},
+  onNearByClick = () => { },
+  onSearchClick = () => { },
+  notificationClick = () => { },
+  onTempaClick = () => { },
+  selectedCity,
 }) => {
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
@@ -47,7 +49,31 @@ const ReelHeader = ({
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <TouchableOpacity onPress={onNearByClick} style={styles.nearMeView}>
+
+        <TouchableOpacity onPress={onTempaClick} style={[styles.nearMeView, {
+          backgroundColor: selectedCity == 'Tampa' ? 'white' : colors.borderGrayColor
+        }]}>
+          <Image
+            source={ImageConstants.location}
+            style={styles.locationIconStyle}
+          />
+          <Text
+            numberOfLines={1}
+            style={[
+              styles.nearMeTxtStyle,
+              {
+                fontSize:  14,
+              },
+            ]}>
+            {'Tampa'}{' '}
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => {
+          onNearByClick()
+        }} style={[styles.nearMeView, { marginVertical: 0,
+            backgroundColor: selectedCity == 'other' ? 'white' : colors.borderGrayColor
+         }]}>
           <Image
             source={ImageConstants.location}
             style={styles.locationIconStyle}
@@ -86,7 +112,7 @@ const ReelHeader = ({
 
           <Image
             source={ImageConstants.bell}
-            style={[styles.rightIconStyle, {tintColor: colors.lightBlack}]}
+            style={[styles.rightIconStyle, { tintColor: colors.lightBlack }]}
           />
         </TouchableOpacity>
       </View>

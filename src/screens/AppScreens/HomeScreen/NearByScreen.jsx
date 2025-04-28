@@ -19,6 +19,7 @@ import {nearByAction} from '../../../redux/Slices/NearBySlice';
 import Geolocation from '@react-native-community/geolocation';
 import MilesListSheet from '../../../components/ActionSheetComponent/MilesListSheet';
 import NotFoundAnime from '../../../components/NotFoundAnime';
+import { setCityAction } from '../../../redux/Slices/SelectedCitySlice';
 
 const NearByScreen = ({navigation}) => {
   const mileListRef = useRef();
@@ -36,6 +37,7 @@ const NearByScreen = ({navigation}) => {
       icon: ImageConstants.globe,
       label: 'Global',
       action: () => {
+        cityDataUpdated()
         dispatch(
           nearByAction({
             location_title: 'Global',
@@ -97,6 +99,12 @@ const NearByScreen = ({navigation}) => {
     );
   };
 
+  const cityDataUpdated = () => {
+    dispatch(setCityAction({
+      city:'other'
+    }))
+  }
+
   const _renderCityList = ({item, index}) => {
     return (
       <View style={styles.cityViewStyle}>
@@ -112,6 +120,7 @@ const NearByScreen = ({navigation}) => {
                 city: item?._id,
               }),
             );
+            cityDataUpdated()
             navigation.navigate('HomeScreen', {shouldScrollTopReel: true});
           }}
           style={styles.firstRowItemStyle}>
@@ -225,6 +234,7 @@ const NearByScreen = ({navigation}) => {
               city: null,
             }),
           );
+          cityDataUpdated()
           navigation.navigate('HomeScreen', {shouldScrollTopReel: true});
         }}
       />

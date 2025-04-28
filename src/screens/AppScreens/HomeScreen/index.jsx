@@ -28,6 +28,7 @@ import NoInternetModal from '../../../components/NoInternetModal';
 import NetInfo from '@react-native-community/netinfo';
 import crashlytics from '@react-native-firebase/crashlytics';
 import Geolocation from '@react-native-community/geolocation';
+import { setCityAction } from '../../../redux/Slices/SelectedCitySlice';
 
 const staticValues = {
   skip: 0,
@@ -40,6 +41,7 @@ const staticValues = {
 const HomeScreen = ({navigation, route}) => {
   const dispatch = useDispatch();
   const nearByType = useSelector(state => state.NearBySlice?.data);
+  const selectedCityData = useSelector(state => state.SelectedCitySlice?.data);
   const reelIndex = useSelector(state => state.ReelIndexSlice?.data);
 
   const prevNearBy = useRef(nearByType);
@@ -71,6 +73,7 @@ const HomeScreen = ({navigation, route}) => {
   });
   const [refreshing, setRefreshing] = React.useState(false);
   const [isInternetConnected, setIsInternetConnected] = useState(true);
+
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       if (state.isConnected !== null && state.isConnected === false) {
@@ -104,23 +107,25 @@ const HomeScreen = ({navigation, route}) => {
     pagination.isLoading = staticValues.isLoading;
 
     setPostArray([]);
-    // getAllPosts();
-    getAllPostsWithParams(paramsValues);
+    getAllPosts();
+    // getAllPostsWithParams(paramsValues);
 
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
-  }, [paramsValues]);
+  }, [paramsValues, selectedCityData]);
 
   const getAllPosts = () => {
+    console.log({selectedCityData, paramsValues})
     pagination.isLoading = true;
 
     let url = {
       skip: pagination.skip,
       limit: pagination.limit,
     };
-
-    if (paramsValues?.location_type == 'city') {
+    if(selectedCityData.city == 'Tampa'){
+      Object.assign(url, {city: selectedCityData.city});
+    }else if (paramsValues?.location_type == 'city') {
       Object.assign(url, {city: paramsValues?.city});
     } else if (paramsValues?.location_type == 'nearme') {
       Object.assign(url, {
@@ -172,8 +177,8 @@ const HomeScreen = ({navigation, route}) => {
         !pagination.isLoading
       ) {
         pagination.skip += pagination.limit;
-        // getAllPosts();
-        getAllPostsWithParams(paramsValues);
+        getAllPosts();
+        // getAllPostsWithParams(paramsValues);
 
       }
     }
@@ -183,60 +188,63 @@ const HomeScreen = ({navigation, route}) => {
     itemVisiblePercentThreshold: 50,
   };
 
-  // useEffect(() => {
-  //   paramsValues.location_title = nearByType?.location_title;
-  //   paramsValues.location_type = nearByType?.location_type;
-  //   paramsValues.location_coordinates = nearByType?.location_coordinates;
-  //   paramsValues.location_distance = nearByType?.location_distance;
-  //   paramsValues.city = nearByType?.city;
-  // }, [nearByType]);
-
   useEffect(() => {
-    const updateLocationAndParams = () => {
-      if (nearByType?.location_type === 'nearme') {
-        Geolocation.getCurrentPosition(
-          position => {
-            const {latitude, longitude} = position.coords;
-            const updatedParams = {
-              location_title: nearByType?.location_title,
-              location_type: nearByType?.location_type,
-              location_coordinates: {latitude, longitude},
-              location_distance: nearByType?.location_distance,
-              city: null,
-            };
-            setParamsValues(updatedParams);
-            // Call API here after setting
-            getAllPostsWithParams(updatedParams);
-          },
-          error => {
-            console.log('Location error:', error);
-            const fallbackParams = {
-              location_title: nearByType?.location_title,
-              location_type: nearByType?.location_type,
-              location_coordinates: nearByType?.location_coordinates,
-              location_distance: nearByType?.location_distance,
-              city: null,
-            };
-            setParamsValues(fallbackParams);
-            getAllPostsWithParams(fallbackParams);
-          },
-          {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-        );
-      } else {
-        const cityParams = {
-          location_title: nearByType?.location_title,
-          location_type: nearByType?.location_type,
-          location_coordinates: null,
-          location_distance: null,
-          city: nearByType?.city,
-        };
-        setParamsValues(cityParams);
-        getAllPostsWithParams(cityParams);
-      }
-    };
+    console.log({selectedCityData})
+    paramsValues.location_title = nearByType?.location_title;
+    paramsValues.location_type = nearByType?.location_type;
+    paramsValues.location_coordinates = nearByType?.location_coordinates;
+    paramsValues.location_distance = nearByType?.location_distance;
+    paramsValues.city = nearByType?.city;
+  }, [nearByType, selectedCityData]);
+
+
+
+  // useEffect(() => {
+  //   const updateLocationAndParams = () => {
+  //     if (nearByType?.location_type == 'nearme') {
+  //       Geolocation.getCurrentPosition(
+  //         position => {
+  //           const {latitude, longitude} = position.coords;
+  //           const updatedParams = {
+  //             location_title: nearByType?.location_title,
+  //             location_type: nearByType?.location_type,
+  //             location_coordinates: {latitude, longitude},
+  //             location_distance: nearByType?.location_distance,
+  //             city: null,
+  //           };
+  //           setParamsValues(updatedParams);
+  //           // Call API here after setting
+  //           getAllPostsWithParams(updatedParams);
+  //         },
+  //         error => {
+  //           console.log('Location error:', error);
+  //           const fallbackParams = {
+  //             location_title: nearByType?.location_title,
+  //             location_type: nearByType?.location_type,
+  //             location_coordinates: nearByType?.location_coordinates,
+  //             location_distance: nearByType?.location_distance,
+  //             city: null,
+  //           };
+  //           setParamsValues(fallbackParams);
+  //           getAllPostsWithParams(fallbackParams);
+  //         },
+  //         {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+  //       );
+  //     } else {
+  //       const cityParams = {
+  //         location_title: nearByType?.location_title,
+  //         location_type: nearByType?.location_type,
+  //         location_coordinates: null,
+  //         location_distance: null,
+  //         city: nearByType?.city,
+  //       };
+  //       setParamsValues(cityParams);
+  //       getAllPostsWithParams(cityParams);
+  //     }
+  //   };
   
-    updateLocationAndParams();
-  }, [nearByType]);
+  //   updateLocationAndParams();
+  // }, [nearByType]);
 
   const getAllPostsWithParams = (params) => {
     pagination.isLoading = true;
@@ -246,15 +254,7 @@ const HomeScreen = ({navigation, route}) => {
       limit: pagination.limit,
     };
   
-    if (params?.location_type === 'city') {
-      Object.assign(url, { city: params?.city });
-    } else if (params?.location_type === 'nearme') {
-      Object.assign(url, {
-        latitude: params?.location_coordinates?.latitude,
-        longitude: params?.location_coordinates?.longitude,
-        distance: params?.location_distance,
-      });
-    }
+    
   
     if (postArray?.length === 0) {
       setIsLoading(true);
@@ -285,7 +285,6 @@ const HomeScreen = ({navigation, route}) => {
       });
   };
   
-  
 
   useEffect(() => {
     if (!isFocused) {
@@ -299,8 +298,8 @@ const HomeScreen = ({navigation, route}) => {
         onRefresh();
       } else if (postArray?.length == 0) {
         console.log('isfouces');
-        // getAllPosts(); 
-        getAllPostsWithParams(paramsValues);
+        getAllPosts(); 
+        // getAllPostsWithParams(paramsValues);
  
       }
       setIsOnFocusItem(true);
@@ -374,6 +373,10 @@ const HomeScreen = ({navigation, route}) => {
     index,
   });
 
+  useEffect(()=>{
+   getAllPosts()
+  },[selectedCityData])
+
   return (
     <>
       <View style={styles.container}>
@@ -381,8 +384,12 @@ const HomeScreen = ({navigation, route}) => {
           onSearchClick={() => navigation.navigate('SearchScreen')}
           onNearByClick={() => navigation.navigate('NearByScreen')}
           notificationClick={() => navigation.navigate('NotificationScreen')}
+          onTempaClick={()=>{
+            dispatch(setCityAction({city:'Tampa'}))
+            setPostArray([])
+          }}
+          selectedCity={selectedCityData.city}
         />
-
         {postArray?.length == 0 && isLoading && (
           <View
             style={{

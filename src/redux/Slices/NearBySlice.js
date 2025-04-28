@@ -2,10 +2,10 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
   data: {
-    location_title: 'Near me',
-    location_type: 'nearme',
+    location_title: 'Global',
+    location_type: 'global',
     location_coordinates: null,
-    location_distance: 25,
+    location_distance: null,
     city: null,
   },
 };
