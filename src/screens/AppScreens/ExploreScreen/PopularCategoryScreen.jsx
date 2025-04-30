@@ -52,6 +52,7 @@ const PopularCategoryScreen = ({navigation, route}) => {
     setIsLoading(true);
     getSubExploreCategoryRequest(route?.params?.id)
       .then(res => {
+        // console.log('explore screen data', res?.result?.subExplore_id)
         setExploreList(res?.result?.subExplore_id);
         setSearchedExploreList(res?.result?.subExplore_id);
       })

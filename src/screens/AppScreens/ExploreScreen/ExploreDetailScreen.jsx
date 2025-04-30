@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Linking,
-  Platform,
+  Platform, StyleSheet, FlatList
 } from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {colors, fonts, HEIGHT, WIDTH, wp} from '../../../constants';
@@ -19,12 +19,16 @@ import Toast from '../../../constants/Toast';
 import ReadMore from '@fawazahmed/react-native-read-more';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../../components/NoInternetModal';
+import NotFoundAnime from '../../../components/NotFoundAnime';
+
 const ExploreDetailScreen = ({navigation, route}) => {
   const {data} = route?.params;
   const [isFav, setIsFav] = useState(
     data?.isFavourite || route?.params?.alreadyFaviroute,
   );
   const [isInternetConnected, setIsInternetConnected] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       if (state.isConnected !== null && state.isConnected === false) {
@@ -75,6 +79,43 @@ const ExploreDetailScreen = ({navigation, route}) => {
     });
 
     Linking.openURL(url);
+  };
+
+  const RenderUserPost = ({item, index}) => {
+    console.log({item})
+    return (
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('ReelViewer', {
+            data: data.postData,
+            currentIndex: index,
+          })
+        }>
+        {item?.postData?.post?.mimetype != 'video/mp4' ? (
+          <Image
+            source={{uri: item?.postData?.post?.data}}
+            style={styles.userPostImage}
+          />
+        ) : (
+          <View style={styles.videoContainer}>
+            <View style={styles.playIconStyle}>
+              <Image
+                source={ImageConstants.play}
+                style={{
+                  height: wp(60),
+                  width: wp(60),
+                  alignSelf: 'center',
+                }}
+              />
+            </View>
+            <Image
+              source={{uri: item?.postData?.post_thumbnail}}
+              style={styles.videoPostStyle}
+            />
+          </View>
+        )}
+      </TouchableOpacity>
+    );
   };
 
   return (
@@ -164,7 +205,7 @@ const ExploreDetailScreen = ({navigation, route}) => {
                 </TouchableOpacity>
               </View>
 
-              <View
+              {/* <View
                 style={{
                   marginVertical: wp(20),
                   padding: 10,
@@ -220,9 +261,9 @@ const ExploreDetailScreen = ({navigation, route}) => {
                     </Text>
                   </View>
                 )}
-              </View>
+              </View> */}
 
-              {data?.description && (
+              {/* {data?.description && (
                 <View>
                   <Text
                     style={{
@@ -244,9 +285,9 @@ const ExploreDetailScreen = ({navigation, route}) => {
                     {data?.description}
                   </ReadMore>
                 </View>
-              )}
+              )} */}
 
-              {!isNaN(Number(data?.latitude)) &&
+              {/* {!isNaN(Number(data?.latitude)) &&
                 !isNaN(Number(data?.longitude)) && (
                   <View
                     style={{
@@ -299,7 +340,17 @@ const ExploreDetailScreen = ({navigation, route}) => {
                       </TouchableOpacity>
                     </View>
                   </View>
-                )}
+                )} */}
+
+                {/* show post thunbnail */}
+                <View style={styles.listViewStyle}>
+          <FlatList
+            data={data.postData}
+            ListEmptyComponent={<NotFoundAnime isLoading={isLoading} />}
+            renderItem={RenderUserPost}
+            numColumns={2}
+          />
+        </View>
             </View>
           </ScrollView>
         </View>
@@ -310,3 +361,33 @@ const ExploreDetailScreen = ({navigation, route}) => {
 };
 
 export default ExploreDetailScreen;
+
+const styles = StyleSheet.create({
+  listViewStyle: {
+    flex: 1,
+    marginTop: 10,
+  },
+  userPostImage: {
+    height: 140,
+    width: WIDTH / 2.1,
+    margin: 4,
+  },
+  videoContainer: {
+    padding: 4,
+    borderWidth: 1,
+    borderColor: colors.primaryColor,
+    borderRadius: 10,
+    margin: 4,
+  },
+  playIconStyle: {
+    position: 'absolute',
+    top: 75,
+    width: WIDTH / 2.1,
+    zIndex: 2,
+  },
+  videoPostStyle: {
+    height: 200,
+    width: WIDTH / 2.2,
+    borderRadius: 10,
+  },
+})
