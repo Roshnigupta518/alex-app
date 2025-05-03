@@ -6,7 +6,7 @@ const HttpRequests = {
   getAPI: async (url, data = null, token = '') => {
      
     const temp_token = await Storage.get('userdata');
-    // console.log('******',url, data, temp_token?.token );
+    console.log('******',url, data, temp_token?.token );
 
     const headers = {
       headers: {

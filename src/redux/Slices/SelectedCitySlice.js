@@ -2,7 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
   data: {
-    city: 'Tampa',
+    locationType: 'current',
   },
 };
 
@@ -12,7 +12,7 @@ export const SelectedCitySlice = createSlice({
   reducers: {
     setCityAction: (state, action) => {
         console.log('update city', action.payload);
-        state.data.city = action?.payload?.city;
+        state.data.locationType = action?.payload?.locationType;
       },
   },
 });

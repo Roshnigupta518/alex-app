@@ -101,7 +101,7 @@ const NearByScreen = ({navigation}) => {
 
   const cityDataUpdated = () => {
     dispatch(setCityAction({
-      city:'other'
+      locationType:'other'
     }))
   }
 

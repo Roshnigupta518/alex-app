@@ -169,12 +169,8 @@ const ExploreDetailScreen = ({navigation, route}) => {
               }}>
               <View
                 style={{
-                  flexDirection: 'row',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
                 }}>
-                <View style={{width: 30}} />
-                <View style={{alignItems: 'center'}}>
                   <Text
                     style={{
                       fontFamily: fonts.bold,
@@ -191,7 +187,6 @@ const ExploreDetailScreen = ({navigation, route}) => {
                     }}>
                     {data?.subTitle}
                   </Text>
-                </View>
 
                 <TouchableOpacity onPress={addToFaviroute}>
                   <Image
@@ -344,14 +339,16 @@ const ExploreDetailScreen = ({navigation, route}) => {
 
                 {/* show post thunbnail */}
                 <View style={styles.listViewStyle}>
-          <FlatList
+
+        </View>
+        </View>
+        <FlatList
             data={data.postData}
             ListEmptyComponent={<NotFoundAnime isLoading={isLoading} />}
             renderItem={RenderUserPost}
             numColumns={2}
           />
-        </View>
-            </View>
+           
           </ScrollView>
         </View>
       </View>

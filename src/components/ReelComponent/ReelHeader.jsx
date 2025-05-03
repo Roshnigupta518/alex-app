@@ -22,6 +22,7 @@ const ReelHeader = ({
   notificationClick = () => { },
   onTempaClick = () => { },
   selectedCity,
+  currentCity
 }) => {
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
@@ -48,31 +49,11 @@ const ReelHeader = ({
 
   return (
     <SafeAreaView style={styles.container}>
-      <View>
-
-        <TouchableOpacity onPress={onTempaClick} style={[styles.nearMeView, {
-          backgroundColor: selectedCity == 'Tampa' ? 'white' : colors.borderGrayColor
-        }]}>
-          <Image
-            source={ImageConstants.location}
-            style={styles.locationIconStyle}
-          />
-          <Text
-            numberOfLines={1}
-            style={[
-              styles.nearMeTxtStyle,
-              {
-                fontSize:  14,
-              },
-            ]}>
-            {'Tampa'}{' '}
-          </Text>
-        </TouchableOpacity>
-
+      <View style={{flexDirection:'row'}}>
         <TouchableOpacity onPress={() => {
           onNearByClick()
-        }} style={[styles.nearMeView, { marginVertical: 0,
-            backgroundColor: selectedCity == 'other' ? 'white' : colors.borderGrayColor
+        }} style={[styles.nearMeView, { 
+            backgroundColor: selectedCity != 'current' ? colors.white : colors.borderGrayColor
          }]}>
           <Image
             source={ImageConstants.location}
@@ -87,6 +68,25 @@ const ReelHeader = ({
               },
             ]}>
             {nearByType?.location_title}{' '}
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={onTempaClick} style={[styles.nearMeView, {
+          backgroundColor: selectedCity == 'current' ? colors.white : colors.borderGrayColor
+        }]}>
+          <Image
+            source={ImageConstants.location}
+            style={styles.locationIconStyle}
+          />
+          <Text
+            numberOfLines={1}
+            style={[
+              styles.nearMeTxtStyle,
+              {
+                fontSize:  14,
+              },
+            ]}>
+            {currentCity}
           </Text>
         </TouchableOpacity>
       </View>
@@ -120,3 +120,4 @@ const ReelHeader = ({
   );
 };
 export default ReelHeader;
+

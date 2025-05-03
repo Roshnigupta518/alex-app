@@ -29,6 +29,7 @@ import NetInfo from '@react-native-community/netinfo';
 import crashlytics from '@react-native-firebase/crashlytics';
 import Geolocation from '@react-native-community/geolocation';
 import { setCityAction } from '../../../redux/Slices/SelectedCitySlice';
+import useLocation from '../../../hooks/useLocation';
 
 const staticValues = {
   skip: 0,
@@ -43,7 +44,9 @@ const HomeScreen = ({navigation, route}) => {
   const nearByType = useSelector(state => state.NearBySlice?.data);
   const selectedCityData = useSelector(state => state.SelectedCitySlice?.data);
   const reelIndex = useSelector(state => state.ReelIndexSlice?.data);
-
+  
+  const {location, city, error} = useLocation()
+  
   const prevNearBy = useRef(nearByType);
   const flashListRef = useRef();
   const deleteCommentRef = useRef();
@@ -57,8 +60,8 @@ const HomeScreen = ({navigation, route}) => {
   const [currentItemIndex, setCurrentItemIndex] = useState(0);
   const [postArray, setPostArray] = useState([]);
   const [paramsValues, setParamsValues] = useState({
-    location_title: 'Near me',
-    location_type: 'nearme',
+    location_title: 'Global',
+    location_type: 'global',
     location_coordinates: null,
     location_distance: null,
     city: null,
@@ -108,26 +111,27 @@ const HomeScreen = ({navigation, route}) => {
 
     setPostArray([]);
     getAllPosts();
-    // getAllPostsWithParams(paramsValues);
-
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
   }, [paramsValues, selectedCityData]);
 
   const getAllPosts = () => {
-    console.log({selectedCityData, paramsValues})
+    console.log({selectedCityData, paramsValues, currentCity:city})
     pagination.isLoading = true;
 
     let url = {
       skip: pagination.skip,
       limit: pagination.limit,
     };
-    if(selectedCityData.city == 'Tampa'){
-      Object.assign(url, {city: selectedCityData.city});
+    if(selectedCityData?.locationType == 'current' && city != null){
+      Object.assign(url, {city: city});
+      console.log('current location ka data')
     }else if (paramsValues?.location_type == 'city') {
       Object.assign(url, {city: paramsValues?.city});
+      console.log('selectedCity ka data')
     } else if (paramsValues?.location_type == 'nearme') {
+      console.log('nearme ka data')
       Object.assign(url, {
         latitude: paramsValues?.location_coordinates?.latitude,
         longitude: paramsValues?.location_coordinates?.longitude,
@@ -141,6 +145,7 @@ const HomeScreen = ({navigation, route}) => {
     GetAllPostsRequest(url)
       .then(res => {
         setPostArray(prevPosts => [...prevPosts, ...res?.result]);
+        console.log({length: res})
         currentTotalItems = postArray?.length + (res?.result?.length || 0);
         pagination.totalRecords = res?.totalrecord;
 
@@ -178,8 +183,6 @@ const HomeScreen = ({navigation, route}) => {
       ) {
         pagination.skip += pagination.limit;
         getAllPosts();
-        // getAllPostsWithParams(paramsValues);
-
       }
     }
   };
@@ -189,102 +192,12 @@ const HomeScreen = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    console.log({selectedCityData})
     paramsValues.location_title = nearByType?.location_title;
     paramsValues.location_type = nearByType?.location_type;
     paramsValues.location_coordinates = nearByType?.location_coordinates;
     paramsValues.location_distance = nearByType?.location_distance;
     paramsValues.city = nearByType?.city;
-  }, [nearByType, selectedCityData]);
-
-
-
-  // useEffect(() => {
-  //   const updateLocationAndParams = () => {
-  //     if (nearByType?.location_type == 'nearme') {
-  //       Geolocation.getCurrentPosition(
-  //         position => {
-  //           const {latitude, longitude} = position.coords;
-  //           const updatedParams = {
-  //             location_title: nearByType?.location_title,
-  //             location_type: nearByType?.location_type,
-  //             location_coordinates: {latitude, longitude},
-  //             location_distance: nearByType?.location_distance,
-  //             city: null,
-  //           };
-  //           setParamsValues(updatedParams);
-  //           // Call API here after setting
-  //           getAllPostsWithParams(updatedParams);
-  //         },
-  //         error => {
-  //           console.log('Location error:', error);
-  //           const fallbackParams = {
-  //             location_title: nearByType?.location_title,
-  //             location_type: nearByType?.location_type,
-  //             location_coordinates: nearByType?.location_coordinates,
-  //             location_distance: nearByType?.location_distance,
-  //             city: null,
-  //           };
-  //           setParamsValues(fallbackParams);
-  //           getAllPostsWithParams(fallbackParams);
-  //         },
-  //         {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-  //       );
-  //     } else {
-  //       const cityParams = {
-  //         location_title: nearByType?.location_title,
-  //         location_type: nearByType?.location_type,
-  //         location_coordinates: null,
-  //         location_distance: null,
-  //         city: nearByType?.city,
-  //       };
-  //       setParamsValues(cityParams);
-  //       getAllPostsWithParams(cityParams);
-  //     }
-  //   };
-  
-  //   updateLocationAndParams();
-  // }, [nearByType]);
-
-  const getAllPostsWithParams = (params) => {
-    pagination.isLoading = true;
-  
-    let url = {
-      skip: pagination.skip,
-      limit: pagination.limit,
-    };
-  
-    
-  
-    if (postArray?.length === 0) {
-      setIsLoading(true);
-    }
-  
-    GetAllPostsRequest(url)
-      .then(res => {
-        setPostArray(prev => [...prev, ...res?.result]);
-        pagination.totalRecords = res?.totalrecord;
-  
-        if (res?.result?.length > 0) {
-          res?.result.forEach(item => {
-            if (item?.postData?.post?.mimetype === 'image/jpeg') {
-              Image.prefetch(item?.postData?.post?.data);
-            }
-          });
-        }
-      })
-      .catch(err => {
-        console.log('err', err);
-        if (err?.message != undefined) {
-          Toast.error('Posts', err?.message);
-        }
-      })
-      .finally(() => {
-        pagination.isLoading = false;
-        setIsLoading(false);
-      });
-  };
-  
+  }, [nearByType]);
 
   useEffect(() => {
     if (!isFocused) {
@@ -298,13 +211,14 @@ const HomeScreen = ({navigation, route}) => {
         onRefresh();
       } else if (postArray?.length == 0) {
         console.log('isfouces');
+        if(city){
         getAllPosts(); 
-        // getAllPostsWithParams(paramsValues);
+      }
  
       }
       setIsOnFocusItem(true);
     }
-  }, [isFocused]);
+  }, [isFocused, city, selectedCityData]);
 
   useEffect(() => {
     const backAction = () => {
@@ -373,9 +287,6 @@ const HomeScreen = ({navigation, route}) => {
     index,
   });
 
-  useEffect(()=>{
-   getAllPosts()
-  },[selectedCityData])
 
   return (
     <>
@@ -385,10 +296,10 @@ const HomeScreen = ({navigation, route}) => {
           onNearByClick={() => navigation.navigate('NearByScreen')}
           notificationClick={() => navigation.navigate('NotificationScreen')}
           onTempaClick={()=>{
-            dispatch(setCityAction({city:'Tampa'}))
-            setPostArray([])
+            dispatch(setCityAction({locationType:'current'}))
           }}
-          selectedCity={selectedCityData.city}
+          selectedCity={selectedCityData?.locationType}
+          currentCity={city}
         />
         {postArray?.length == 0 && isLoading && (
           <View
@@ -401,7 +312,7 @@ const HomeScreen = ({navigation, route}) => {
           </View>
         )}
 
-        {postArray?.length > 0 ? (
+        {(postArray?.length > 0) ? (
           <View
             style={{
               alignItems: 'center',
@@ -442,13 +353,18 @@ const HomeScreen = ({navigation, route}) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Text
+              
+            <Text onPress={()=>{
+              if(selectedCityData?.locationType == 'current'){
+                navigation.navigate('PostMediaScreen')
+              }
+            }}
               style={{
                 fontFamily: fonts.bold,
                 fontSize: wp(16),
                 color: colors.white,
               }}>
-              No post found!
+              {selectedCityData?.locationType == 'current'? 'Be the first one to post in this city' : 'No post found!'}
             </Text>
           </View>
         )}

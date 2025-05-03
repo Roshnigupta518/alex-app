@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
   },
 
   nearMeView: {
-    marginVertical: wp(20),
+    marginVertical: wp(30),
     backgroundColor: colors.borderGrayColor,
     paddingVertical: 10,
     flexDirection: 'row',
@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     borderColor: colors.primaryColor,
+    marginRight:wp(5)
   },
 
   locationIconStyle: {

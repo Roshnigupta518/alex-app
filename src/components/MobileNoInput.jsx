@@ -62,11 +62,21 @@ const MobileNoInput = ({
               dialCode: {
                 fontFamily: fonts.medium,
                 color: colors.black,
+                marginRight: 8, // space between code and name
               },
               countryName: {
                 fontFamily: fonts.medium,
                 color: colors.black,
+                flex: 1, // allow it to take available space
+                flexWrap: 'wrap', // allow text to wrap
+                 paddingRight: 10, // give it breathing room from the edge
               },
+              countryButtonStyles: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                paddingRight: 10,
+              }
             }}
             androidWindowSoftInputMode={'pan'}
           />
