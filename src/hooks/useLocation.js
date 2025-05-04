@@ -1,8 +1,21 @@
-// useLocation.js
 import { useEffect, useState } from 'react';
 import Geolocation from '@react-native-community/geolocation';
-import { PermissionsAndroid, Platform } from 'react-native';
-const GOOGLE_API_KEY = 'AIzaSyAbFHI5aGGL3YVP0KvD9nDiFKsi_cX3bS0'
+import {
+  Platform,
+  PermissionsAndroid,
+  Alert,
+  Linking,
+} from 'react-native';
+import {
+  check,
+  request,
+  PERMISSIONS,
+  RESULTS,
+  openSettings,
+} from 'react-native-permissions';
+
+const GOOGLE_API_KEY = 'AIzaSyAbFHI5aGGL3YVP0KvD9nDiFKsi_cX3bS0';
+
 const useLocation = () => {
   const [location, setLocation] = useState(null);
   const [city, setCity] = useState(null);
@@ -25,19 +38,62 @@ const useLocation = () => {
     } catch (err) {
       console.error('Error fetching city:', err);
       setError('Failed to fetch city');
-    } finally {
-      setLoading(false);
     }
   };
 
   const requestLocationPermission = async () => {
-    if (Platform.OS === 'android') {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-      );
-      return granted === PermissionsAndroid.RESULTS.GRANTED;
+    try {
+      if (Platform.OS === 'android') {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+        );
+
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) return true;
+
+        Alert.alert(
+          'Location Permission Required',
+          'Please enable location permission from settings.',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Open Settings', onPress: () => Linking.openSettings() },
+          ]
+        );
+        return false;
+      } else {
+        const permission = PERMISSIONS.IOS.LOCATION_WHEN_IN_USE;
+        let result = await check(permission);
+
+        if (result === RESULTS.DENIED) {
+          result = await request(permission);
+        }
+
+        if (result === RESULTS.GRANTED) return true;
+
+        Alert.alert(
+          'Location Permission Required',
+          'Please enable location access from iOS Settings.',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Open Settings', onPress: () => openSettings() },
+          ]
+        );
+        return false;
+      }
+    } catch (err) {
+      console.error('Permission check failed:', err);
+      return false;
     }
-    return true;
+  };
+
+  const promptToEnableLocation = () => {
+    Alert.alert(
+      'Location Service Off',
+      'Please turn on location services to get your current location.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Open Settings', onPress: () => Linking.openSettings() },
+      ]
+    );
   };
 
   useEffect(() => {
@@ -55,7 +111,19 @@ const useLocation = () => {
           getCityFromCoords(latitude, longitude);
         },
         (err) => {
-          setError(err.message);
+          if (
+            err.code === 1 // permission denied
+          ) {
+            setError('Location permission denied');
+          } else if (
+            err.code === 2 || // position unavailable
+            err.code === 3 // timeout
+          ) {
+            promptToEnableLocation();
+            setError('Location services might be off');
+          } else {
+            setError(err.message);
+          }
         },
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
       );

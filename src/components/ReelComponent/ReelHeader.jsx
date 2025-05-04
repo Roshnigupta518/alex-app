@@ -50,6 +50,27 @@ const ReelHeader = ({
   return (
     <SafeAreaView style={styles.container}>
       <View style={{flexDirection:'row'}}>
+       
+
+        <TouchableOpacity onPress={onTempaClick} style={[styles.nearMeView, {
+          backgroundColor: selectedCity == 'current' ? colors.white : colors.borderGrayColor
+        }]}>
+          <Image
+            source={ImageConstants.location}
+            style={styles.locationIconStyle}
+          />
+          <Text
+            numberOfLines={1}
+            style={[
+              styles.nearMeTxtStyle,
+              {
+                fontSize:  14,
+              },
+            ]}>
+            {currentCity}
+          </Text>
+        </TouchableOpacity>
+
         <TouchableOpacity onPress={() => {
           onNearByClick()
         }} style={[styles.nearMeView, { 
@@ -68,25 +89,6 @@ const ReelHeader = ({
               },
             ]}>
             {nearByType?.location_title}{' '}
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={onTempaClick} style={[styles.nearMeView, {
-          backgroundColor: selectedCity == 'current' ? colors.white : colors.borderGrayColor
-        }]}>
-          <Image
-            source={ImageConstants.location}
-            style={styles.locationIconStyle}
-          />
-          <Text
-            numberOfLines={1}
-            style={[
-              styles.nearMeTxtStyle,
-              {
-                fontSize:  14,
-              },
-            ]}>
-            {currentCity}
           </Text>
         </TouchableOpacity>
       </View>

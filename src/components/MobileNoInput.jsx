@@ -62,20 +62,22 @@ const MobileNoInput = ({
               dialCode: {
                 fontFamily: fonts.medium,
                 color: colors.black,
-                marginRight: 8, // space between code and name
+                marginRight: 8,
+                flexShrink: 0, // Don't shrink dial code
               },
               countryName: {
                 fontFamily: fonts.medium,
-                color: colors.black,
-                flex: 1, // allow it to take available space
-                flexWrap: 'wrap', // allow text to wrap
-                 paddingRight: 10, // give it breathing room from the edge
+  color: colors.black,
+  flexShrink: 1,           // Allows it to shrink if needed
+  flexGrow: 1,             // Allows it to grow and fill space
+  flexBasis: 'auto',       // Respects content size
+  minWidth: 0,
               },
               countryButtonStyles: {
                 flexDirection: 'row',
                 alignItems: 'center',
-                justifyContent: 'flex-start',
-                paddingRight: 10,
+                paddingHorizontal: 10,
+                width: '100%',
               }
             }}
             androidWindowSoftInputMode={'pan'}

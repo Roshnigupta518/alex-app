@@ -353,7 +353,7 @@ const HomeScreen = ({navigation, route}) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-              
+              {(!isLoading && postArray?.length == 0&& city != null)&&
             <Text onPress={()=>{
               if(selectedCityData?.locationType == 'current'){
                 navigation.navigate('PostMediaScreen')
@@ -364,8 +364,8 @@ const HomeScreen = ({navigation, route}) => {
                 fontSize: wp(16),
                 color: colors.white,
               }}>
-              {selectedCityData?.locationType == 'current'? 'Be the first one to post in this city' : 'No post found!'}
-            </Text>
+              {(selectedCityData?.locationType == 'current' )? 'Be the first one to post in this city' : 'No post found!'}
+            </Text>}
           </View>
         )}
 
