@@ -106,7 +106,7 @@ const {city, location, error} = useLocation()
     return () => unsubscribe();
   }, []);
   const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
+    // setRefreshing(true);
     pagination.skip = staticValues.skip;
     pagination.limit = staticValues.limit;
     pagination.totalRecords = staticValues.totalRecords;
