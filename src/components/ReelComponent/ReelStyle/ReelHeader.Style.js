@@ -12,7 +12,8 @@ const styles = StyleSheet.create({
   },
 
   nearMeView: {
-    marginVertical: wp(30),
+    marginVertical: wp(20),
+    height:50,
     backgroundColor: colors.borderGrayColor,
     paddingVertical: 10,
     flexDirection: 'row',

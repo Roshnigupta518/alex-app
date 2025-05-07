@@ -78,7 +78,7 @@ const ReelCard = ({
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} key={idx}>
       {data?.postData?.post?.mimetype == 'video/mp4' ? (
         <VideoPlayer
           url={data?.postData?.post?.data}

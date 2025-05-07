@@ -8,7 +8,7 @@ import {
   Alert,
   BackHandler,
   Image,
-  Text,
+  Text, Platform, PermissionsAndroid, AppState, ScrollView, Linking
 } from 'react-native';
 import {colors, fonts, HEIGHT, wp} from '../../../constants';
 import ReelHeader from '../../../components/ReelComponent/ReelHeader';
@@ -30,6 +30,8 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import Geolocation from '@react-native-community/geolocation';
 import { setCityAction } from '../../../redux/Slices/SelectedCitySlice';
 import useLocation from '../../../hooks/useLocation';
+import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import DeviceInfo from 'react-native-device-info';
 
 const staticValues = {
   skip: 0,
@@ -38,14 +40,14 @@ const staticValues = {
   currentTotalItems: 0,
   isLoading: false,
 };
-
+const GOOGLE_API_KEY = 'AIzaSyAbFHI5aGGL3YVP0KvD9nDiFKsi_cX3bS0';
 const HomeScreen = ({navigation, route}) => {
   const dispatch = useDispatch();
   const nearByType = useSelector(state => state.NearBySlice?.data);
   const selectedCityData = useSelector(state => state.SelectedCitySlice?.data);
   const reelIndex = useSelector(state => state.ReelIndexSlice?.data);
   
-  const {location, city, error} = useLocation()
+  // const {location, city, error} = useLocation()
   
   const prevNearBy = useRef(nearByType);
   const flashListRef = useRef();
@@ -66,7 +68,7 @@ const HomeScreen = ({navigation, route}) => {
     location_distance: null,
     city: null,
   });
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [pagination, setPagination] = useState({
     skip: staticValues.skip,
     limit: staticValues.limit,
@@ -76,6 +78,8 @@ const HomeScreen = ({navigation, route}) => {
   });
   const [refreshing, setRefreshing] = React.useState(false);
   const [isInternetConnected, setIsInternetConnected] = useState(true);
+const {city, location, error} = useLocation()
+
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -109,29 +113,33 @@ const HomeScreen = ({navigation, route}) => {
     pagination.currentTotalItems = staticValues.currentTotalItems;
     pagination.isLoading = staticValues.isLoading;
 
-    setPostArray([]);
+    // setPostArray([]);
+    if(selectedCityData?.locationType == 'current'){
+      getAllPosts();
+    }else{
     getAllPosts();
+  }
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
-  }, [paramsValues, selectedCityData]);
+  }, [paramsValues, selectedCityData, city]);
 
   const getAllPosts = () => {
     console.log({selectedCityData, paramsValues, currentCity:city})
     pagination.isLoading = true;
-
+  
     let url = {
       skip: pagination.skip,
       limit: pagination.limit,
     };
-    if(selectedCityData?.locationType == 'current' && city != null){
+    if(selectedCityData?.locationType == 'current' && city != null ){
       Object.assign(url, {city: city});
-      console.log('current location ka data')
+      console.log('current location data')
     }else if (paramsValues?.location_type == 'city') {
       Object.assign(url, {city: paramsValues?.city});
-      console.log('selectedCity ka data')
+      console.log('selectedCity data')
     } else if (paramsValues?.location_type == 'nearme') {
-      console.log('nearme ka data')
+      console.log('nearme data')
       Object.assign(url, {
         latitude: paramsValues?.location_coordinates?.latitude,
         longitude: paramsValues?.location_coordinates?.longitude,
@@ -156,7 +164,8 @@ const HomeScreen = ({navigation, route}) => {
             }
           });
         }
-
+       setIsLoading(false)
+       setRefreshing(false)
         // flashListRef.current.scrollToOffset({animated: true, offset: 0});
       })
       .catch(err => {
@@ -169,6 +178,7 @@ const HomeScreen = ({navigation, route}) => {
       .finally(() => {
         pagination.isLoading = false;
         setIsLoading(false);
+        setRefreshing(false)
       });
   };
 
@@ -192,6 +202,7 @@ const HomeScreen = ({navigation, route}) => {
   };
 
   useEffect(() => {
+    setIsLoading(true)
     paramsValues.location_title = nearByType?.location_title;
     paramsValues.location_type = nearByType?.location_type;
     paramsValues.location_coordinates = nearByType?.location_coordinates;
@@ -214,11 +225,13 @@ const HomeScreen = ({navigation, route}) => {
         if(city){
         getAllPosts(); 
       }
- 
+      if(error){
+        setIsLoading(false)
+      }
       }
       setIsOnFocusItem(true);
     }
-  }, [isFocused, city, selectedCityData]);
+  }, [isFocused, city, selectedCityData, error]);
 
   useEffect(() => {
     const backAction = () => {
@@ -296,12 +309,16 @@ const HomeScreen = ({navigation, route}) => {
           onNearByClick={() => navigation.navigate('NearByScreen')}
           notificationClick={() => navigation.navigate('NotificationScreen')}
           onTempaClick={()=>{
+            if(error){
+            }else{
+            setIsLoading(true)
             dispatch(setCityAction({locationType:'current'}))
+          }
           }}
           selectedCity={selectedCityData?.locationType}
           currentCity={city}
         />
-        {postArray?.length == 0 && isLoading && (
+        {/* {(postArray?.length == 0 && isLoading) && (
           <View
             style={{
               alignItems: 'center',
@@ -367,7 +384,95 @@ const HomeScreen = ({navigation, route}) => {
               {(selectedCityData?.locationType == 'current' )? 'Be the first one to post in this city' : 'No post found!'}
             </Text>}
           </View>
-        )}
+        )} */}
+
+<ScrollView contentContainerStyle={{flex:1}} nestedScrollEnabled={true}  refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    }>
+{(isLoading && postArray?.length == 0) ? (
+  // Show loader
+  <View style={{
+    alignItems: 'center',
+    height: HEIGHT / 1.2,
+    justifyContent: 'center',
+  }}>
+    <ActivityIndicator size="large" color={colors.white} />
+  </View>
+  
+) : postArray?.length > 0 ? (
+  // Show post list
+  <View
+  style={{
+    alignItems: 'center',
+    height: HEIGHT,
+    justifyContent: 'center',
+  }}>
+  <FlatList
+    refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    }
+    nestedScrollEnabled={true}
+    ref={flashListRef}
+    data={postArray}
+    renderItem={_renderReels}
+    showsVerticalScrollIndicator={false}
+    initialScrollIndex={0}
+    disableIntervalMomentum
+    onViewableItemsChanged={_onViewableItemsChanged}
+    viewabilityConfig={_viewabilityConfig}
+    estimatedItemSize={2}
+    pagingEnabled
+    initialNumToRender={2}
+    removeClippedSubviews={true}
+    windowSize={5}
+    maxToRenderPerBatch={5}
+    getItemLayout={getItemLayout}
+    contentInset={{top: 0, bottom: 0, left: 0, right: 0}}
+    contentContainerStyle={{
+      alignSelf: 'center',
+    }}
+  />
+</View>
+) : (
+  // No posts found view
+  <View style={{
+    flex: 1,
+    backgroundColor: colors.black,
+    justifyContent: 'center',
+    alignItems: 'center',
+  }}>
+    {city != null ? (
+      <Text
+        onPress={() => {
+          if (selectedCityData?.locationType === 'current') {
+            navigation.navigate('PostMediaScreen');
+          }
+        }}
+        style={{
+          fontFamily: fonts.bold,
+          fontSize: wp(16),
+          color: colors.white,
+        }}>
+        {selectedCityData?.locationType === 'current'
+          ? 'Be the first one to post in this city'
+          : 'No post found!'}
+      </Text>
+    ):
+
+    <Text
+       
+    style={{
+      fontFamily: fonts.bold,
+      fontSize: wp(16),
+      color: colors.white,
+    }}>
+    {selectedCityData.locationType == 'current' && error}
+  </Text>
+    }
+  </View>
+)}
+
+</ScrollView>
 
         {/* Comment List Screen */}
         <CommentListSheet
