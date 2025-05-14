@@ -5,7 +5,7 @@ const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT,
+    // height: SCREEN_HEIGHT,
     flex: 1,
     backgroundColor: colors.black,
   },
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
       position: 'absolute',
       bottom: condition ? '0%' : '4.6%',
       width: WIDTH,
-      height: HEIGHT / 3.2,
+      // height: HEIGHT / 3.2,
     };
   },
 
@@ -38,10 +38,10 @@ const styles = StyleSheet.create({
 
   uploadedImageStyle: condition => {
     return {
-      height: HEIGHT,
+      // height: HEIGHT,
       width: WIDTH,
       resizeMode: 'contain',
-      bottom: condition ? '0%' : '5.4%',
+      // bottom: condition ? '0%' : '5.4%',
     };
   },
 

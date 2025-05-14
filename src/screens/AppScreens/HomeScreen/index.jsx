@@ -32,6 +32,7 @@ import { setCityAction } from '../../../redux/Slices/SelectedCitySlice';
 import useLocation from '../../../hooks/useLocation';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import DeviceInfo from 'react-native-device-info';
+import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 
 const staticValues = {
   skip: 0,
@@ -40,14 +41,14 @@ const staticValues = {
   currentTotalItems: 0,
   isLoading: false,
 };
-const GOOGLE_API_KEY = 'AIzaSyAbFHI5aGGL3YVP0KvD9nDiFKsi_cX3bS0';
 const HomeScreen = ({navigation, route}) => {
   const dispatch = useDispatch();
   const nearByType = useSelector(state => state.NearBySlice?.data);
   const selectedCityData = useSelector(state => state.SelectedCitySlice?.data);
   const reelIndex = useSelector(state => state.ReelIndexSlice?.data);
   
-  // const {location, city, error} = useLocation()
+  const tabBarHeight = useBottomTabBarHeight();
+  const screenHeight = HEIGHT - tabBarHeight
   
   const prevNearBy = useRef(nearByType);
   const flashListRef = useRef();
@@ -78,7 +79,7 @@ const HomeScreen = ({navigation, route}) => {
   });
   const [refreshing, setRefreshing] = React.useState(false);
   const [isInternetConnected, setIsInternetConnected] = useState(true);
-const {city, location, error} = useLocation()
+  const {city, location, error} = useLocation()
 
 
   useEffect(() => {
@@ -106,7 +107,8 @@ const {city, location, error} = useLocation()
     return () => unsubscribe();
   }, []);
   const onRefresh = React.useCallback(() => {
-    // setRefreshing(true);
+    setRefreshing(true);
+    console.log('call this***************')
     pagination.skip = staticValues.skip;
     pagination.limit = staticValues.limit;
     pagination.totalRecords = staticValues.totalRecords;
@@ -127,7 +129,7 @@ const {city, location, error} = useLocation()
   const getAllPosts = () => {
     console.log({selectedCityData, paramsValues, currentCity:city})
     pagination.isLoading = true;
-  
+    setIsLoading(true);
     let url = {
       skip: pagination.skip,
       limit: pagination.limit,
@@ -265,6 +267,7 @@ const {city, location, error} = useLocation()
       flashListRef.current?.removeAllListeners?.();
     };
   }, []);
+
   useEffect(() => {
     if (reelIndex == 0 && postArray?.length > 0) {
       flashListRef.current.scrollToOffset({animated: true, offset: 0});
@@ -274,7 +277,7 @@ const {city, location, error} = useLocation()
   const _renderReels = useCallback(
     ({item, index}) => {
       return (
-        <View style={styles.cardContainer} key={index}>
+        <View style={[styles.cardContainer,{height:screenHeight}]} key={index}>
           <ReelCard
             idx={index}
             screen={'Home'}
@@ -288,6 +291,7 @@ const {city, location, error} = useLocation()
             onMenuClick={() => menuSheetRef.current?.show()}
             onShareClick={() => shareSheetRef.current?.show()}
             isItemOnFocus={currentItemIndex == index && isOnFocusItem}
+            screenHeight={screenHeight}
           />
         </View>
       );
@@ -295,8 +299,8 @@ const {city, location, error} = useLocation()
     [postArray, currentItemIndex, isOnFocusItem],
   );
   const getItemLayout = (data, index) => ({
-    length: HEIGHT, // Replace with your item height
-    offset: HEIGHT * index,
+    length: screenHeight,
+    offset: screenHeight * index,
     index,
   });
 
@@ -393,7 +397,7 @@ const {city, location, error} = useLocation()
   // Show loader
   <View style={{
     alignItems: 'center',
-    height: HEIGHT / 1.2,
+    height: screenHeight / 1.2,
     justifyContent: 'center',
   }}>
     <ActivityIndicator size="large" color={colors.white} />
@@ -404,7 +408,7 @@ const {city, location, error} = useLocation()
   <View
   style={{
     alignItems: 'center',
-    height: HEIGHT,
+    height: screenHeight,
     justifyContent: 'center',
   }}>
   <FlatList
@@ -431,6 +435,8 @@ const {city, location, error} = useLocation()
     contentContainerStyle={{
       alignSelf: 'center',
     }}
+    keyExtractor={(item, index) => item.id?.toString() || index.toString()}
+    extraData={screenHeight}
   />
 </View>
 ) : (
@@ -558,7 +564,7 @@ const {city, location, error} = useLocation()
 
 const styles = StyleSheet.create({
   cardContainer: {
-    height: HEIGHT,
+    // height: HEIGHT,
     backgroundColor: colors.gray,
   },
 

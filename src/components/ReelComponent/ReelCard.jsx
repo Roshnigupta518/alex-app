@@ -20,6 +20,7 @@ const ReelCard = ({
   onShareClick = () => {},
   onMenuClick = () => {},
   onFollowingUserClick = () => {},
+  screenHeight
 }) => {
   const userInfo = useSelector(state => state.UserInfoSlice.data);
   const shouldMute = useSelector(state => state.VideoMuteSlice.isMute);
@@ -78,24 +79,25 @@ const ReelCard = ({
   };
 
   return (
-    <View style={styles.container} key={idx}>
+    <View style={[styles.container,{height:screenHeight}]} key={idx}>
       {data?.postData?.post?.mimetype == 'video/mp4' ? (
         <VideoPlayer
           url={data?.postData?.post?.data}
           shouldPlay={shouldPlay}
           onMuteClick={changeMuteState}
           screen={screen}
+          screenHeight = {screenHeight}
         />
       ) : (
         <Image
           source={{
             uri: data?.postData?.post?.data,
           }}
-          style={styles.uploadedImageStyle(screen == 'Reel')}
+          style={[styles.uploadedImageStyle(screen == 'Reel'),{height:screenHeight}]}
         />
       )}
 
-      <View style={styles.firstRowContainer(screen == 'Reel')}>
+      <View style={[styles.firstRowContainer(screen == 'Reel')]}>
         {/* First Profile View Row */}
         <View style={styles.subFirstRowContiner}>
           <View style={styles.userImageContainer}>

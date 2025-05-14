@@ -9,6 +9,7 @@ export default function VideoPlayer({
   shouldPlay,
   screen = '',
   onMuteClick = () => {},
+  screenHeight
 }) {
   const video = React.useRef(null);
   const shouldMute = useSelector(state => state.VideoMuteSlice.isMute);
@@ -22,12 +23,13 @@ export default function VideoPlayer({
     <View style={styles.container}>
       <TouchableOpacity
         activeOpacity={1}
-        style={{width: '100%', height: '100%', alignItems: 'center'}}
+        style={{ width:WIDTH, height: screenHeight, alignItems: 'center'}}
         onPress={onMuteClick}>
         {url != '' && (
           <Video
             ref={video}
-            style={styles.video(screen == 'Reel')}
+            // style={styles.video(screen == 'Reel')}
+            style={{width:WIDTH, height: screenHeight}}
             source={{
               uri: url,
             }}
@@ -45,13 +47,13 @@ export default function VideoPlayer({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: colors.black,
-    alignItems: 'center',
+    // flex: 1,
+    // backgroundColor: colors.black,
+    // alignItems: 'center',
   },
   video: condition => {
     return {
-      flex: 1,
+      // flex: 1,
 
       width: WIDTH,
       height: HEIGHT,

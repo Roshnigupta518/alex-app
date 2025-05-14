@@ -3,7 +3,7 @@
     "project_number": "859541725168",
     "firebase_url": "https://tourism-c262b-default-rtdb.firebaseio.com",
     "project_id": "tourism-c262b",
-    "storage_bucket": "tourism-c262b.appspot.com"
+    "storage_bucket": "tourism-c262b.firebasestorage.app"
   },
   "client": [
     {
@@ -36,6 +36,14 @@
           "android_info": {
             "package_name": "com.alexsocial",
             "certificate_hash": "04ca57925cfb64cdc593d283af734ed6541debaa"
+          }
+        },
+        {
+          "client_id": "859541725168-nf9gaam64vs06nkjkv6fq08bjlt1ehak.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alexsocial",
+            "certificate_hash": "7dbe4f0c25feff67fb058de498a814c0aa0ed413"
           }
         },
         {
