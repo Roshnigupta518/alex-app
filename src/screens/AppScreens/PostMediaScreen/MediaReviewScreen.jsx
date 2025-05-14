@@ -422,6 +422,7 @@ const MediaReviewScreen = ({navigation, route}) => {
                   : 'Post Video'
               }
               isLoading={isLoading}
+              disabled={isLoading}
               onPress={validateFields}
             />
           </View>
