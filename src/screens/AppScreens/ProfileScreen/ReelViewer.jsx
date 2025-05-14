@@ -13,7 +13,9 @@ import FollowUserSheet from '../../../components/ActionSheetComponent/FollowUser
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../../components/NoInternetModal';
 import crashlytics from '@react-native-firebase/crashlytics';
+
 const ReelViewer = ({navigation, route}) => {
+ 
   const flashListRef = useRef();
   const deleteCommentRef = useRef();
   const shareSheetRef = useRef();
@@ -89,6 +91,7 @@ const ReelViewer = ({navigation, route}) => {
             onMenuClick={() => menuSheetRef.current?.show()}
             onShareClick={() => shareSheetRef.current?.show()}
             isItemOnFocus={currentItemIndex == index && isOnFocusItem}
+            screenHeight={HEIGHT}
           />
         </View>
       );
