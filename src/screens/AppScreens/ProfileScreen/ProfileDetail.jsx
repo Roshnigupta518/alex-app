@@ -53,7 +53,7 @@ const ProfileDetail = ({navigation, route}) => {
     return () => unsubscribe();
   }, []);
   const getUserProfile = () => {
-    console.log('ser', userInfo);
+    // console.log('ser', userInfo);
     GetUserProfileRequest(route?.params?.userId || userInfo?.id)
       .then(res => {
         setUserDetails(res?.result);

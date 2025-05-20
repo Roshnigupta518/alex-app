@@ -111,4 +111,25 @@ export const RegexType = {
     typeError:
       'Please enter valid feedback message and text length should be in between of 5 to 400.',
   },
+
+  instagram:{
+    regex: /^https?:\/\/(www\.)?instagram\.com\/[A-Za-z0-9._%-]+\/?$/,
+    typeError: 'Please enter valid instagram Url',
+  },
+  twitter:{
+    regex: /^https?:\/\/(www\.)?twitter\.com\/[A-Za-z0-9_]+\/?$/,
+    typeError: 'Please enter valid twitter Url',
+  },
+  youtube:{
+    regex: /^https?:\/\/(www\.)?youtube\.com\/(@[A-Za-z0-9_-]+|(user|channel|c)\/[A-Za-z0-9_-]+)(\?.*)?\/?$/,
+    typeError: 'Please enter valid youtube Url',
+  },
+  facebook:{
+    regex: /^https?:\/\/(www\.)?facebook\.com\/[A-Za-z0-9.]+\/?$/,
+    typeError: 'Please enter valid facebook Url',
+  },
+  tiktok:{
+    regex:  /^https?:\/\/(www\.)?tiktok\.com\/@?[A-Za-z0-9._]+\/?$/,
+    typeError: 'Please enter valid tiktok Url',
+  }
 };
