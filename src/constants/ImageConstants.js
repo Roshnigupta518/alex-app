@@ -72,6 +72,16 @@ const ImageConstants = {
   wallet: require('./../assets/images/wallet.png'),
   business_logo: require('./../assets/images/business_logo.png'),
   apple: require('./../assets/images/apple.png'),
+  settings : require('./../assets/images/setting.png'),
+  edit : require('./../assets/images/write.png'),
+
+  tiktok: require('./../assets/images/tik-tok.png'),
+  twitter: require('./../assets/images/twitter.png'),
+  like : require('./../assets/images/like.png'),
+  instagram : require('./../assets/images/instagram.png'),
+
+  facebook : require('./../assets/images/communication.png'),
+  youtube : require('./../assets/images/youtube.png'),
 };
 
 export default ImageConstants;

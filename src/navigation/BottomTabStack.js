@@ -4,7 +4,7 @@ import ChatScreen from '../screens/AppScreens/ChatScreen';
 import PostMediaScreen from '../screens/AppScreens/PostMediaScreen';
 import ExploreScreen from '../screens/AppScreens/ExploreScreen';
 import BusinessScreen from '../screens/AppScreens/BusinessScreen';
-import ProfileScreen from '../screens/AppScreens/ProfileScreen';
+import ProfileRedirect from '../screens/AppScreens/ProfileScreen/ProfileRedirect';
 import CustomBottomTab from './CustomBottomTab';
 import BusinessUserListingScreen from '../screens/BusinessUserScreen/BusinessListing';
 import EventUserListingScreen from '../screens/BusinessUserScreen/EventListing';
@@ -31,7 +31,8 @@ function BottomTabStack() {
         component={EventUserListingScreen}
       />
 
-      <Tab.Screen name="ProfileScreen" component={ProfileScreen} />
+      <Tab.Screen name="ProfileScreen" component={ProfileRedirect}/>
+    
     </Tab.Navigator>
   );
 }

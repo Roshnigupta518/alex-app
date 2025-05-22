@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -7,13 +7,13 @@ import {
   TouchableOpacity,
   Platform,
   StyleSheet,
-  FlatList,
+  FlatList, Linking
 } from 'react-native';
-import {colors, fonts, HEIGHT, WIDTH, wp} from '../../../constants';
+import { colors, fonts, HEIGHT, WIDTH, wp } from '../../../constants';
 import BackHeader from '../../../components/BackHeader';
 import ImageConstants from '../../../constants/ImageConstants';
-import {useSelector} from 'react-redux';
-import {useIsFocused} from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { useIsFocused } from '@react-navigation/native';
 import {
   GetUserPostsRequest,
   GetUserProfileRequest,
@@ -21,13 +21,26 @@ import {
 import Toast from '../../../constants/Toast';
 import NoInternetModal from '../../../components/NoInternetModal';
 import NetInfo from '@react-native-community/netinfo';
-const ProfileDetail = ({navigation, route}) => {
+import TabsHeader from '../../../components/TabsHeader';
+import { formatCount } from '../../../validation/helper';
+import MediaItem from '../../../components/GridView';
+import NotFoundAnime from '../../../components/NotFoundAnime';
+
+const ProfileDetail = ({ navigation, route }) => {
   const isFocused = useIsFocused();
 
   const userInfo = useSelector(state => state.UserInfoSlice.data);
   const [userDetails, setUserDetails] = useState(null);
   const [postData, setPostData] = useState([]);
   const [isInternetConnected, setIsInternetConnected] = useState(true);
+  const [activeTab, setActiveTab] = useState('photo');
+  const [isLoading, setIsLoading] = useState(false)
+
+  const tabList = [
+    { key: 'photo', label: 'Photos' },
+    { key: 'video', label: 'Videos' },
+  ];
+
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       if (state.isConnected !== null && state.isConnected === false) {
@@ -64,55 +77,56 @@ const ProfileDetail = ({navigation, route}) => {
   };
 
   const getUsersPosts = async () => {
+    setIsLoading(true)
     GetUserPostsRequest(route?.params?.userId || userInfo?.id)
       .then(res => {
         setPostData(res?.result);
+        setIsLoading(false)
       })
       .catch(err => {
         console.log('err', err);
         Toast.error('Post', err?.message);
+        setIsLoading(false)
       });
   };
 
-  const RenderUserPost = ({item, index}) => {
+  const renderTabContent = () => {
+    let filteredData = [];
+
+    if (activeTab === 'photo') {
+      filteredData = postData.filter(item => item?.postData?.post?.mimetype !== 'video/mp4');
+    } else if (activeTab === 'video') {
+      filteredData = postData.filter(item => item?.postData?.post?.mimetype === 'video/mp4');
+    }
+
+    if (filteredData.length === 0) {
+      return (
+        <NotFoundAnime isLoading={isLoading} />
+      );
+    }
+
     return (
-      <TouchableOpacity
-        onPress={() =>
-          navigation.navigate('ReelViewer', {
-            data: postData,
-            currentIndex: index,
-          })
-        }>
-        {item?.postData?.post?.mimetype != 'video/mp4' ? (
-          <Image
-            source={{uri: item?.postData?.post?.data}}
-            style={styles.userPostImage}
+      <FlatList
+        data={filteredData}
+        renderItem={({ item, index }) => (
+          <MediaItem
+            item={item}
+            onPress={() =>
+              navigation.navigate('ReelViewer', {
+                data: filteredData,
+                currentIndex: index,
+              })
+            }
+            index={index}
           />
-        ) : (
-          <View style={styles.videoContainer}>
-            <View style={styles.playIconStyle}>
-              <Image
-                source={ImageConstants.play}
-                style={{
-                  height: wp(60),
-                  width: wp(60),
-                  alignSelf: 'center',
-                }}
-              />
-            </View>
-            <Image
-              source={{uri: item?.postData?.post_thumbnail}}
-              style={{
-                height: 200,
-                width: WIDTH / 2.2,
-                borderRadius: 10,
-              }}
-            />
-          </View>
         )}
-      </TouchableOpacity>
+        numColumns={3}
+        keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={{ padding: 15 }}
+      />
     );
   };
+
 
   useEffect(() => {
     if (isFocused) {
@@ -124,87 +138,131 @@ const ProfileDetail = ({navigation, route}) => {
     getUsersPosts();
   }, []);
 
+  const openSocialLink = async (url) => {
+    try {
+      const supported = await Linking.canOpenURL(url);
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        console.warn("Don't know how to open URI: " + url);
+      }
+    } catch (error) {
+      console.error("An error occurred", error);
+    }
+  };
+
+
   return (
     <>
       <SafeAreaView style={styles.container}>
-        <BackHeader label="Profile Details" />
+        <BackHeader label="Profile Details"
+          onPress={() => navigation.navigate('HomeScreen')}
+          rightView={() => <TouchableOpacity onPress={() => navigation.navigate('Setting')} >
+            <Image source={ImageConstants.settings} style={styles.imgsty} />
+          </TouchableOpacity>}
+          profileEdit={true}
+          onEdit={() => navigation.navigate('EditProfileScreen')}
+        />
         <View
           style={{
             flex: 1,
           }}>
           <View style={styles.UserImageView}>
-            <Image
-              source={
-                userDetails?.profile_picture
-                  ? {uri: userDetails?.profile_picture}
-                  : ImageConstants.user
-              }
-              style={styles.userImagesStyle}
-            />
+            <View style={styles.wdh30}>
+              <Image
+                source={
+                  userDetails?.profile_picture
+                    ? { uri: userDetails?.profile_picture }
+                    : ImageConstants.user
+                }
+                style={styles.userImagesStyle}
+              />
+            </View>
 
-            <View style={{margin: 20}}>
-              <Text numberOfLines={2} style={styles.userNameStyle}>
-                {userDetails?.anonymous_name}
-              </Text>
+            <View style={styles.wdh70}>
+              <View style={styles.profileCounts}>
+                <View style={styles.wdh33}>
+                  <View>
+                    <Text style={styles.contentTextStyle}>{formatCount(userDetails?.post_count)}</Text>
+                    <Text style={styles.contentTitleStyle}>Posts</Text>
+                  </View>
 
-              {(route?.params?.userId == userInfo?.id ||
-                route?.params?.userId == undefined) && (
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('EditProfileScreen')}
-                  activeOpacity={0.8}
-                  style={styles.editProfileStyle}>
-                  <Text style={styles.editProfileTxt}>Edit Profile</Text>
+                </View>
+                <View style={styles.wdh33}>
+                  <View>
+                    <Text style={styles.contentTextStyle}>{formatCount(userDetails?.follower_count)}</Text>
+                    <Text style={styles.contentTitleStyle}>Followers</Text>
+                  </View>
+
+                </View>
+                <View style={styles.wdh33}>
+                  <View>
+                    <Text style={styles.contentTextStyle}>{formatCount(userDetails?.following_count)}</Text>
+                    <Text style={styles.contentTitleStyle}>Following</Text>
+                  </View>
+
+                </View>
+              </View>
+
+              <View style={[styles.profileCounts, { marginTop: 10 }]}>
+                <View style={styles.wdh33}>
+
+                  <View>
+                    <Text style={styles.contentTextStyle}>{formatCount(userDetails?.places_count)}</Text>
+                    <Text style={styles.contentTitleStyle}>Places</Text>
+                  </View>
+                </View>
+                <View style={styles.wdh33}>
+
+                  <View>
+                    <Text style={styles.contentTextStyle}>{formatCount(userDetails?.cityes_count)}</Text>
+                    <Text style={styles.contentTitleStyle}>cities</Text>
+                  </View>
+                </View>
+                <View style={styles.wdh33}>
+
+                  <View>
+                    <Text style={styles.contentTextStyle}>{formatCount(userDetails?.countries_count)}</Text>
+                    <Text style={styles.contentTitleStyle}>Countries</Text>
+                  </View>
+                </View>
+              </View>
+
+              <View style={[styles.profileCounts, { marginTop: 10, justifyContent: 'space-evenly' }]}>
+                <TouchableOpacity onPress={() => openSocialLink(userDetails?.socialLinks?.tiktok)}>
+                  <Image source={ImageConstants.tiktok} style={styles.imgsty} />
                 </TouchableOpacity>
-              )}
+
+                <TouchableOpacity onPress={() => openSocialLink(userDetails?.socialLinks?.twitter)}>
+                  <Image source={ImageConstants.twitter} style={styles.imgsty} />
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => openSocialLink(userDetails?.socialLinks?.instagram)}>
+                  <Image source={ImageConstants.instagram} style={styles.imgsty} />
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => openSocialLink(userDetails?.socialLinks?.facebook)}>
+                  <Image source={ImageConstants.facebook} style={styles.imgsty} />
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => openSocialLink(userDetails?.socialLinks?.youtube)}>
+                  <Image source={ImageConstants.youtube} style={styles.imgsty} />
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
 
-          <View style={styles.numberContentContainer}>
-            <View style={styles.contentView}>
-              <Text style={styles.contentTextStyle}>
-                {userDetails?.post_count}
-              </Text>
-              <Text style={styles.contentTitleStyle}>Posts</Text>
-            </View>
-            <Image source={ImageConstants.verticalLine} />
 
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('FollowUsers', {
-                  id: userInfo?.id,
-                  type: 'followers',
-                })
-              }
-              style={styles.contentView}>
-              <Text style={styles.contentTextStyle}>
-                {userDetails?.follower_count}
-              </Text>
-              <Text style={styles.contentTitleStyle}>Followers</Text>
-            </TouchableOpacity>
-            <Image source={ImageConstants.verticalLine} />
-
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('FollowUsers', {
-                  id: userInfo?.id,
-                  type: 'following',
-                })
-              }
-              style={styles.contentView}>
-              <Text style={styles.contentTextStyle}>
-                {userDetails?.following_count}
-              </Text>
-              <Text style={styles.contentTitleStyle}>Following</Text>
-            </TouchableOpacity>
+          <View style={{ paddingHorizontal: 20 }}>
+            <Text style={[styles.contentTextStyle, { textAlign: 'left' }]}>{userDetails?.name}</Text>
+            {(userDetails?.city || userDetails?.bio) &&
+              <Text style={[styles.contentTitleStyle, { textAlign: 'left' }]}>{userDetails?.city}{'\n'}
+                {userDetails?.bio}
+              </Text>}
           </View>
 
-          <View style={styles.listViewStyle}>
-            <FlatList
-              data={postData}
-              renderItem={RenderUserPost}
-              numColumns={2}
-            />
-          </View>
+          <TabsHeader activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabList} />
+          {renderTabContent()}
         </View>
       </SafeAreaView>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
@@ -273,13 +331,13 @@ const styles = StyleSheet.create({
   UserImageView: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: wp(40),
+    marginVertical: wp(10),
     marginHorizontal: wp(20),
   },
 
   userImagesStyle: {
-    height: wp(100),
-    width: wp(100),
+    height: wp(120),
+    width: wp(120),
     borderRadius: 100,
   },
 
@@ -314,7 +372,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     borderRadius: 10,
     shadowColor: colors.black,
-    shadowOffset: {height: 1, width: 1},
+    shadowOffset: { height: 1, width: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 20,
     elevation: 2,
@@ -322,14 +380,16 @@ const styles = StyleSheet.create({
 
   contentTextStyle: {
     fontFamily: fonts.semiBold,
-    fontSize: wp(20),
+    fontSize: wp(14),
     color: colors.black,
+    textAlign: 'center'
   },
 
   contentTitleStyle: {
     fontFamily: fonts.regular,
-    fontSize: wp(17),
+    fontSize: wp(12),
     color: colors.gray,
+    textAlign: 'center'
   },
 
   contentView: {
@@ -354,6 +414,15 @@ const styles = StyleSheet.create({
     width: WIDTH / 2.1,
     zIndex: 2,
   },
+  imgsty: { width: wp(20), height: wp(20) },
+  profileCounts: {
+    flexDirection: 'row',
+    marginLeft: 15
+  },
+  wdh70: { width: '70%' },
+  wdh33: { width: "33%" },
+  wdh30: { width: "30%" }
+
 });
 
 export default ProfileDetail;

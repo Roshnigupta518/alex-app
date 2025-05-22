@@ -11,17 +11,23 @@ import {colors, fonts, wp} from '../constants';
 import ImageConstants from '../constants/ImageConstants';
 import {useNavigation} from '@react-navigation/native';
 
-const BackHeader = ({label = '', rightView = () => {}, labelStyle}) => {
+const BackHeader = ({label = '',rightView = () => {}, labelStyle, onPress,profileEdit,onEdit, }) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={() => navigation.goBack()}
+        onPress={() => {
+          if(onPress){
+            onPress()
+          }else{
+          navigation.goBack()
+        }
+        }}
         activeOpacity={0.8}
         style={styles.buttonViewStyle}>
         <Image source={ImageConstants.leftArrow} />
       </TouchableOpacity>
-
+    <View style={{flexDirection:'row'}}>
       <Text
         style={[
           {
@@ -33,6 +39,12 @@ const BackHeader = ({label = '', rightView = () => {}, labelStyle}) => {
         ]}>
         {label}
       </Text>
+      {profileEdit&&
+      <TouchableOpacity onPress={onEdit}>
+      <Image source={ImageConstants.edit} style={{width:wp(20), height:wp(20), marginLeft:5}} />
+      </TouchableOpacity>
+      }
+      </View>
 
       <View style={styles.rightViewStyle}>{rightView && rightView()}</View>
     </View>

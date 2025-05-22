@@ -29,6 +29,8 @@ import { userDataAction } from '../../../redux/Slices/UserInfoSlice';
 import Storage from '../../../constants/Storage';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../../components/NoInternetModal';
+import TabsHeader from '../../../components/TabsHeader';
+
 const EditProfileScreen = ({ navigation, route }) => {
   const mediaRef = useRef(null);
   const dispatch = useDispatch();
@@ -36,6 +38,7 @@ const EditProfileScreen = ({ navigation, route }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [imageData, setImageData] = useState(null);
   const [userImage, setUserImage] = useState(userInfo?.profile_picture || '');
+  
   const [state, setState] = useState({
     screenName: userInfo?.anonymous_name || '',
     userName: userInfo?.name || '',
@@ -55,6 +58,11 @@ const EditProfileScreen = ({ navigation, route }) => {
   });
   const [isInternetConnected, setIsInternetConnected] = useState(true);
   const [activeTab, setActiveTab] = useState('account');
+
+  const tabList = [
+    { key: 'account', label: 'Account Info' },
+    { key: 'social', label: 'Social Media' },
+  ];
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -424,20 +432,8 @@ const EditProfileScreen = ({ navigation, route }) => {
             </View>
           </View>
 
-          <View style={styles.tabsContainer}>
-            {['account', 'social'].map(tab => {
-              const isActive = activeTab === tab;
-              return (
-                <TouchableOpacity key={tab} onPress={() => setActiveTab(tab)} style={styles.tabWrapper}>
-                  <View style={[styles.tabItem, { borderBottomColor: isActive ? colors.primaryColor : colors.black }]}>
-                    <Text style={[styles.tabText, isActive && styles.activeTabText]}>
-                      {tab === 'account' ? 'Account Info' : 'Social Media'}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
+       
+           <TabsHeader activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabList} />
 
           {renderTabContent()}
 
@@ -597,36 +593,6 @@ const styles = StyleSheet.create({
     width: WIDTH / 2.1,
     zIndex: 2,
   },
-  tabsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: wp(20),
-    marginHorizontal: wp(20),
-  },
-
-  tabWrapper: {
-    flex: 1,
-    alignItems: 'center',
-  },
-
-  tabItem: {
-    // paddingBottom: wp(10),
-    borderBottomWidth: 3,
-    width: '100%',
-    alignItems: 'center',
-  },
-
-  tabText: {
-    fontFamily: fonts.semiBold,
-    fontSize: wp(12),
-    color: colors.black,
-  },
-
-  activeTabText: {
-    color: colors.black,
-  },
-
-
 });
 
 export default EditProfileScreen;

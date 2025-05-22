@@ -41,6 +41,8 @@ import ClaimBusinessScreen from '../screens/AppScreens/ClaimBusinessScreen';
 import GetAddress from '../screens/AppScreens/PostMediaScreen/GetAddress';
 import BusinessChildScreen from '../screens/AppScreens/BusinessScreen/BusinessChildScreen';
 import BusinessListWithChild from '../screens/AppScreens/BusinessScreen/BusinessListWithChild';
+import Setting from  '../screens/AppScreens/ProfileScreen/Setting'
+
 const Stack = createStackNavigator();
 
 function AppStack({isLoggedIn = false}) {
@@ -126,6 +128,7 @@ function AppStack({isLoggedIn = false}) {
         component={BusinessListWithChild}
       />
       <Stack.Screen name="GetAddress" component={GetAddress} />
+      <Stack.Screen name="Setting" component={Setting} />
     </Stack.Navigator>
   );
 }

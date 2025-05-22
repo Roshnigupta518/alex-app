@@ -8,7 +8,7 @@ import {
   Image,
 } from 'react-native';
 import {colors, fonts, HEIGHT, WIDTH, wp} from '../../../constants';
-import Storage from './../../../constants/Storage';
+import Storage from '../../../constants/Storage';
 import {userDataAction} from '../../../redux/Slices/UserInfoSlice';
 import {CommonActions} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -23,6 +23,7 @@ import NetInfo from '@react-native-community/netinfo';
 import {LoginManager, AccessToken, Settings} from 'react-native-fbsdk-next';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
+import BackHeader from '../../../components/BackHeader';
 
 const ProfileScreen = ({navigation}) => {
   const [isInternetConnected, setIsInternetConnected] = useState(true);
@@ -52,12 +53,12 @@ const ProfileScreen = ({navigation}) => {
   }, []);
 
   const profile_menu_list = [
-    {
-      icon: ImageConstants.profileicon,
-      name: 'Profile Detail',
-      screen: () => navigation.navigate('ProfileDetail'),
-      shouldShowActionIcon: true,
-    },
+    // {
+    //   icon: ImageConstants.profileicon,
+    //   name: 'Profile Detail',
+    //   screen: () => navigation.navigate('ProfileDetail'),
+    //   shouldShowActionIcon: true,
+    // },
     {
       icon: ImageConstants.save,
       name: 'Saved Post',
@@ -212,7 +213,8 @@ const ProfileScreen = ({navigation}) => {
           backgroundColor: colors.white,
           padding: wp(15),
         }}>
-        <View
+          <BackHeader label='Settings' />
+        {/* <View
           style={{
             marginHorizontal: wp(20),
           }}>
@@ -222,9 +224,9 @@ const ProfileScreen = ({navigation}) => {
               fontSize: wp(23),
               color: colors.black,
             }}>
-            Profile
+            Setting
           </Text>
-        </View>
+        </View> */}
 
         <View
           style={{
@@ -251,7 +253,7 @@ const ProfileScreen = ({navigation}) => {
         <SignOutSheet ref={signOutRef} onSuccess={LogoutUser} />
         <SwitchUserSheet
           ref={switchUserRef}
-          onActionDone={() => navigation.navigate('Home')}
+          onActionDone={() => navigation.navigate('HomeScreen')}
         />
       </SafeAreaView>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
