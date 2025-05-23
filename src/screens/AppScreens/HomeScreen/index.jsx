@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -10,20 +10,20 @@ import {
   Image,
   Text, Platform, PermissionsAndroid, AppState, ScrollView, Linking
 } from 'react-native';
-import {colors, fonts, HEIGHT, wp} from '../../../constants';
+import { colors, fonts, HEIGHT, wp } from '../../../constants';
 import ReelHeader from '../../../components/ReelComponent/ReelHeader';
 import ReelCard from '../../../components/ReelComponent/ReelCard';
-import {useIsFocused} from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import CommentListSheet from '../../../components/ActionSheetComponent/CommentListSheet';
-import {GetAllPostsRequest} from '../../../services/Utills';
+import { GetAllPostsRequest } from '../../../services/Utills';
 import Toast from '../../../constants/Toast';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ShareSheet from '../../../components/ActionSheetComponent/ShareSheet';
 import ReportActionSheet from '../../../components/ActionSheetComponent/ReportActionSheet';
 import ReportTypeOptionSheet from '../../../components/ActionSheetComponent/ReportTypeOptionSheet';
 import FollowUserSheet from '../../../components/ActionSheetComponent/FollowUserSheet';
 import DeleteCommentSheet from '../../../components/ActionSheetComponent/DeleteCommentSheet';
-import {ReelIndexAction} from '../../../redux/Slices/ReelIndexSlice';
+import { ReelIndexAction } from '../../../redux/Slices/ReelIndexSlice';
 import NoInternetModal from '../../../components/NoInternetModal';
 import NetInfo from '@react-native-community/netinfo';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -32,7 +32,7 @@ import { setCityAction } from '../../../redux/Slices/SelectedCitySlice';
 import useLocation from '../../../hooks/useLocation';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import DeviceInfo from 'react-native-device-info';
-import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 const staticValues = {
   skip: 0,
@@ -41,15 +41,15 @@ const staticValues = {
   currentTotalItems: 0,
   isLoading: false,
 };
-const HomeScreen = ({navigation, route}) => {
+const HomeScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const nearByType = useSelector(state => state.NearBySlice?.data);
   const selectedCityData = useSelector(state => state.SelectedCitySlice?.data);
   const reelIndex = useSelector(state => state.ReelIndexSlice?.data);
-  
+
   const tabBarHeight = useBottomTabBarHeight();
   const screenHeight = HEIGHT - tabBarHeight
-  
+
   const prevNearBy = useRef(nearByType);
   const flashListRef = useRef();
   const deleteCommentRef = useRef();
@@ -79,7 +79,7 @@ const HomeScreen = ({navigation, route}) => {
   });
   const [refreshing, setRefreshing] = React.useState(false);
   const [isInternetConnected, setIsInternetConnected] = useState(true);
-  const {city, location, error} = useLocation()
+  const { city, location, error } = useLocation()
 
 
   useEffect(() => {
@@ -116,29 +116,29 @@ const HomeScreen = ({navigation, route}) => {
     pagination.isLoading = staticValues.isLoading;
 
     // setPostArray([]);
-    if(selectedCityData?.locationType == 'current'){
+    if (selectedCityData?.locationType == 'current') {
       getAllPosts();
-    }else{
-    getAllPosts();
-  }
+    } else {
+      getAllPosts();
+    }
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
   }, [paramsValues, selectedCityData, city]);
 
   const getAllPosts = () => {
-    console.log({selectedCityData, paramsValues, currentCity:city})
+    console.log({ selectedCityData, paramsValues, currentCity: city })
     pagination.isLoading = true;
     setIsLoading(true);
     let url = {
       skip: pagination.skip,
       limit: pagination.limit,
     };
-    if(selectedCityData?.locationType == 'current' && city != null ){
-      Object.assign(url, {city: city});
+    if (selectedCityData?.locationType == 'current' && city != null) {
+      Object.assign(url, { city: city });
       console.log('current location data')
-    }else if (paramsValues?.location_type == 'city') {
-      Object.assign(url, {city: paramsValues?.city});
+    } else if (paramsValues?.location_type == 'city') {
+      Object.assign(url, { city: paramsValues?.city });
       console.log('selectedCity data')
     } else if (paramsValues?.location_type == 'nearme') {
       console.log('nearme data')
@@ -155,7 +155,7 @@ const HomeScreen = ({navigation, route}) => {
     GetAllPostsRequest(url)
       .then(res => {
         setPostArray(prevPosts => [...prevPosts, ...res?.result]);
-        console.log({length: res})
+        console.log({ length: res })
         currentTotalItems = postArray?.length + (res?.result?.length || 0);
         pagination.totalRecords = res?.totalrecord;
 
@@ -166,8 +166,8 @@ const HomeScreen = ({navigation, route}) => {
             }
           });
         }
-       setIsLoading(false)
-       setRefreshing(false)
+        setIsLoading(false)
+        setRefreshing(false)
         // flashListRef.current.scrollToOffset({animated: true, offset: 0});
       })
       .catch(err => {
@@ -184,7 +184,7 @@ const HomeScreen = ({navigation, route}) => {
       });
   };
 
-  const _onViewableItemsChanged = ({viewableItems}) => {
+  const _onViewableItemsChanged = ({ viewableItems }) => {
     if (viewableItems[0]) {
       setCurrentItemIndex(viewableItems[0]?.index);
       dispatch(ReelIndexAction(viewableItems[0]?.index));
@@ -224,12 +224,12 @@ const HomeScreen = ({navigation, route}) => {
         onRefresh();
       } else if (postArray?.length == 0) {
         console.log('isfouces');
-        if(city){
-        getAllPosts(); 
-      }
-      if(error){
-        setIsLoading(false)
-      }
+        if (city) {
+          getAllPosts();
+        }
+        if (error) {
+          setIsLoading(false)
+        }
       }
       setIsOnFocusItem(true);
     }
@@ -246,7 +246,7 @@ const HomeScreen = ({navigation, route}) => {
             onPress: () => null,
             style: 'cancel',
           },
-          {text: 'YES', onPress: () => BackHandler.exitApp()},
+          { text: 'YES', onPress: () => BackHandler.exitApp() },
         ],
       );
       return true;
@@ -260,7 +260,7 @@ const HomeScreen = ({navigation, route}) => {
     return () => backHandler.remove();
   }, []);
   useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener(state => {});
+    const unsubscribe = NetInfo.addEventListener(state => { });
 
     return () => {
       unsubscribe();
@@ -270,14 +270,14 @@ const HomeScreen = ({navigation, route}) => {
 
   useEffect(() => {
     if (reelIndex == 0 && postArray?.length > 0) {
-      flashListRef.current.scrollToOffset({animated: true, offset: 0});
+      flashListRef.current.scrollToOffset({ animated: true, offset: 0 });
     }
   }, [reelIndex]);
 
   const _renderReels = useCallback(
-    ({item, index}) => {
+    ({ item, index }) => {
       return (
-        <View style={[styles.cardContainer,{height:screenHeight}]} key={index}>
+        <View style={[styles.cardContainer, { height: screenHeight }]} key={index}>
           <ReelCard
             idx={index}
             screen={'Home'}
@@ -312,173 +312,106 @@ const HomeScreen = ({navigation, route}) => {
           onSearchClick={() => navigation.navigate('SearchScreen')}
           onNearByClick={() => navigation.navigate('NearByScreen')}
           notificationClick={() => navigation.navigate('NotificationScreen')}
-          onTempaClick={()=>{
-            if(error){
-            }else{
-            setIsLoading(true)
-            dispatch(setCityAction({locationType:'current'}))
-          }
+          onTempaClick={() => {
+            if (error) {
+            } else {
+              setIsLoading(true)
+              dispatch(setCityAction({ locationType: 'current' }))
+            }
           }}
           selectedCity={selectedCityData?.locationType}
           currentCity={city}
         />
-        {/* {(postArray?.length == 0 && isLoading) && (
-          <View
-            style={{
-              alignItems: 'center',
-              height: HEIGHT / 1.2,
-              justifyContent: 'center',
-            }}>
-            <ActivityIndicator size={'large'} color={colors.white} />
-          </View>
-        )}
 
-        {(postArray?.length > 0) ? (
-          <View
-            style={{
+
+        <ScrollView contentContainerStyle={{ flex: 1 }} nestedScrollEnabled={true} refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
+          {(isLoading && postArray?.length == 0) ? (
+            // Show loader
+            <View style={{
               alignItems: 'center',
-              height: HEIGHT,
+              height: screenHeight / 1.2,
               justifyContent: 'center',
             }}>
-            <FlatList
-              refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-              }
-              nestedScrollEnabled={true}
-              ref={flashListRef}
-              data={postArray}
-              renderItem={_renderReels}
-              showsVerticalScrollIndicator={false}
-              initialScrollIndex={0}
-              disableIntervalMomentum
-              onViewableItemsChanged={_onViewableItemsChanged}
-              viewabilityConfig={_viewabilityConfig}
-              estimatedItemSize={2}
-              pagingEnabled
-              initialNumToRender={2}
-              removeClippedSubviews={true}
-              windowSize={5}
-              maxToRenderPerBatch={5}
-              getItemLayout={getItemLayout}
-              contentInset={{top: 0, bottom: 0, left: 0, right: 0}}
-              contentContainerStyle={{
-                alignSelf: 'center',
-              }}
-            />
-          </View>
-        ) : (
-          <View
-            style={{
+              <ActivityIndicator size="large" color={colors.white} />
+            </View>
+
+          ) : postArray?.length > 0 ? (
+            // Show post list
+            <View
+              style={{
+                alignItems: 'center',
+                height: screenHeight,
+                justifyContent: 'center',
+              }}>
+              <FlatList
+                refreshControl={
+                  <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }
+                nestedScrollEnabled={true}
+                ref={flashListRef}
+                data={postArray}
+                renderItem={_renderReels}
+                showsVerticalScrollIndicator={false}
+                initialScrollIndex={0}
+                disableIntervalMomentum
+                onViewableItemsChanged={_onViewableItemsChanged}
+                viewabilityConfig={_viewabilityConfig}
+                estimatedItemSize={2}
+                pagingEnabled
+                initialNumToRender={2}
+                removeClippedSubviews={true}
+                windowSize={5}
+                maxToRenderPerBatch={5}
+                getItemLayout={getItemLayout}
+                contentInset={{ top: 0, bottom: 0, left: 0, right: 0 }}
+                contentContainerStyle={{
+                  alignSelf: 'center',
+                }}
+                keyExtractor={(item, index) => item.id?.toString() || index.toString()}
+                extraData={screenHeight}
+              />
+            </View>
+          ) : (
+            // No posts found view
+            <View style={{
               flex: 1,
               backgroundColor: colors.black,
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-              {(!isLoading && postArray?.length == 0&& city != null)&&
-            <Text onPress={()=>{
-              if(selectedCityData?.locationType == 'current'){
-                navigation.navigate('PostMediaScreen')
+              {city != null ? (
+                <Text
+                  onPress={() => {
+                    if (selectedCityData?.locationType === 'current') {
+                      navigation.navigate('PostMediaScreen');
+                    }
+                  }}
+                  style={{
+                    fontFamily: fonts.bold,
+                    fontSize: wp(16),
+                    color: colors.white,
+                  }}>
+                  {selectedCityData?.locationType === 'current'
+                    ? 'Be the first one to post in this city'
+                    : 'No post found!'}
+                </Text>
+              ) :
+
+                <Text
+                  style={{
+                    fontFamily: fonts.bold,
+                    fontSize: wp(16),
+                    color: colors.white,
+                  }}>
+                  {selectedCityData.locationType == 'current' && error}
+                </Text>
               }
-            }}
-              style={{
-                fontFamily: fonts.bold,
-                fontSize: wp(16),
-                color: colors.white,
-              }}>
-              {(selectedCityData?.locationType == 'current' )? 'Be the first one to post in this city' : 'No post found!'}
-            </Text>}
-          </View>
-        )} */}
+            </View>
+          )}
 
-<ScrollView contentContainerStyle={{flex:1}} nestedScrollEnabled={true}  refreshControl={
-      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-    }>
-{(isLoading && postArray?.length == 0) ? (
-  // Show loader
-  <View style={{
-    alignItems: 'center',
-    height: screenHeight / 1.2,
-    justifyContent: 'center',
-  }}>
-    <ActivityIndicator size="large" color={colors.white} />
-  </View>
-  
-) : postArray?.length > 0 ? (
-  // Show post list
-  <View
-  style={{
-    alignItems: 'center',
-    height: screenHeight,
-    justifyContent: 'center',
-  }}>
-  <FlatList
-    refreshControl={
-      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-    }
-    nestedScrollEnabled={true}
-    ref={flashListRef}
-    data={postArray}
-    renderItem={_renderReels}
-    showsVerticalScrollIndicator={false}
-    initialScrollIndex={0}
-    disableIntervalMomentum
-    onViewableItemsChanged={_onViewableItemsChanged}
-    viewabilityConfig={_viewabilityConfig}
-    estimatedItemSize={2}
-    pagingEnabled
-    initialNumToRender={2}
-    removeClippedSubviews={true}
-    windowSize={5}
-    maxToRenderPerBatch={5}
-    getItemLayout={getItemLayout}
-    contentInset={{top: 0, bottom: 0, left: 0, right: 0}}
-    contentContainerStyle={{
-      alignSelf: 'center',
-    }}
-    keyExtractor={(item, index) => item.id?.toString() || index.toString()}
-    extraData={screenHeight}
-  />
-</View>
-) : (
-  // No posts found view
-  <View style={{
-    flex: 1,
-    backgroundColor: colors.black,
-    justifyContent: 'center',
-    alignItems: 'center',
-  }}>
-    {city != null ? (
-      <Text
-        onPress={() => {
-          if (selectedCityData?.locationType === 'current') {
-            navigation.navigate('PostMediaScreen');
-          }
-        }}
-        style={{
-          fontFamily: fonts.bold,
-          fontSize: wp(16),
-          color: colors.white,
-        }}>
-        {selectedCityData?.locationType === 'current'
-          ? 'Be the first one to post in this city'
-          : 'No post found!'}
-      </Text>
-    ):
-
-    <Text
-       
-    style={{
-      fontFamily: fonts.bold,
-      fontSize: wp(16),
-      color: colors.white,
-    }}>
-    {selectedCityData.locationType == 'current' && error}
-  </Text>
-    }
-  </View>
-)}
-
-</ScrollView>
+        </ScrollView>
 
         {/* Comment List Screen */}
         <CommentListSheet

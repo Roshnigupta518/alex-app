@@ -25,6 +25,8 @@ const ReelCard = ({
   const userInfo = useSelector(state => state.UserInfoSlice.data);
   const shouldMute = useSelector(state => state.VideoMuteSlice.isMute);
 
+  console.log({screenHeight})
+
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [isLiked, setIsLiked] = useState(data?.isLiked || false);

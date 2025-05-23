@@ -113,23 +113,23 @@ export const RegexType = {
   },
 
   instagram:{
-    regex: /^https?:\/\/(www\.)?instagram\.com\/[A-Za-z0-9._%-]+\/?$/,
+    regex: /^https?:\/\/(www\.)?instagram\.com\/[A-Za-z0-9._%-]+\/?(?:\?.*)?$/,
     typeError: 'Please enter valid instagram Url',
   },
   twitter:{
-    regex: /^https?:\/\/(www\.)?twitter\.com\/[A-Za-z0-9_]+\/?$/,
+    regex: /^https?:\/\/(www\.)?(twitter\.com|x\.com)\/[A-Za-z0-9_]+\/?(?:\?.*)?$/,
     typeError: 'Please enter valid twitter Url',
   },
   youtube:{
-    regex: /^https?:\/\/(www\.)?youtube\.com\/(@[A-Za-z0-9_-]+|(user|channel|c)\/[A-Za-z0-9_-]+)(\?.*)?\/?$/,
+    regex: /^https?:\/\/(www\.)?youtube\.com\/@[\w.-]+\/?(?:\?.*)?$/,
     typeError: 'Please enter valid youtube Url',
   },
   facebook:{
-    regex: /^https?:\/\/(www\.)?facebook\.com\/[A-Za-z0-9.]+\/?$/,
+    regex: /^https?:\/\/(www\.)?facebook\.com\/[A-Za-z0-9.]+\/?(?:\?.*)?$/,
     typeError: 'Please enter valid facebook Url',
   },
   tiktok:{
-    regex:  /^https?:\/\/(www\.)?tiktok\.com\/@?[A-Za-z0-9._]+\/?$/,
+    regex: /^https?:\/\/(www\.)?tiktok\.com\/@[\w._]+\/?(?:\?.*)?$/,
     typeError: 'Please enter valid tiktok Url',
   }
 };

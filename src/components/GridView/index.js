@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { Image, TouchableOpacity, StyleSheet, View } from 'react-native';
 import ImageConstants from '../../constants/ImageConstants';
 import { wp, WIDTH, colors } from '../../constants';
 
@@ -18,19 +18,16 @@ const MediaItem = ({ item, size, onPress, index }) => {
                         <Image
                             source={ImageConstants.play}
                             style={{
-                                height: wp(60),
-                                width: wp(60),
+                                height: wp(25),
+                                width: wp(25),
                                 alignSelf: 'center',
                             }}
                         />
                     </View>
                     <Image
                         source={{ uri: item?.postData?.post_thumbnail }}
-                        style={{
-                            height: 200,
-                            width: WIDTH / 2.2,
-                            borderRadius: 10,
-                        }}
+                        style={ styles.userPostImage
+                    }
                     />
                 </View>
             )}
@@ -49,16 +46,16 @@ const styles = StyleSheet.create({
         margin: 4,
       },
       videoContainer: {
-        padding: 4,
-        borderWidth: 1,
-        borderColor: colors.primaryColor,
-        borderRadius: 10,
-        margin: 4,
+        // padding: 4,
+        // borderWidth: 1,
+        // borderColor: colors.primaryColor,
+        // borderRadius: 10,
+        // margin: 4,
       },
       playIconStyle: {
         position: 'absolute',
-        top: 75,
-        width: WIDTH / 2.1,
+        top: 55,
+        width: WIDTH / 3.1,
         zIndex: 2,
       }
 });

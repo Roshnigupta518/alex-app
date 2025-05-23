@@ -1,4 +1,4 @@
-import {Dimensions, StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet, Platform} from 'react-native';
 import {colors, WIDTH, HEIGHT, fonts, wp} from '../../../constants';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
 
   firstRowContainer: condition => {
     return {
-      paddingBottom: wp(70),
+      paddingBottom: Platform.OS == 'android' ? wp(40) : wp(70),
       paddingHorizontal: 15,
       position: 'absolute',
       bottom: condition ? '0%' : '4.6%',
