@@ -115,12 +115,8 @@ const HomeScreen = ({ navigation, route }) => {
     pagination.currentTotalItems = staticValues.currentTotalItems;
     pagination.isLoading = staticValues.isLoading;
 
-    // setPostArray([]);
-    if (selectedCityData?.locationType == 'current') {
-      getAllPosts();
-    } else {
-      getAllPosts();
-    }
+    setPostArray([]);
+    getAllPosts();
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
@@ -221,6 +217,7 @@ const HomeScreen = ({ navigation, route }) => {
         prevNearBy.current !== nearByType
       ) {
         setPostArray([]);
+         console.log('calling when refresh the page')
         onRefresh();
       } else if (postArray?.length == 0) {
         console.log('isfouces');
@@ -346,9 +343,9 @@ const HomeScreen = ({ navigation, route }) => {
                 justifyContent: 'center',
               }}>
               <FlatList
-                refreshControl={
-                  <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                }
+                // refreshControl={
+                //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                // }
                 nestedScrollEnabled={true}
                 ref={flashListRef}
                 data={postArray}
