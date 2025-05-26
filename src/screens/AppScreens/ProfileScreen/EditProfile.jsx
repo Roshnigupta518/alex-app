@@ -43,18 +43,17 @@ const EditProfileScreen = ({ navigation, route }) => {
     screenName: userInfo?.anonymous_name || '',
     userName: userInfo?.name || '',
     email: userInfo?.email || '',
-    instagram: userInfo?.socialLinks?.instagram || '',
-    twitter: userInfo?.socialLinks?.twitter|| '',
-    tiktok: userInfo?.socialLinks?.tiktok|| '',
-    facebook: userInfo?.socialLinks?.facebook || '',
-    youtube: userInfo?.socialLinks?.youtube|| '',
-    state: userInfo?.state|| '',
-    city: userInfo?.city|| '',
-    zip: userInfo?.zip|| '',
-    telephone: userInfo?.phone|| '',
-    address : userInfo?.address|| '',
-    bio: userInfo?.bio|| '',
-    password: userInfo?.password
+    instagram: '',
+    twitter: '',
+    tiktok:  '',
+    facebook:  '',
+    youtube: '',
+    state: '',
+    city: '',
+    zip: '',
+    telephone: '',
+    address : '',
+    bio: '',
   });
   const [isInternetConnected, setIsInternetConnected] = useState(true);
   const [activeTab, setActiveTab] = useState('account');
@@ -141,7 +140,7 @@ const EditProfileScreen = ({ navigation, route }) => {
 
     return true;
   };
-
+  // console.log({userInfo})
   const getUserInfo = () => {
     GetMyProfileRequest()
       .then(res => {
@@ -150,20 +149,18 @@ const EditProfileScreen = ({ navigation, route }) => {
           id: userInfo?.id,
           token: userInfo?.token,
         });
-        console.log({ data })
+       
         Storage.store('userdata', data)
           .then(() => {
             dispatch(userDataAction(data));
           })
           .catch(err => Toast.error('Storage', err?.message));
-        navigation.goBack();
       })
       .catch(err => {
         Toast.error('Profile fetching', err?.message);
       })
       .finally(() => setIsLoading(false));
   };
-
   const submitProfile = () => {
     if (!validateFields()) {
       return;
@@ -181,18 +178,18 @@ const EditProfileScreen = ({ navigation, route }) => {
       data.append('youtube', state.youtube);
 
       data.append('address', state.address);
-      // data.append('password', state.password);
       data.append('city', state.city);
       data.append('zip', state.zip);
       data.append('state', state.state);
       data.append('bio', state.bio);
       data.append('phone', state.telephone);
-
+     console.log({state})
       setIsLoading(true);
       updateProfileRequest(data)
         .then(res => {
           Toast.success('Profile', res?.message);
           getUserInfo();
+          navigation.goBack();
         })
         .catch(err => {
           Toast.error('Profiles', err?.message);
@@ -403,14 +400,32 @@ const EditProfileScreen = ({ navigation, route }) => {
     }
   };
 
+  useEffect(()=>{
+    setState({
+      ...state,
+      instagram: userInfo?.socialLinks?.instagram ,
+      twitter: userInfo?.socialLinks?.twitter,
+      tiktok: userInfo?.socialLinks?.tiktok,
+      facebook: userInfo?.socialLinks?.facebook ,
+      youtube: userInfo?.socialLinks?.youtube,
+      state: userInfo?.state,
+      city: userInfo?.city,
+      zip: userInfo?.zip,
+      telephone: userInfo?.phone,
+      address : userInfo?.address,
+      bio: userInfo?.bio,
+    })
+  },[userInfo])
+
+  useEffect(()=>{
+    getUserInfo()
+  },[])
+
   return (
     <>
       <SafeAreaView style={styles.container}>
         <BackHeader label='Edit Profile' labelStyle={{ textAlign: 'center' }} />
 
-        {/* <KeyboardAvoidingView style={{flex: 1}}
-          behavior={Platform.OS == 'android' ? 'height' : 'padding'}
-          > */}
         <ScrollView
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}>
@@ -438,7 +453,6 @@ const EditProfileScreen = ({ navigation, route }) => {
           {renderTabContent()}
 
         </ScrollView>
-        {/* </KeyboardAvoidingView> */}
 
         <MediaPickerSheet
           ref={mediaRef}

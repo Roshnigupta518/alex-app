@@ -110,6 +110,21 @@ const FollowUsers = ({navigation, route}) => {
     ({item, index}) => {
       if (item?.follow_user_id != null) {
         return (
+          <TouchableOpacity 
+          onPress={()=> {
+            if(route?.params?.type == 'following')
+            {
+              navigation.navigate('UserProfileDetail', {
+                userId: item?.follow_user_id?._id ,
+              })
+            }
+            if(route?.params?.type != 'following'){
+            navigation.navigate('UserProfileDetail', {
+            userId: item?.user_id?._id ,
+          }
+        )
+      }
+      }}>
           <View
             style={{
               flexDirection: 'row',
@@ -242,6 +257,7 @@ const FollowUsers = ({navigation, route}) => {
               </TouchableOpacity>
             )}
           </View>
+          </TouchableOpacity>
         );
       }
     },

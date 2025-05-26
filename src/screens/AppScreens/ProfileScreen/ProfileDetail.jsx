@@ -22,7 +22,7 @@ import Toast from '../../../constants/Toast';
 import NoInternetModal from '../../../components/NoInternetModal';
 import NetInfo from '@react-native-community/netinfo';
 import TabsHeader from '../../../components/TabsHeader';
-import { formatCount } from '../../../validation/helper';
+import { formatCount, openSocialLink } from '../../../validation/helper';
 import MediaItem from '../../../components/GridView';
 import NotFoundAnime from '../../../components/NotFoundAnime';
 
@@ -137,16 +137,6 @@ const ProfileDetail = ({ navigation, route }) => {
   useEffect(() => {
     getUsersPosts();
   }, []);
-
-  const openSocialLink = async (url) => {
-    try {
-      const supported = await Linking.canOpenURL(url);
-      console.log('canOpenURL:', supported);
-      await Linking.openURL(url);
-    } catch (error) {
-      console.error("Failed to open URL:", error);
-    }
-  };
 
   return (
     <>
