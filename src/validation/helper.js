@@ -19,4 +19,16 @@ export const formatCount = (num) => {
     }
   };
 
+  // export const tabList = [
+  //   { key: 'photo', label: 'Photos' },
+  //   { key: 'video', label: 'Videos' },
+  // ];
+
+  export const tabList = [
+    { key: 'photo', title: 'Photos' },
+    { key: 'video', title: 'Videos' },
+  ];
+  
+
+
   

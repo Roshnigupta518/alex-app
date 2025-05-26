@@ -24,10 +24,11 @@ import { Video, ResizeMode } from 'expo-av';
 import verifyUserChatList from '../ChatScreen/ChatUtills/GetChatId';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../../components/NoInternetModal';
-import { formatCount, openSocialLink } from '../../../validation/helper';
+import { formatCount, openSocialLink, tabList } from '../../../validation/helper';
 import TabsHeader from '../../../components/TabsHeader';
 import NotFoundAnime from '../../../components/NotFoundAnime';
 import MediaItem from '../../../components/GridView';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
 const UserProfileDetail = ({ navigation, route }) => {
   const userInfo = useSelector(state => state.UserInfoSlice.data);
@@ -37,13 +38,9 @@ const UserProfileDetail = ({ navigation, route }) => {
   const [isFollowLoading, setIsFollowLoading] = useState(true);
   const [isFollow, setIsFollow] = useState(false);
   const [postData, setPostData] = useState([]);
-  const [activeTab, setActiveTab] = useState('photo');
+  const [index, setIndex] = useState(0);
+  const [routes] = useState(tabList);
   const [isLoading, setIsLoading] = useState(false)
-
-  const tabList = [
-    { key: 'photo', label: 'Photos' },
-    { key: 'video', label: 'Videos' },
-  ];
 
   const [isInternetConnected, setIsInternetConnected] = useState(true);
   useEffect(() => {
@@ -96,19 +93,11 @@ const UserProfileDetail = ({ navigation, route }) => {
       });
   };
 
-  const renderTabContent = () => {
-    let filteredData = [];
-
-    if (activeTab === 'photo') {
-      filteredData = postData.filter(item => item?.postData?.post?.mimetype !== 'video/mp4');
-    } else if (activeTab === 'video') {
-      filteredData = postData.filter(item => item?.postData?.post?.mimetype === 'video/mp4');
-    }
+  const renderPhotos = () => {
+    const filteredData = postData.filter(item => item?.postData?.post?.mimetype !== 'video/mp4');
 
     if (filteredData.length === 0) {
-      return (
-        <NotFoundAnime isLoading={isLoading} />
-      );
+      return <NotFoundAnime isLoading={isLoading} />;
     }
 
     return (
@@ -133,12 +122,44 @@ const UserProfileDetail = ({ navigation, route }) => {
     );
   };
 
+  const renderVideos = () => {
+    const filteredData = postData.filter(item => item?.postData?.post?.mimetype === 'video/mp4');
+
+    if (filteredData.length === 0) {
+      return <NotFoundAnime isLoading={isLoading} />;
+    }
+
+    return (
+      <FlatList
+        data={filteredData}
+        renderItem={({ item, index }) => (
+          <MediaItem
+            item={item}
+            onPress={() =>
+              navigation.navigate('ReelViewer', {
+                data: filteredData,
+                currentIndex: index,
+              })
+            }
+            index={index}
+          />
+        )}
+        numColumns={3}
+        keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={{ padding: 15 }}
+      />
+    );
+  };
+
+  const renderScene = SceneMap({
+    photo: renderPhotos,
+    video: renderVideos,
+  });
+
   useEffect(() => {
     getUserProfile();
     getUsersPosts();
   }, []);
-
-  console.log({ name: userDetails?.anonymous_name })
 
   return (
     <>
@@ -172,16 +193,27 @@ const UserProfileDetail = ({ navigation, route }) => {
 
                 </View>
                 <View style={styles.wdh33}>
-                  <View>
+                  <TouchableOpacity onPress={() =>
+                    navigation.navigate('FollowUsers', {
+                      id: userDetails?._id,
+                      type: 'followers',
+                    })
+                  }>
                     <Text style={styles.contentTextStyle}>{formatCount(userDetails?.follower_count)}</Text>
                     <Text style={styles.contentTitleStyle}>Followers</Text>
-                  </View>
+                  </TouchableOpacity>
                 </View>
                 <View style={styles.wdh33}>
-                  <View>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate('FollowUsers', {
+                        id: userDetails?._id,
+                        type: 'following',
+                      })
+                    }>
                     <Text style={styles.contentTextStyle}>{formatCount(userDetails?.following_count)}</Text>
                     <Text style={styles.contentTitleStyle}>Following</Text>
-                  </View>
+                  </TouchableOpacity>
                 </View>
               </View>
 
@@ -320,8 +352,22 @@ const UserProfileDetail = ({ navigation, route }) => {
             </View>
           </View>
 
-          <TabsHeader activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabList} />
-          {renderTabContent()}
+          <TabView
+            navigationState={{ index, routes }}
+            renderScene={renderScene}
+            onIndexChange={setIndex}
+            initialLayout={{ width: WIDTH }}
+            renderTabBar={() => (
+              <TabsHeader
+                activeTab={routes[index].key}
+                setActiveTab={(key) => {
+                  const tabIndex = routes.findIndex(route => route.key === key);
+                  if (tabIndex !== -1) setIndex(tabIndex);
+                }}
+                tabs={routes}
+              />
+            )}
+          />
 
         </View>
       </SafeAreaView>

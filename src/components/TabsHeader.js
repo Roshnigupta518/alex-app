@@ -11,7 +11,7 @@ const TabsHeader = ({ activeTab, setActiveTab, tabs }) => {
           <TouchableOpacity key={tab.key} onPress={() => setActiveTab(tab.key)} style={styles.tabWrapper}>
             <View style={[styles.tabItem, { borderBottomColor: isActive ? colors.primaryColor : colors.black }]}>
               <Text style={[styles.tabText, isActive && styles.activeTabText]}>
-                {tab.label}
+                {tab.title}
               </Text>
             </View>
           </TouchableOpacity>
@@ -52,6 +52,5 @@ tabsContainer: {
   activeTabText: {
     color: colors.black,
   },
-
-
 });
+

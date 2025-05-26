@@ -9,7 +9,7 @@ import {
   StyleSheet,
   FlatList,
   KeyboardAvoidingView,
-  ScrollView,
+  ScrollView, Dimensions
 } from 'react-native';
 import { colors, fonts, HEIGHT, WIDTH, wp } from '../../../constants';
 import BackHeader from '../../../components/BackHeader';
@@ -30,6 +30,8 @@ import Storage from '../../../constants/Storage';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../../components/NoInternetModal';
 import TabsHeader from '../../../components/TabsHeader';
+import NotFoundAnime from '../../../components/NotFoundAnime';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
 const EditProfileScreen = ({ navigation, route }) => {
   const mediaRef = useRef(null);
@@ -38,30 +40,30 @@ const EditProfileScreen = ({ navigation, route }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [imageData, setImageData] = useState(null);
   const [userImage, setUserImage] = useState(userInfo?.profile_picture || '');
-  
+
   const [state, setState] = useState({
     screenName: userInfo?.anonymous_name || '',
     userName: userInfo?.name || '',
     email: userInfo?.email || '',
     instagram: '',
     twitter: '',
-    tiktok:  '',
-    facebook:  '',
+    tiktok: '',
+    facebook: '',
     youtube: '',
     state: '',
     city: '',
     zip: '',
     telephone: '',
-    address : '',
+    address: '',
     bio: '',
   });
   const [isInternetConnected, setIsInternetConnected] = useState(true);
   const [activeTab, setActiveTab] = useState('account');
-
-  const tabList = [
-    { key: 'account', label: 'Account Info' },
-    { key: 'social', label: 'Social Media' },
-  ];
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    { key: 'account', title: 'Account Info' },
+    { key: 'social', title: 'Social Media' },
+  ]);
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -90,7 +92,7 @@ const EditProfileScreen = ({ navigation, route }) => {
 
   const validateFields = () => {
     let anonymsErr = checkValidation('anonymous_name', state.screenName);
-    let instaErr = checkValidation('instagram',state.instagram)
+    let instaErr = checkValidation('instagram', state.instagram)
     let youtubeErr = checkValidation('youtube', state.youtube)
     let tiktokErr = checkValidation('tiktok', state.tiktok)
     let twitterErr = checkValidation('twitter', state.twitter)
@@ -142,6 +144,7 @@ const EditProfileScreen = ({ navigation, route }) => {
   };
   // console.log({userInfo})
   const getUserInfo = () => {
+    setIsLoading(true)
     GetMyProfileRequest()
       .then(res => {
         let data = { ...res?.result };
@@ -149,7 +152,21 @@ const EditProfileScreen = ({ navigation, route }) => {
           id: userInfo?.id,
           token: userInfo?.token,
         });
-       
+        console.log({ data })
+        setState({
+          ...state,
+          instagram: data?.socialLinks?.instagram,
+          twitter: data?.socialLinks?.twitter,
+          tiktok: data?.socialLinks?.tiktok,
+          facebook: data?.socialLinks?.facebook,
+          youtube: data?.socialLinks?.youtube,
+          state: data?.state,
+          city: data?.city,
+          zip: data?.zip,
+          telephone: data?.phone,
+          address: data?.address,
+          bio: data?.bio,
+        })
         Storage.store('userdata', data)
           .then(() => {
             dispatch(userDataAction(data));
@@ -183,7 +200,6 @@ const EditProfileScreen = ({ navigation, route }) => {
       data.append('state', state.state);
       data.append('bio', state.bio);
       data.append('phone', state.telephone);
-     console.log({state})
       setIsLoading(true);
       updateProfileRequest(data)
         .then(res => {
@@ -199,45 +215,249 @@ const EditProfileScreen = ({ navigation, route }) => {
     }
   };
 
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'account':
-        return (
-          <View>
-            <View style={{ margin: wp(20) }}>
-              <CustomLabelInput
-                placeholderColor="white"
-                label="Enter Email Id"
-                placeholder="Input Text"
-                editable={false}
-                value={state.email}
-                maxLength={255}
-                containerStyle={{ marginVertical: wp(10) }}
-              />
+  // const renderTabContent = () => {
+  //   switch (activeTab) {
+  //     case 'account':
+  //       return (
+  //         <View>
+  //           <View style={{ margin: wp(20) }}>
+  //             <CustomLabelInput
+  //               placeholderColor="white"
+  //               label="Enter Email Id"
+  //               placeholder="Input Text"
+  //               editable={false}
+  //               value={state.email}
+  //               maxLength={255}
+  //               containerStyle={{ marginVertical: wp(10) }}
+  //             />
 
-              <CustomLabelInput
-                placeholderColor="white"
-                label="Screen Name"
-                placeholder="Input Text"
-                value={state.screenName}
-                onTextChange={txt =>
-                  setState(prevState => ({ ...prevState, screenName: txt }))
-                }
-                containerStyle={{ marginVertical: wp(10) }}
-              />
+  //             <CustomLabelInput
+  //               placeholderColor="white"
+  //               label="Screen Name"
+  //               placeholder="Input Text"
+  //               value={state.screenName}
+  //               onTextChange={txt =>
+  //                 setState(prevState => ({ ...prevState, screenName: txt }))
+  //               }
+  //               containerStyle={{ marginVertical: wp(10) }}
+  //             />
 
-              <CustomLabelInput
-                placeholderColor="white"
-                label="User Name"
-                placeholder="Input Text"
-                value={state.userName}
-                onTextChange={txt =>
-                  setState(prevState => ({ ...prevState, userName: txt }))
-                }
-                containerStyle={{ marginVertical: wp(10) }}
-              />
+  //             <CustomLabelInput
+  //               placeholderColor="white"
+  //               label="User Name"
+  //               placeholder="Input Text"
+  //               value={state.userName}
+  //               onTextChange={txt =>
+  //                 setState(prevState => ({ ...prevState, userName: txt }))
+  //               }
+  //               containerStyle={{ marginVertical: wp(10) }}
+  //             />
 
-              {/* <CustomLabelInput
+  //             {/* <CustomLabelInput
+  //               placeholderColor="white"
+  //               label="Password"
+  //               placeholder=""
+  //               value={state.password}
+  //               onTextChange={txt =>
+  //                 setState(prevState => ({ ...prevState, password: txt }))
+  //               }
+  //               containerStyle={{ marginVertical: wp(10) }}
+  //             /> */}
+
+  //             <CustomLabelInput
+  //               placeholderColor="white"
+  //               label="Address"
+  //               placeholder=""
+  //               value={state.address}
+  //               onTextChange={txt =>
+  //                 setState(prevState => ({ ...prevState, address: txt }))
+  //               }
+  //               containerStyle={{ marginVertical: wp(10) }}
+  //             />
+
+  //             <CustomLabelInput
+  //               placeholderColor="white"
+  //               label="City"
+  //               placeholder=""
+  //               value={state.city}
+  //               onTextChange={txt =>
+  //                 setState(prevState => ({ ...prevState, city: txt }))
+  //               }
+  //               containerStyle={{ marginVertical: wp(10) }}
+  //             />
+
+  //             <CustomLabelInput
+  //               placeholderColor="white"
+  //               label="State"
+  //               placeholder=""
+  //               value={state.state}
+  //               onTextChange={txt =>
+  //                 setState(prevState => ({ ...prevState, state: txt }))
+  //               }
+  //               containerStyle={{ marginVertical: wp(10) }}
+  //             />
+
+  //             <CustomLabelInput
+  //               placeholderColor="white"
+  //               label="Zip"
+  //               placeholder=""
+  //               value={state.zip}
+  //               onTextChange={txt =>
+  //                 setState(prevState => ({ ...prevState, zip: txt }))
+  //               }
+  //               containerStyle={{ marginVertical: wp(10) }}
+  //             />
+
+  //             <CustomLabelInput
+  //               placeholderColor="white"
+  //               label="Telephone"
+  //               placeholder=""
+  //               value={state.telephone}
+  //               onTextChange={txt =>
+  //                 setState(prevState => ({ ...prevState, telephone: txt }))
+  //               }
+  //               containerStyle={{ marginVertical: wp(10) }}
+  //               keyboardType='numeric'
+  //             />
+
+  //             <CustomLabelInput
+  //               placeholderColor="white"
+  //               label="About yourself"
+  //               placeholder=""
+  //               value={state.bio}
+  //               onTextChange={txt =>
+  //                 setState(prevState => ({ ...prevState, bio: txt }))
+  //               }
+  //               containerStyle={{ marginVertical: wp(10) }}
+  //             />
+
+  //           </View>
+  //           <View style={{ marginVertical: wp(20) }}>
+  //             <CustomButton
+  //               label="Save Changes"
+  //               onPress={submitProfile}
+  //               isLoading={isLoading}
+  //             />
+  //           </View>
+  //         </View>
+  //       );
+  //     case 'social':
+  //       return (
+  //         <View>
+  //           <View style={{ margin: wp(20) }}>
+
+  //             <CustomLabelInput
+  //               placeholderColor="white"
+  //               label="Tiktok"
+  //               placeholder="Enter profile link"
+  //               value={state.tiktok}
+  //               onTextChange={txt =>
+  //                 setState(prevState => ({ ...prevState, tiktok: txt }))
+  //               }
+  //               containerStyle={{ marginVertical: wp(10) }}
+  //             />
+
+  //             <CustomLabelInput
+  //               placeholderColor="white"
+  //               label="Instagram"
+  //               placeholder="Enter profile link"
+  //               value={state.instagram}
+  //               onTextChange={txt =>
+  //                 setState(prevState => ({ ...prevState, instagram: txt }))
+  //               }
+  //               containerStyle={{ marginVertical: wp(10) }}
+  //             />
+
+  //             <CustomLabelInput
+  //               placeholderColor="white"
+  //               label="Youtube"
+  //               placeholder="Enter profile link"
+  //               value={state.youtube}
+  //               onTextChange={txt =>
+  //                 setState(prevState => ({ ...prevState, youtube: txt }))
+  //               }
+  //               containerStyle={{ marginVertical: wp(10) }}
+  //             />
+
+  //             <CustomLabelInput
+  //               placeholderColor="white"
+  //               label="Facebook"
+  //               placeholder="Enter profile link"
+  //               value={state.facebook}
+  //               onTextChange={txt =>
+  //                 setState(prevState => ({ ...prevState, facebook: txt }))
+  //               }
+  //               containerStyle={{ marginVertical: wp(10) }}
+  //             />
+
+  //             <CustomLabelInput
+  //               placeholderColor="white"
+  //               label="X"
+  //               placeholder="Enter profile link"
+  //               value={state.twitter}
+  //               onTextChange={txt =>
+  //                 setState(prevState => ({ ...prevState, twitter: txt }))
+  //               }
+  //               containerStyle={{ marginVertical: wp(10) }}
+  //             />
+
+  //           </View>
+  //           <View style={{ marginVertical: wp(20) }}>
+  //             <CustomButton
+  //               label="Save Changes"
+  //               onPress={submitProfile}
+  //               isLoading={isLoading}
+  //             />
+  //           </View>
+  //         </View>
+  //       );
+  //     case 'payment':
+  //       return <Text>Payment Method Section (you can implement this later)</Text>;
+  //   }
+  // };
+
+
+
+  const AccountTab = () => {
+    return (
+      <ScrollView style={{ flex: 1 }}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}>
+        <View>
+          <View style={{ margin: wp(20) }}>
+            <CustomLabelInput
+              placeholderColor="white"
+              label="Enter Email Id"
+              placeholder="Input Text"
+              editable={false}
+              value={state.email}
+              maxLength={255}
+              containerStyle={{ marginVertical: wp(10) }}
+            />
+
+            <CustomLabelInput
+              placeholderColor="white"
+              label="Screen Name"
+              placeholder="Input Text"
+              value={state.screenName}
+              onTextChange={txt =>
+                setState(prevState => ({ ...prevState, screenName: txt }))
+              }
+              containerStyle={{ marginVertical: wp(10) }}
+            />
+
+            <CustomLabelInput
+              placeholderColor="white"
+              label="User Name"
+              placeholder="Input Text"
+              value={state.userName}
+              onTextChange={txt =>
+                setState(prevState => ({ ...prevState, userName: txt }))
+              }
+              containerStyle={{ marginVertical: wp(10) }}
+            />
+
+            {/* <CustomLabelInput
                 placeholderColor="white"
                 label="Password"
                 placeholder=""
@@ -248,211 +468,217 @@ const EditProfileScreen = ({ navigation, route }) => {
                 containerStyle={{ marginVertical: wp(10) }}
               /> */}
 
-              <CustomLabelInput
-                placeholderColor="white"
-                label="Address"
-                placeholder=""
-                value={state.address}
-                onTextChange={txt =>
-                  setState(prevState => ({ ...prevState, address: txt }))
-                }
-                containerStyle={{ marginVertical: wp(10) }}
-              />
+            <CustomLabelInput
+              placeholderColor="white"
+              label="Address"
+              placeholder=""
+              value={state.address}
+              onTextChange={txt =>
+                setState(prevState => ({ ...prevState, address: txt }))
+              }
+              containerStyle={{ marginVertical: wp(10) }}
+            />
 
-              <CustomLabelInput
-                placeholderColor="white"
-                label="City"
-                placeholder=""
-                value={state.city}
-                onTextChange={txt =>
-                  setState(prevState => ({ ...prevState, city: txt }))
-                }
-                containerStyle={{ marginVertical: wp(10) }}
-              />
+            <CustomLabelInput
+              placeholderColor="white"
+              label="City"
+              placeholder=""
+              value={state.city}
+              onTextChange={txt =>
+                setState(prevState => ({ ...prevState, city: txt }))
+              }
+              containerStyle={{ marginVertical: wp(10) }}
+            />
 
-              <CustomLabelInput
-                placeholderColor="white"
-                label="State"
-                placeholder=""
-                value={state.state}
-                onTextChange={txt =>
-                  setState(prevState => ({ ...prevState, state: txt }))
-                }
-                containerStyle={{ marginVertical: wp(10) }}
-              />
+            <CustomLabelInput
+              placeholderColor="white"
+              label="State"
+              placeholder=""
+              value={state.state}
+              onTextChange={txt =>
+                setState(prevState => ({ ...prevState, state: txt }))
+              }
+              containerStyle={{ marginVertical: wp(10) }}
+            />
 
-              <CustomLabelInput
-                placeholderColor="white"
-                label="Zip"
-                placeholder=""
-                value={state.zip}
-                onTextChange={txt =>
-                  setState(prevState => ({ ...prevState, zip: txt }))
-                }
-                containerStyle={{ marginVertical: wp(10) }}
-              />
+            <CustomLabelInput
+              placeholderColor="white"
+              label="Zip"
+              placeholder=""
+              value={state.zip}
+              onTextChange={txt =>
+                setState(prevState => ({ ...prevState, zip: txt }))
+              }
+              containerStyle={{ marginVertical: wp(10) }}
+            />
 
-              <CustomLabelInput
-                placeholderColor="white"
-                label="Telephone"
-                placeholder=""
-                value={state.telephone}
-                onTextChange={txt =>
-                  setState(prevState => ({ ...prevState, telephone: txt }))
-                }
-                containerStyle={{ marginVertical: wp(10) }}
-                keyboardType='numeric'
-              />
+            <CustomLabelInput
+              placeholderColor="white"
+              label="Telephone"
+              placeholder=""
+              value={state.telephone}
+              onTextChange={txt =>
+                setState(prevState => ({ ...prevState, telephone: txt }))
+              }
+              containerStyle={{ marginVertical: wp(10) }}
+              keyboardType='numeric'
+            />
 
-              <CustomLabelInput
-                placeholderColor="white"
-                label="About yourself"
-                placeholder=""
-                value={state.bio}
-                onTextChange={txt =>
-                  setState(prevState => ({ ...prevState, bio: txt }))
-                }
-                containerStyle={{ marginVertical: wp(10) }}
-              />
+            <CustomLabelInput
+              placeholderColor="white"
+              label="About yourself"
+              placeholder=""
+              value={state.bio}
+              onTextChange={txt =>
+                setState(prevState => ({ ...prevState, bio: txt }))
+              }
+              containerStyle={{ marginVertical: wp(10) }}
+            />
 
-            </View>
-            <View style={{ marginVertical: wp(20) }}>
-              <CustomButton
-                label="Save Changes"
-                onPress={submitProfile}
-                isLoading={isLoading}
-              />
-            </View>
           </View>
-        );
-      case 'social':
-        return (
-          <View>
-            <View style={{ margin: wp(20) }}>
-
-              <CustomLabelInput
-                placeholderColor="white"
-                label="Tiktok"
-                placeholder="Enter profile link"
-                value={state.tiktok}
-                onTextChange={txt =>
-                  setState(prevState => ({ ...prevState, tiktok: txt }))
-                }
-                containerStyle={{ marginVertical: wp(10) }}
-              />
-
-              <CustomLabelInput
-                placeholderColor="white"
-                label="Instagram"
-                placeholder="Enter profile link"
-                value={state.instagram}
-                onTextChange={txt =>
-                  setState(prevState => ({ ...prevState, instagram: txt }))
-                }
-                containerStyle={{ marginVertical: wp(10) }}
-              />
-
-              <CustomLabelInput
-                placeholderColor="white"
-                label="Youtube"
-                placeholder="Enter profile link"
-                value={state.youtube}
-                onTextChange={txt =>
-                  setState(prevState => ({ ...prevState, youtube: txt }))
-                }
-                containerStyle={{ marginVertical: wp(10) }}
-              />
-
-              <CustomLabelInput
-                placeholderColor="white"
-                label="Facebook"
-                placeholder="Enter profile link"
-                value={state.facebook}
-                onTextChange={txt =>
-                  setState(prevState => ({ ...prevState, facebook: txt }))
-                }
-                containerStyle={{ marginVertical: wp(10) }}
-              />
-
-              <CustomLabelInput
-                placeholderColor="white"
-                label="X"
-                placeholder="Enter profile link"
-                value={state.twitter}
-                onTextChange={txt =>
-                  setState(prevState => ({ ...prevState, twitter: txt }))
-                }
-                containerStyle={{ marginVertical: wp(10) }}
-              />
-
-            </View>
-            <View style={{ marginVertical: wp(20) }}>
-              <CustomButton
-                label="Save Changes"
-                onPress={submitProfile}
-                isLoading={isLoading}
-              />
-            </View>
+          <View style={{ marginVertical: wp(20) }}>
+            <CustomButton
+              label="Save Changes"
+              onPress={submitProfile}
+              isLoading={isLoading}
+            />
           </View>
-        );
-      case 'payment':
-        return <Text>Payment Method Section (you can implement this later)</Text>;
-    }
+        </View>
+      </ScrollView>
+    )
   };
 
-  useEffect(()=>{
-    setState({
-      ...state,
-      instagram: userInfo?.socialLinks?.instagram ,
-      twitter: userInfo?.socialLinks?.twitter,
-      tiktok: userInfo?.socialLinks?.tiktok,
-      facebook: userInfo?.socialLinks?.facebook ,
-      youtube: userInfo?.socialLinks?.youtube,
-      state: userInfo?.state,
-      city: userInfo?.city,
-      zip: userInfo?.zip,
-      telephone: userInfo?.phone,
-      address : userInfo?.address,
-      bio: userInfo?.bio,
-    })
-  },[userInfo])
+  const SocialTab = () => {
+    return (
+      <ScrollView style={{ flex: 1 }}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}>
+        <View>
+          <View style={{ margin: wp(20) }}>
 
-  useEffect(()=>{
+            <CustomLabelInput
+              placeholderColor="white"
+              label="Tiktok"
+              placeholder="Enter profile link"
+              value={state.tiktok}
+              onTextChange={txt =>
+                setState(prevState => ({ ...prevState, tiktok: txt }))
+              }
+              containerStyle={{ marginVertical: wp(10) }}
+            />
+
+            <CustomLabelInput
+              placeholderColor="white"
+              label="Instagram"
+              placeholder="Enter profile link"
+              value={state.instagram}
+              onTextChange={txt =>
+                setState(prevState => ({ ...prevState, instagram: txt }))
+              }
+              containerStyle={{ marginVertical: wp(10) }}
+            />
+
+            <CustomLabelInput
+              placeholderColor="white"
+              label="Youtube"
+              placeholder="Enter profile link"
+              value={state.youtube}
+              onTextChange={txt =>
+                setState(prevState => ({ ...prevState, youtube: txt }))
+              }
+              containerStyle={{ marginVertical: wp(10) }}
+            />
+
+            <CustomLabelInput
+              placeholderColor="white"
+              label="Facebook"
+              placeholder="Enter profile link"
+              value={state.facebook}
+              onTextChange={txt =>
+                setState(prevState => ({ ...prevState, facebook: txt }))
+              }
+              containerStyle={{ marginVertical: wp(10) }}
+            />
+
+            <CustomLabelInput
+              placeholderColor="white"
+              label="X"
+              placeholder="Enter profile link"
+              value={state.twitter}
+              onTextChange={txt =>
+                setState(prevState => ({ ...prevState, twitter: txt }))
+              }
+              containerStyle={{ marginVertical: wp(10) }}
+            />
+
+          </View>
+          <View style={{ marginVertical: wp(20) }}>
+            <CustomButton
+              label="Save Changes"
+              onPress={submitProfile}
+              isLoading={isLoading}
+            />
+          </View>
+        </View>
+      </ScrollView>
+    )
+  };
+
+
+  const renderScene = SceneMap({
+    account: AccountTab,
+    social: SocialTab,
+  });
+
+  useEffect(() => {
     getUserInfo()
-  },[])
+  }, [])
 
   return (
     <>
       <SafeAreaView style={styles.container}>
         <BackHeader label='Edit Profile' labelStyle={{ textAlign: 'center' }} />
+        {!isLoading ? (
 
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}>
+          <View style={{ flex: 1 }}>
+            <View style={styles.UserImageView}>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => mediaRef.current?.open()}>
+                <Image
+                  source={userImage ? { uri: userImage } : ImageConstants.user}
+                  style={styles.userImagesStyle}
+                />
+              </TouchableOpacity>
 
-          <View style={styles.UserImageView}>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => mediaRef.current?.open()}>
-              <Image
-                source={userImage ? { uri: userImage } : ImageConstants.user}
-                style={styles.userImagesStyle}
-              />
-            </TouchableOpacity>
-
-            <View style={{ margin: 20 }}>
-              <Text numberOfLines={2} style={styles.userNameStyle}>
-                {userInfo?.name}
-              </Text>
+              <View style={{ margin: 20 }}>
+                <Text numberOfLines={2} style={styles.userNameStyle}>
+                  {userInfo?.name}
+                </Text>
+              </View>
             </View>
+
+            <TabView
+              navigationState={{ index, routes }}
+              renderScene={renderScene}
+              onIndexChange={setIndex}
+              initialLayout={{ width: WIDTH }}
+              renderTabBar={() => (
+                <TabsHeader
+                  activeTab={routes[index].key}
+                  setActiveTab={(key) => {
+                    const tabIndex = routes.findIndex(route => route.key === key);
+                    if (tabIndex !== -1) setIndex(tabIndex);
+                  }}
+                  tabs={routes}
+                />
+              )}
+            />
           </View>
 
-       
-           <TabsHeader activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabList} />
-
-          {renderTabContent()}
-
-        </ScrollView>
+        ) :
+          <NotFoundAnime isLoading={isLoading} />
+        }
 
         <MediaPickerSheet
           ref={mediaRef}

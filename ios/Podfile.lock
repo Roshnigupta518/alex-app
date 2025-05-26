@@ -1251,6 +1251,10 @@ PODS:
     - React-Core
   - react-native-netinfo (6.0.6):
     - React-Core
+  - react-native-pager-view (6.8.0):
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
   - react-native-safe-area-context (4.9.0):
     - React-Core
   - react-native-splash-screen (3.3.0):
@@ -1592,6 +1596,7 @@ DEPENDENCIES:
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
+  - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
@@ -1784,6 +1789,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-maps"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
+  react-native-pager-view:
+    :path: "../node_modules/react-native-pager-view"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-splash-screen:
@@ -1966,6 +1973,7 @@ SPEC CHECKSUMS:
   react-native-image-picker: 709d04e7df67bd3a90f376c3eedb2e8b8334dd04
   react-native-maps: cbf2f03bfeebfd7ec45966b066db13a075fd2af3
   react-native-netinfo: 40b91995cd49c33ae57996486db76f0af067b630
+  react-native-pager-view: d9d699332bcefff74e4c3bf5567ff2821f756db8
   react-native-safe-area-context: b97eb6f9e3b7f437806c2ce5983f479f8eb5de4b
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   React-nativeconfig: b4d4e9901d4cabb57be63053fd2aa6086eb3c85f

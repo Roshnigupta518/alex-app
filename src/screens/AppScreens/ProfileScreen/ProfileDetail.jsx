@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Platform,
   StyleSheet,
-  FlatList, Linking
+  FlatList, Dimensions
 } from 'react-native';
 import { colors, fonts, HEIGHT, WIDTH, wp } from '../../../constants';
 import BackHeader from '../../../components/BackHeader';
@@ -22,9 +22,10 @@ import Toast from '../../../constants/Toast';
 import NoInternetModal from '../../../components/NoInternetModal';
 import NetInfo from '@react-native-community/netinfo';
 import TabsHeader from '../../../components/TabsHeader';
-import { formatCount, openSocialLink } from '../../../validation/helper';
+import { formatCount, openSocialLink, tabList } from '../../../validation/helper';
 import MediaItem from '../../../components/GridView';
 import NotFoundAnime from '../../../components/NotFoundAnime';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
 const ProfileDetail = ({ navigation, route }) => {
   const isFocused = useIsFocused();
@@ -33,13 +34,11 @@ const ProfileDetail = ({ navigation, route }) => {
   const [userDetails, setUserDetails] = useState(null);
   const [postData, setPostData] = useState([]);
   const [isInternetConnected, setIsInternetConnected] = useState(true);
-  const [activeTab, setActiveTab] = useState('photo');
+ 
   const [isLoading, setIsLoading] = useState(false)
+  const [index, setIndex] = useState(0);
+  const [routes] = useState(tabList);
 
-  const tabList = [
-    { key: 'photo', label: 'Photos' },
-    { key: 'video', label: 'Videos' },
-  ];
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -90,19 +89,11 @@ const ProfileDetail = ({ navigation, route }) => {
       });
   };
 
-  const renderTabContent = () => {
-    let filteredData = [];
-
-    if (activeTab === 'photo') {
-      filteredData = postData.filter(item => item?.postData?.post?.mimetype !== 'video/mp4');
-    } else if (activeTab === 'video') {
-      filteredData = postData.filter(item => item?.postData?.post?.mimetype === 'video/mp4');
-    }
+  const renderPhotos = () => {
+    const filteredData = postData.filter(item => item?.postData?.post?.mimetype !== 'video/mp4');
 
     if (filteredData.length === 0) {
-      return (
-        <NotFoundAnime isLoading={isLoading} />
-      );
+      return <NotFoundAnime isLoading={isLoading} />;
     }
 
     return (
@@ -127,6 +118,39 @@ const ProfileDetail = ({ navigation, route }) => {
     );
   };
 
+  const renderVideos = () => {
+    const filteredData = postData.filter(item => item?.postData?.post?.mimetype === 'video/mp4');
+
+    if (filteredData.length === 0) {
+      return <NotFoundAnime isLoading={isLoading} />;
+    }
+
+    return (
+      <FlatList
+        data={filteredData}
+        renderItem={({ item, index }) => (
+          <MediaItem
+            item={item}
+            onPress={() =>
+              navigation.navigate('ReelViewer', {
+                data: filteredData,
+                currentIndex: index,
+              })
+            }
+            index={index}
+          />
+        )}
+        numColumns={3}
+        keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={{ padding: 15 }}
+      />
+    );
+  };
+
+  const renderScene = SceneMap({
+    photo: renderPhotos,
+    video: renderVideos,
+  });
 
   useEffect(() => {
     if (isFocused) {
@@ -268,8 +292,23 @@ const ProfileDetail = ({ navigation, route }) => {
               </Text>}
           </View>
 
-          <TabsHeader activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabList} />
-          {renderTabContent()}
+          <TabView
+            navigationState={{ index, routes }}
+            renderScene={renderScene}
+            onIndexChange={setIndex}
+            initialLayout={{ width: WIDTH }}
+            renderTabBar={() => (
+              <TabsHeader
+                activeTab={routes[index].key}
+                setActiveTab={(key) => {
+                  const tabIndex = routes.findIndex(route => route.key === key);
+                  if (tabIndex !== -1) setIndex(tabIndex);
+                }}
+                tabs={routes}
+              />
+            )}
+          />
+
         </View>
       </SafeAreaView>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}

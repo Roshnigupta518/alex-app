@@ -26,6 +26,11 @@ const FollowUsers = ({navigation, route}) => {
   const [users, setUsers] = useState([]);
   const [searchedUser, setSearchedUser] = useState([]);
   const [isInternetConnected, setIsInternetConnected] = useState(true);
+
+  const id = route?.params?.id
+   
+  console.log({id})
+
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       if (state.isConnected !== null && state.isConnected === false) {
@@ -62,7 +67,7 @@ const FollowUsers = ({navigation, route}) => {
   };
 
   const getAllFollowing = () => {
-    getAllFollowingRequest(route?.params?.id)
+    getAllFollowingRequest(id)
       .then(res => {
         setUsers(res?.result);
         setSearchedUser(res?.result);
@@ -71,7 +76,7 @@ const FollowUsers = ({navigation, route}) => {
   };
 
   const getAllFollowers = () => {
-    getAllFollowerRequest(route?.params?.id)
+    getAllFollowerRequest(id)
       .then(res => {
         setUsers(res?.result);
         setSearchedUser(res?.result);
@@ -89,7 +94,7 @@ const FollowUsers = ({navigation, route}) => {
 
   useEffect(() => {
     callUserList();
-  }, []);
+  }, [id]);
 
   const searchUser = txt => {
     let user_res = searchedUser.filter(item => {
