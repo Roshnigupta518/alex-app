@@ -211,22 +211,8 @@ const ProfileScreen = ({navigation}) => {
         style={{
           flex: 1,
           backgroundColor: colors.white,
-          padding: wp(15),
         }}>
           <BackHeader label='Settings' />
-        {/* <View
-          style={{
-            marginHorizontal: wp(20),
-          }}>
-          <Text
-            style={{
-              fontFamily: fonts.semiBold,
-              fontSize: wp(23),
-              color: colors.black,
-            }}>
-            Setting
-          </Text>
-        </View> */}
 
         <View
           style={{

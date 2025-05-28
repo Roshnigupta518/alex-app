@@ -35,10 +35,8 @@ const ProfileDetail = ({ navigation, route }) => {
   const [postData, setPostData] = useState([]);
   const [isInternetConnected, setIsInternetConnected] = useState(true);
  
+  const [activeTab, setActiveTab] = useState('photo');
   const [isLoading, setIsLoading] = useState(false)
-  const [index, setIndex] = useState(0);
-  const [routes] = useState(tabList);
-
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -89,11 +87,19 @@ const ProfileDetail = ({ navigation, route }) => {
       });
   };
 
-  const renderPhotos = () => {
-    const filteredData = postData.filter(item => item?.postData?.post?.mimetype !== 'video/mp4');
+  const renderTabContent = () => {
+    let filteredData = [];
+
+    if (activeTab === 'photo') {
+      filteredData = postData.filter(item => item?.postData?.post?.mimetype !== 'video/mp4');
+    } else if (activeTab === 'video') {
+      filteredData = postData.filter(item => item?.postData?.post?.mimetype === 'video/mp4');
+    }
 
     if (filteredData.length === 0) {
-      return <NotFoundAnime isLoading={isLoading} />;
+      return (
+        <NotFoundAnime isLoading={isLoading} />
+      );
     }
 
     return (
@@ -118,39 +124,6 @@ const ProfileDetail = ({ navigation, route }) => {
     );
   };
 
-  const renderVideos = () => {
-    const filteredData = postData.filter(item => item?.postData?.post?.mimetype === 'video/mp4');
-
-    if (filteredData.length === 0) {
-      return <NotFoundAnime isLoading={isLoading} />;
-    }
-
-    return (
-      <FlatList
-        data={filteredData}
-        renderItem={({ item, index }) => (
-          <MediaItem
-            item={item}
-            onPress={() =>
-              navigation.navigate('ReelViewer', {
-                data: filteredData,
-                currentIndex: index,
-              })
-            }
-            index={index}
-          />
-        )}
-        numColumns={3}
-        keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={{ padding: 15 }}
-      />
-    );
-  };
-
-  const renderScene = SceneMap({
-    photo: renderPhotos,
-    video: renderVideos,
-  });
 
   useEffect(() => {
     if (isFocused) {
@@ -257,8 +230,8 @@ const ProfileDetail = ({ navigation, route }) => {
                 ) : null}
 
                 {userDetails?.socialLinks?.twitter ? (
-                  <TouchableOpacity onPress={() => openSocialLink(userDetails.socialLinks.twitter)}>
-                    <Image source={ImageConstants.twitter} style={styles.imgsty} />
+                  <TouchableOpacity  style={{ overflow: 'visible' }} onPress={() => openSocialLink(userDetails.socialLinks.twitter)}>
+                    <Image source={ImageConstants.twitter} style={styles.imgsty} resizeMode="contain" />
                   </TouchableOpacity>
                 ) : null}
 
@@ -275,8 +248,8 @@ const ProfileDetail = ({ navigation, route }) => {
                 ) : null}
 
                 {userDetails?.socialLinks?.youtube ? (
-                  <TouchableOpacity onPress={() => openSocialLink(userDetails.socialLinks.youtube)}>
-                    <Image source={ImageConstants.youtube} style={styles.imgsty} />
+                  <TouchableOpacity  style={{ overflow: 'visible' }} onPress={() => openSocialLink(userDetails.socialLinks.youtube)}>
+                    <Image source={ImageConstants.youtube} style={styles.imgsty} resizeMode="contain" />
                   </TouchableOpacity>
                 ) : null}
               </View>
@@ -292,22 +265,8 @@ const ProfileDetail = ({ navigation, route }) => {
               </Text>}
           </View>
 
-          <TabView
-            navigationState={{ index, routes }}
-            renderScene={renderScene}
-            onIndexChange={setIndex}
-            initialLayout={{ width: WIDTH }}
-            renderTabBar={() => (
-              <TabsHeader
-                activeTab={routes[index].key}
-                setActiveTab={(key) => {
-                  const tabIndex = routes.findIndex(route => route.key === key);
-                  if (tabIndex !== -1) setIndex(tabIndex);
-                }}
-                tabs={routes}
-              />
-            )}
-          />
+          <TabsHeader activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabList} />
+          {renderTabContent()}
 
         </View>
       </SafeAreaView>

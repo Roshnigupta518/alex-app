@@ -8,7 +8,7 @@ import {
   Platform,
   StyleSheet,
   FlatList,
-  ActivityIndicator,
+  ActivityIndicator,ScrollView
 } from 'react-native';
 import { colors, fonts, HEIGHT, WIDTH, wp } from '../../../constants';
 import BackHeader from '../../../components/BackHeader';
@@ -38,8 +38,7 @@ const UserProfileDetail = ({ navigation, route }) => {
   const [isFollowLoading, setIsFollowLoading] = useState(true);
   const [isFollow, setIsFollow] = useState(false);
   const [postData, setPostData] = useState([]);
-  const [index, setIndex] = useState(0);
-  const [routes] = useState(tabList);
+  const [activeTab, setActiveTab] = useState('photo');
   const [isLoading, setIsLoading] = useState(false)
 
   const [isInternetConnected, setIsInternetConnected] = useState(true);
@@ -93,11 +92,19 @@ const UserProfileDetail = ({ navigation, route }) => {
       });
   };
 
-  const renderPhotos = () => {
-    const filteredData = postData.filter(item => item?.postData?.post?.mimetype !== 'video/mp4');
+  const renderTabContent = () => {
+    let filteredData = [];
+
+    if (activeTab === 'photo') {
+      filteredData = postData.filter(item => item?.postData?.post?.mimetype !== 'video/mp4');
+    } else if (activeTab === 'video') {
+      filteredData = postData.filter(item => item?.postData?.post?.mimetype === 'video/mp4');
+    }
 
     if (filteredData.length === 0) {
-      return <NotFoundAnime isLoading={isLoading} />;
+      return (
+        <NotFoundAnime isLoading={isLoading} />
+      );
     }
 
     return (
@@ -122,39 +129,6 @@ const UserProfileDetail = ({ navigation, route }) => {
     );
   };
 
-  const renderVideos = () => {
-    const filteredData = postData.filter(item => item?.postData?.post?.mimetype === 'video/mp4');
-
-    if (filteredData.length === 0) {
-      return <NotFoundAnime isLoading={isLoading} />;
-    }
-
-    return (
-      <FlatList
-        data={filteredData}
-        renderItem={({ item, index }) => (
-          <MediaItem
-            item={item}
-            onPress={() =>
-              navigation.navigate('ReelViewer', {
-                data: filteredData,
-                currentIndex: index,
-              })
-            }
-            index={index}
-          />
-        )}
-        numColumns={3}
-        keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={{ padding: 15 }}
-      />
-    );
-  };
-
-  const renderScene = SceneMap({
-    photo: renderPhotos,
-    video: renderVideos,
-  });
 
   useEffect(() => {
     getUserProfile();
@@ -165,7 +139,9 @@ const UserProfileDetail = ({ navigation, route }) => {
     <>
       <SafeAreaView style={styles.container}>
         <BackHeader />
-
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}>
         <View
           style={{
             flex: 1,
@@ -310,7 +286,7 @@ const UserProfileDetail = ({ navigation, route }) => {
                       fontSize: wp(17),
                       color: colors.white,
                     }}>
-                    {isFollow ? 'Following' : 'Follow'}
+                    {!isFollow ? 'Following' : 'Follow'}
                   </Text>
                 )}
               </TouchableOpacity>
@@ -352,24 +328,11 @@ const UserProfileDetail = ({ navigation, route }) => {
             </View>
           </View>
 
-          <TabView
-            navigationState={{ index, routes }}
-            renderScene={renderScene}
-            onIndexChange={setIndex}
-            initialLayout={{ width: WIDTH }}
-            renderTabBar={() => (
-              <TabsHeader
-                activeTab={routes[index].key}
-                setActiveTab={(key) => {
-                  const tabIndex = routes.findIndex(route => route.key === key);
-                  if (tabIndex !== -1) setIndex(tabIndex);
-                }}
-                tabs={routes}
-              />
-            )}
-          />
+          <TabsHeader activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabList} />
+          {renderTabContent()}
 
         </View>
+        </ScrollView>
       </SafeAreaView>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
