@@ -41,6 +41,8 @@ const UserProfileDetail = ({ navigation, route }) => {
   const [activeTab, setActiveTab] = useState('photo');
   const [isLoading, setIsLoading] = useState(false)
 
+  const userId = route?.params?.userId
+
   const [isInternetConnected, setIsInternetConnected] = useState(true);
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -69,7 +71,7 @@ const UserProfileDetail = ({ navigation, route }) => {
 
   const getUserProfile = () => {
     setIsFollowLoading(true);
-    GetUserProfileRequest(route?.params?.userId || userInfo?.id)
+    GetUserProfileRequest(userId || userInfo?.id)
       .then(res => {
         setUserDetails(res?.result);
         console.log({ result: res.result })
@@ -82,7 +84,7 @@ const UserProfileDetail = ({ navigation, route }) => {
   };
 
   const getUsersPosts = async () => {
-    GetUserPostsRequest(route?.params?.userId || userInfo?.id)
+    GetUserPostsRequest(userId || userInfo?.id)
       .then(res => {
         setPostData(res?.result);
       })
@@ -129,11 +131,10 @@ const UserProfileDetail = ({ navigation, route }) => {
     );
   };
 
-
   useEffect(() => {
     getUserProfile();
     getUsersPosts();
-  }, []);
+  }, [userId]);
 
   return (
     <>
@@ -286,7 +287,7 @@ const UserProfileDetail = ({ navigation, route }) => {
                       fontSize: wp(17),
                       color: colors.white,
                     }}>
-                    {!isFollow ? 'Following' : 'Follow'}
+                    {isFollow ? 'Following' : 'Follow'}
                   </Text>
                 )}
               </TouchableOpacity>

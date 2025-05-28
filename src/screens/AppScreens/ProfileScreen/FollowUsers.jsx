@@ -29,8 +29,6 @@ const FollowUsers = ({navigation, route}) => {
 
   const id = route?.params?.id
    
-  console.log({id})
-
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       if (state.isConnected !== null && state.isConnected === false) {
@@ -92,9 +90,18 @@ const FollowUsers = ({navigation, route}) => {
     }
   };
 
+  // useEffect(() => {
+  //   callUserList();
+  // }, [id]);
+
   useEffect(() => {
-    callUserList();
-  }, [id]);
+    const unsubscribe = navigation.addListener('focus', () => {
+      console.log('Screen is focused');
+      callUserList();
+    });
+
+    return unsubscribe;
+  }, [id, navigation]);
 
   const searchUser = txt => {
     let user_res = searchedUser.filter(item => {
@@ -117,8 +124,7 @@ const FollowUsers = ({navigation, route}) => {
         return (
           <TouchableOpacity 
           onPress={()=> {
-            if(route?.params?.type == 'following')
-            {
+            if(route?.params?.type == 'following'){
               navigation.navigate('UserProfileDetail', {
                 userId: item?.follow_user_id?._id ,
               })
