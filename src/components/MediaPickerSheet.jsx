@@ -1,11 +1,12 @@
 import React, {forwardRef, useEffect, useImperativeHandle, useRef} from 'react';
-import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, Image, StyleSheet, TouchableOpacity, Platform} from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
 import {colors, fonts, wp} from '../constants';
 import ImageConstants from '../constants/ImageConstants';
 import ImagePicker from 'react-native-image-crop-picker';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Toast from '../constants/Toast';
+import {check, request, PERMISSIONS, RESULTS, openSettings} from 'react-native-permissions';
 
 const MediaPickerSheet = forwardRef(
   (
@@ -57,6 +58,21 @@ const MediaPickerSheet = forwardRef(
     };
 
     const getFromCamera = async () => {
+      const permission =
+      Platform.OS === 'android'
+        ? PERMISSIONS.ANDROID.CAMERA
+        : PERMISSIONS.IOS.CAMERA;
+  
+      const result = await check(permission);
+  
+    if (result === RESULTS.BLOCKED || result === RESULTS.DENIED) {
+      Toast.error(
+        'Permission Required',
+        'To take a photo, please allow camera access in your device settings.'
+      );
+      return;
+    }
+
       launchCamera({mediaType})
         .then(res => {
           if (res?.assets?.length > 0) {
