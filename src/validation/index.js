@@ -5,19 +5,68 @@ const checkValidation = (regexType, value, extraValue = null) => {
     if (value?.length == 0)
         return RegexType[regexType]?.emptyError;
 
-    if (regexType === 'mobileno') {
-        const onlyDigitsRegex = /^[0-9]+$/;
+    if (regexType === 'anonymous_name') {
+        const cleaned = value.trim();
 
-        if (!onlyDigitsRegex.test(value)) {
-            return RegexType[regexType]?.invalidCharError || 'Please enter valid mobile number';
+        // First: check length (min 3, max 50)
+        if (cleaned.length < 3 || cleaned.length > 50) {
+            return 'Screen name must be 3-50 characters';
         }
 
-        if (value.length < 5 || value.length > 15) {
-            return RegexType[regexType]?.lengthError || 'Mobile number must be between 5 to 15 digits';
+        // Then: match updated regex (letters only, single space between words)
+        if (!RegexType[regexType]?.regex.test(cleaned)) {
+            return RegexType[regexType]?.typeError;
         }
 
         return '';
     }
+
+    if (regexType === 'fullname') {
+        const cleaned = value.trim();
+
+        if (cleaned.length < 3 || cleaned.length > 50) {
+            return 'Name must be between 3 and 50 characters';
+        }
+
+        if (!RegexType[regexType]?.regex.test(cleaned)) {
+            return RegexType[regexType]?.typeError;
+        }
+
+        return '';
+    }
+
+    if (regexType === 'mobileno') {
+        const onlyDigitsRegex = /^[0-9]+$/;
+      
+        if (!onlyDigitsRegex.test(value)) {
+          return RegexType[regexType]?.invalidCharError || 'Please enter a valid mobile number';
+        }
+      
+        if (value.length < 5 || value.length > 15) {
+          return RegexType[regexType]?.lengthError || 'Mobile number must be between 5 to 15 digits';
+        }
+      
+        if (/^0+$/.test(value)) {
+          return 'Mobile number cannot be all zeros';
+        }
+      
+        return '';
+      }
+      
+
+    // if (regexType === 'mobileno') {
+    //     const onlyDigitsRegex = /^[0-9]+$/;
+
+    //     if (!onlyDigitsRegex.test(value)) {
+    //         return RegexType[regexType]?.invalidCharError || 'Please enter valid mobile number';
+    //     }
+
+    //     if (value.length < 5 || value.length > 15) {
+    //         return RegexType[regexType]?.lengthError || 'Mobile number must be between 5 to 15 digits';
+    //     }
+
+    //     return '';
+    // }
 
     else if (RegexType[regexType]?.regex?.test(value) && extraValue == null)
         return '';

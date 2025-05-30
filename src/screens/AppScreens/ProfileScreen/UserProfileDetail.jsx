@@ -84,19 +84,21 @@ const UserProfileDetail = ({ navigation, route }) => {
   };
 
   const getUsersPosts = async () => {
+    setIsLoading(true)
     GetUserPostsRequest(userId || userInfo?.id)
       .then(res => {
         setPostData(res?.result);
+        setIsLoading(false)
       })
       .catch(err => {
         console.log('err', err);
         Toast.error('Post', err?.message);
+        setIsLoading(false)
       });
   };
 
   const renderTabContent = () => {
     let filteredData = [];
-
     if (activeTab === 'photo') {
       filteredData = postData.filter(item => item?.postData?.post?.mimetype !== 'video/mp4');
     } else if (activeTab === 'video') {

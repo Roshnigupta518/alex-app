@@ -38,15 +38,22 @@ export const RegexType = {
   },
 
   fullname: {
-    regex: /^[A-Za-z\s]{3,150}$/,
+    // regex: /^[A-Za-z\s]{3,150}$/,
+    // emptyError: 'Please enter your name',
+    // typeError: 'Please enter valid name',
+
+    regex: /^[A-Za-z]+(?: [A-Za-z]+)*$/,
     emptyError: 'Please enter your name',
-    typeError: 'Please enter valid name',
+    typeError: 'Name must only contain letters and a single space between words',
   },
 
   anonymous_name: {
-    regex: /^[A-Za-z\s]{3,150}$/,
-    emptyError: 'Please enter screen name',
-    typeError: 'Please enter valid screen name',
+    // regex: /^[A-Za-z\s]{3,150}$/,
+    // emptyError: 'Please enter screen name',
+    // typeError: 'Please enter valid screen name',
+      regex: /^[A-Za-z]+(?: [A-Za-z]+)*$/, // One space between words, no leading/trailing/multiple spaces
+      emptyError: 'Please enter screen name',
+      typeError: 'Screen name must be 3-50 characters and only one space between words',
   },
 
   clinicalName: {

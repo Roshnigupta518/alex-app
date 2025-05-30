@@ -61,7 +61,7 @@ const SetupProfileScreen = ({navigation, route}) => {
       return;
     } else {
       let data = new FormData();
-      data.append('anonymous_name', state.screenName);
+      data.append('anonymous_name', state.screenName.trim().replace(/\s+/g, ' '));
       data.append('name', state.name);
       data.append('password', state.password);
       data.append('confirm_password', state.confirmPassword);

@@ -76,6 +76,7 @@ const ReelViewer = ({navigation, route}) => {
 
   const _renderReels = useCallback(
     ({item, index}) => {
+      console.log({index, HEIGHT})
       return (
         <View style={styles.cardContainer}>
           <ReelCard
@@ -107,14 +108,28 @@ const ReelViewer = ({navigation, route}) => {
       // });
     }
   }, []);
-  const getItemLayout = (data, index) => ({
-    length: HEIGHT, // Replace with your item height
-    offset: HEIGHT * index,
-    index,
-  });
+  // const getItemLayout = (data, index) => ({
+  //   length: HEIGHT, // Replace with your item height
+  //   offset: HEIGHT * index,
+  //   index,
+  // });
+
+  const getItemLayout = (data, index) => {
+    const ITEM_HEIGHT = Math.round(HEIGHT);
+    console.log({ITEM_HEIGHT})
+    return {
+      length: ITEM_HEIGHT,
+      offset: ITEM_HEIGHT * index,
+      index,
+    };
+  };
+
+  
   return (
     <>
-      <View style={styles.container}>
+      <View 
+      style={styles.container}
+      >
         <View
           style={{
             position: 'absolute',
@@ -123,6 +138,7 @@ const ReelViewer = ({navigation, route}) => {
           }}>
           <BackHeader />
         </View>
+      
         <FlatList
           ref={flashListRef}
           data={postArray}
@@ -133,17 +149,27 @@ const ReelViewer = ({navigation, route}) => {
           disableIntervalMomentum
           onViewableItemsChanged={_onViewableItemsChanged}
           viewabilityConfig={_viewabilityConfig}
-          estimatedItemSize={2}
+          // estimatedItemSize={2}
           pagingEnabled
-          initialNumToRender={2}
-          windowSize={2}
-          removeClippedSubviews={true}
-          getItemLayout={getItemLayout}
-          contentInset={{top: 0, bottom: 20, left: 0, right: 0}}
+          snapToInterval={Math.round(HEIGHT)}
+          initialNumToRender={5}
+          windowSize={10}
+          removeClippedSubviews={false}
+          // getItemLayout={getItemLayout}
+          getItemLayout={(data, index) => ({
+            length: Math.round(HEIGHT),
+            offset: Math.round(HEIGHT) * index,
+            index
+          })}
+          contentInset={{top: 0, bottom: 0, left: 0, right: 0}}
           contentInsetAdjustmentBehavior="automatic"
-          contentContainerStyle={{alignSelf: 'center'}}
-        />
+          // contentContainerStyle={{alignSelf: 'center'}}
+          // extraData={HEIGHT}
+          extraData={Math.round(HEIGHT)}
+          contentContainerStyle={{ padding: 0, margin: 0 }}
 
+        />
+     
         {/* comment actionsheets */}
         <CommentListSheet
           ref={actionsheetRef}
@@ -225,7 +251,7 @@ const ReelViewer = ({navigation, route}) => {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    height: HEIGHT,
+    height: Math.round(HEIGHT),
     backgroundColor: colors.black,
   },
 

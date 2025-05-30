@@ -32,7 +32,7 @@ const ReelCard = ({
   const [isSaved, setIsSaved] = useState(data?.isSaved || false);
   const [shouldPlay, setShouldPlay] = useState(isItemOnFocus);
   const [muteIconVisible, setMuteIconVisible] = useState(false);
-
+  console.log({screenHeight})
   useEffect(() => {
     setShouldPlay(
       isItemOnFocus && data?.postData?.post?.mimetype == 'video/mp4',
