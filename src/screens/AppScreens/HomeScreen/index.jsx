@@ -79,8 +79,10 @@ const HomeScreen = ({ navigation, route }) => {
   });
   const [refreshing, setRefreshing] = React.useState(false);
   const [isInternetConnected, setIsInternetConnected] = useState(true);
-  const { city, location, error } = useLocation()
+  // const { city, location, error } = useLocation()
+  const { location, city, error, permissionGranted, refreshLocation } = useLocation();
 
+  console.log({ location, city, error, permissionGranted })
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -106,9 +108,11 @@ const HomeScreen = ({ navigation, route }) => {
     // Unsubscribe
     return () => unsubscribe();
   }, []);
-  const onRefresh = React.useCallback(() => {
+  const onRefresh = React.useCallback(async() => {
     setRefreshing(true);
-    console.log('call this***************')
+    console.log('call this refresh***************')
+    console.log({ selectedCityData, paramsValues, currentCity: city })
+
     pagination.skip = staticValues.skip;
     pagination.limit = staticValues.limit;
     pagination.totalRecords = staticValues.totalRecords;
@@ -116,23 +120,43 @@ const HomeScreen = ({ navigation, route }) => {
     pagination.isLoading = staticValues.isLoading;
 
     setPostArray([]);
+    await refreshLocation();
     getAllPosts();
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
-  }, [paramsValues, selectedCityData, city]);
+  }, [paramsValues, selectedCityData, city, refreshLocation]);
 
   const getAllPosts = () => {
     console.log({ selectedCityData, paramsValues, currentCity: city })
+    // 💡 Handle case when current location is required but not available
+    if (selectedCityData?.locationType == 'current') {
+      if (city == null || !!error) {
+        console.log('Current location not available:', error);
+       
+        setIsLoading(false);
+        setRefreshing(false);
+        return; 
+      }
+    }
+
     pagination.isLoading = true;
     setIsLoading(true);
     let url = {
-      skip: pagination.skip,
-      limit: pagination.limit,
+      // skip: pagination.skip,
+      // limit: pagination.limit,
     };
-    if (selectedCityData?.locationType == 'current' && city != null) {
+    if (pagination.skip !== 0 || pagination.limit !== 0) {
+      Object.assign(url, {
+        skip: pagination.skip,
+        limit: pagination.limit,
+      });
+    }
+    if (selectedCityData?.locationType == 'current') {
+
       Object.assign(url, { city: city });
-      console.log('current location data')
+
+      console.log('current location data');
     } else if (paramsValues?.location_type == 'city') {
       Object.assign(url, { city: paramsValues?.city });
       console.log('selectedCity data')
@@ -208,29 +232,49 @@ const HomeScreen = ({ navigation, route }) => {
     paramsValues.city = nearByType?.city;
   }, [nearByType]);
 
+  // useEffect(() => {
+  //   if (!isFocused) {
+  //     setIsOnFocusItem(false);
+  //   } else {
+  //     if (
+  //       route?.params?.shouldScrollTopReel ||
+  //       prevNearBy.current !== nearByType
+  //     ) {
+  //       setPostArray([]);
+  //        console.log('calling when refresh the page')
+  //       onRefresh();
+  //     } else if (postArray?.length == 0) {
+  //       console.log('isfouces');
+  //       if (city) {
+  //         getAllPosts();
+  //       }
+  //       if (error) {
+  //         setIsLoading(false)
+  //       }
+  //     }
+  //     setIsOnFocusItem(true);
+  //   }
+  // }, [isFocused, city, selectedCityData, error]);
+
   useEffect(() => {
     if (!isFocused) {
       setIsOnFocusItem(false);
     } else {
-      if (
-        route?.params?.shouldScrollTopReel ||
-        prevNearBy.current !== nearByType
-      ) {
+      if ((error || !city) && selectedCityData?.locationType == 'current') {
+        console.log('Skipping location-based logic because of error or missing city.');
+        setIsLoading(false);
+        return;
+      }
+      if (route?.params?.shouldScrollTopReel || prevNearBy.current !== nearByType) {
         setPostArray([]);
-         console.log('calling when refresh the page')
         onRefresh();
-      } else if (postArray?.length == 0) {
-        console.log('isfouces');
-        if (city) {
-          getAllPosts();
-        }
-        if (error) {
-          setIsLoading(false)
-        }
+      } else if (postArray?.length === 0) {
+        getAllPosts();
       }
       setIsOnFocusItem(true);
     }
   }, [isFocused, city, selectedCityData, error]);
+
 
   useEffect(() => {
     const backAction = () => {
@@ -310,11 +354,12 @@ const HomeScreen = ({ navigation, route }) => {
           onNearByClick={() => navigation.navigate('NearByScreen')}
           notificationClick={() => navigation.navigate('NotificationScreen')}
           onTempaClick={() => {
-            if (error) {
-            } else {
-              setIsLoading(true)
-              dispatch(setCityAction({ locationType: 'current' }))
-            }
+            // if (error) {
+            // } else {
+            // setIsLoading(true)
+            dispatch(setCityAction({ locationType: 'current' }))
+            setPostArray([])
+            // }
           }}
           selectedCity={selectedCityData?.locationType}
           currentCity={city}
@@ -326,13 +371,14 @@ const HomeScreen = ({ navigation, route }) => {
         }>
           {(isLoading && postArray?.length == 0) ? (
             // Show loader
-            <View style={{
-              alignItems: 'center',
-              height: screenHeight / 1.2,
-              justifyContent: 'center',
-            }}>
-              <ActivityIndicator size="large" color={colors.white} />
-            </View>
+            // <View style={{
+            //   alignItems: 'center',
+            //   height: screenHeight / 1.2,
+            //   justifyContent: 'center',
+            // }}>
+            //   <ActivityIndicator size="large" color={colors.white} />
+            // </View>
+            null
 
           ) : postArray?.length > 0 ? (
             // Show post list
@@ -398,9 +444,10 @@ const HomeScreen = ({ navigation, route }) => {
 
                 <Text
                   style={{
-                    fontFamily: fonts.bold,
-                    fontSize: wp(16),
+                    fontFamily: fonts.regular,
+                    fontSize: wp(12),
                     color: colors.white,
+                    textAlign: 'center'
                   }}>
                   {selectedCityData.locationType == 'current' && error}
                 </Text>

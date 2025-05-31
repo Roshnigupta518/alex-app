@@ -59,7 +59,7 @@ const CustomLabelInput = ({
 }: inputProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   return (
-    <View style={[styles.container, containerStyle]}>
+    <View style={[styles.container, containerStyle,{backgroundColor: (!editable)? colors.lightGray:''}]}>
       <Text style={[styles.labelStyle, labelStyle]}>{label}</Text>
 
       <View style={styles.inputConatiner}>

@@ -208,7 +208,7 @@ const UserProfileDetail = ({ navigation, route }) => {
 
                   <View>
                     <Text style={styles.contentTextStyle}>{formatCount(userDetails?.cityes_count)}</Text>
-                    <Text style={styles.contentTitleStyle}>cities</Text>
+                    <Text style={styles.contentTitleStyle}>Cities</Text>
                   </View>
                 </View>
                 <View style={styles.wdh33}>

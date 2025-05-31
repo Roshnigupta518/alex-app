@@ -142,7 +142,7 @@ const OTPScreen = ({navigation, route}) => {
         <Text style={styles.titleTxtStyle}>Verify Yourself</Text>
 
         <Text style={styles.subTitleStyle}>
-          Enter four digit code sent over your Registered email{' '}
+          Enter four digit code sent over your registered email{' '}
           {email && (
             <>
               {email

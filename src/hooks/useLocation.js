@@ -10,6 +10,7 @@ const useCheckLocation = () => {
   const [location, setLocation] = useState(null);
   const [city, setCity] = useState(null);
   const [error, setError] = useState(null);
+  const [permissionGranted, setPermissionGranted] = useState(false);
   const appState = useRef(AppState.currentState);
 
   const getCityFromCoords = async (latitude, longitude) => {
@@ -30,26 +31,49 @@ const useCheckLocation = () => {
     }
   };
 
+  const checkLocationPermission = async () => {
+    try {
+      const permission = Platform.OS === 'android'
+        ? PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION
+        : PERMISSIONS.IOS.LOCATION_WHEN_IN_USE;
+
+      const result = await check(permission);
+
+      if (result === RESULTS.GRANTED) {
+        console.log('Location permission granted.');
+        setPermissionGranted(true);
+        return true;
+      }
+
+      console.log('Location permission denied. Skipping location-based logic.');
+      setPermissionGranted(false);
+      setError('Location Permission denied.\nTo see current location related content please enable location permission in your settings');
+      return false;
+    } catch (err) {
+      console.error('Error checking permission:', err);
+      setError('Error checking location permission');
+      return false;
+    }
+  };
+
   const requestLocationPermission = async () => {
     try {
       if (Platform.OS === 'android') {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
         );
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) return true;
-        // Alert.alert('Permission Required', 'Please enable location permission in your settings.');
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          setPermissionGranted(true);
+          return true;
+        }
+
+        setPermissionGranted(false);
         Alert.alert(
           'Location Permission Denied',
           'Please enable location access in your settings',
           [
-            {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-            {
-              text: 'Open Settings',
-              onPress: () => Linking.openSettings(),
-            },
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Open Settings', onPress: () => Linking.openSettings() },
           ]
         );
         return false;
@@ -57,26 +81,27 @@ const useCheckLocation = () => {
         const permission = PERMISSIONS.IOS.LOCATION_WHEN_IN_USE;
         let result = await check(permission);
         if (result === RESULTS.DENIED) result = await request(permission);
-        if (result === RESULTS.GRANTED) return true;
-        // Alert.alert('Permission Required', 'Please enable location access in your iPhone settings.');
+
+        if (result === RESULTS.GRANTED) {
+          setPermissionGranted(true);
+          return true;
+        }
+
+        setPermissionGranted(false);
         Alert.alert(
           'Location Permission Denied',
           'Please enable location access in your iPhone settings',
           [
-            {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-            {
-              text: 'Open Settings',
-              onPress: () => Linking.openSettings(),
-            },
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Open Settings', onPress: () => Linking.openSettings() },
           ]
         );
         return false;
       }
     } catch (e) {
       console.error('Permission error:', e);
+      setError('Error requesting location permission');
+      setPermissionGranted(false);
       return false;
     }
   };
@@ -84,7 +109,8 @@ const useCheckLocation = () => {
   const checkGPS = async () => {
     const isEnabled = await DeviceInfo.isLocationEnabled();
     if (!isEnabled) {
-      Alert.alert('Location Off', 'Please turn on GPS (Location Services) from phone settings.');
+      // Alert.alert('Location Off', 'Please turn on GPS (Location Services) from phone settings.');
+      setError('To see posts near you, please turn on GPS (Location Services)');
     }
     return isEnabled;
   };
@@ -109,31 +135,37 @@ const useCheckLocation = () => {
         console.error('Geolocation error:', err);
         setError(err.message || 'Failed to get location');
       }
-      // ,
-      // {
-      //   enableHighAccuracy: true,
-      //   timeout: 15000,
-      //   maximumAge: 10000,
-      // }
     );
   };
 
   const init = async () => {
-    const hasPermission = await requestLocationPermission();
+    const hasPermission = await checkLocationPermission();
     if (!hasPermission) {
-      setError('Location Permission denied');
+      console.log('Skipping location logic as permission denied.');
       return;
     }
 
     const isGPSEnabled = await checkGPS();
-    if (!isGPSEnabled) {
-      setError('GPS is turned off');
-      return;
-    }
+    if (!isGPSEnabled) return;
 
     if (!location) {
       fetchLocation();
     }
+  };
+
+  const refreshLocation = async () => {
+    const isGPSEnabled = await DeviceInfo.isLocationEnabled();
+    if (!isGPSEnabled) {
+      setError('To see posts near you, please turn on GPS (Location Services)');
+      return;
+    }
+  
+    if (!permissionGranted) {
+      setError('Location permission not granted');
+      return;
+    }
+  
+    fetchLocation();
   };
 
   useEffect(() => {
@@ -142,7 +174,7 @@ const useCheckLocation = () => {
     const subscription = AppState.addEventListener('change', async nextAppState => {
       if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
         const isGPSEnabled = await DeviceInfo.isLocationEnabled();
-        if (isGPSEnabled && !location) {
+        if (isGPSEnabled && permissionGranted && !location) {
           fetchLocation();
         }
       }
@@ -152,7 +184,7 @@ const useCheckLocation = () => {
     return () => subscription.remove();
   }, []);
 
-  return { location, city, error };
+  return { location, city, error, permissionGranted, refreshLocation };
 };
 
 export default useCheckLocation;

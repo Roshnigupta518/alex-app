@@ -223,7 +223,7 @@ const EditProfileScreen = ({ navigation, route }) => {
             <View style={{ margin: wp(20) }}>
               <CustomLabelInput
                 placeholderColor="white"
-                label="Enter Email Id"
+                label="Email Id"
                 placeholder="Input Text"
                 editable={false}
                 value={state.email}
