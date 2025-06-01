@@ -41,7 +41,7 @@ const EditProfileScreen = ({ navigation, route }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [imageData, setImageData] = useState(null);
   const [userImage, setUserImage] = useState(userInfo?.profile_picture || '');
-  const [callingCode, setCallingCode] = useState('');
+  const [callingCode, setCallingCode] = useState();
 
   const [state, setState] = useState({
     screenName: userInfo?.anonymous_name || '',

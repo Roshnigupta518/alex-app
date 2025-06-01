@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -24,6 +24,13 @@ const MobileNoInput = ({
   const [country, setCountry] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [countryPickerKey, setCountryPickerKey] = useState(0);
+
+    // 🔥 Sync prop to local state
+    useEffect(() => {
+      if (callingCode) {
+        setCountryCode(callingCode);
+      }
+    }, [callingCode]);
 
   const onSelect = country => {
     setCountryCode(country?.dial_code);
