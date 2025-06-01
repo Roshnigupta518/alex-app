@@ -345,7 +345,6 @@ const HomeScreen = ({ navigation, route }) => {
     index,
   });
 
-
   return (
     <>
       <View style={styles.container}>
@@ -354,12 +353,8 @@ const HomeScreen = ({ navigation, route }) => {
           onNearByClick={() => navigation.navigate('NearByScreen')}
           notificationClick={() => navigation.navigate('NotificationScreen')}
           onTempaClick={() => {
-            // if (error) {
-            // } else {
-            // setIsLoading(true)
             dispatch(setCityAction({ locationType: 'current' }))
             setPostArray([])
-            // }
           }}
           selectedCity={selectedCityData?.locationType}
           currentCity={city}
@@ -424,7 +419,7 @@ const HomeScreen = ({ navigation, route }) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-              {city != null ? (
+              {(city != null && !isLoading) ? (
                 <Text
                   onPress={() => {
                     if (selectedCityData?.locationType === 'current') {
