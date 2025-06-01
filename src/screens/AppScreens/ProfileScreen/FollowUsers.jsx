@@ -26,6 +26,7 @@ const FollowUsers = ({navigation, route}) => {
   const [users, setUsers] = useState([]);
   const [searchedUser, setSearchedUser] = useState([]);
   const [isInternetConnected, setIsInternetConnected] = useState(true);
+  const [isLoading, setIsLoading] = useState(false)
 
   const id = route?.params?.id
    
@@ -65,21 +66,30 @@ const FollowUsers = ({navigation, route}) => {
   };
 
   const getAllFollowing = () => {
+    setIsLoading(true)
     getAllFollowingRequest(id)
       .then(res => {
         setUsers(res?.result);
         setSearchedUser(res?.result);
+        setIsLoading(false)
       })
-      .catch(err => Toast.error('Follow List', err?.message));
+      .catch(err => {
+        Toast.error('Follow List', err?.message)
+        setIsLoading(false)
+      });
   };
 
   const getAllFollowers = () => {
+    setIsLoading(true)
     getAllFollowerRequest(id)
       .then(res => {
         setUsers(res?.result);
         setSearchedUser(res?.result);
+        setIsLoading(false)
       })
-      .catch(err => Toast.error('Follow List', err?.message));
+      .catch(err => {Toast.error('Follow List', err?.message)
+        setIsLoading(false)
+      });
   };
 
   const callUserList = () => {
@@ -305,7 +315,7 @@ const FollowUsers = ({navigation, route}) => {
             }}>
             <FlatList
               data={searchedUser}
-              ListEmptyComponent={<NotFoundAnime />}
+              ListEmptyComponent={<NotFoundAnime isLoading={isLoading} />}
               renderItem={_renderUserList}
               keyExtractor={item => item._id}
             />

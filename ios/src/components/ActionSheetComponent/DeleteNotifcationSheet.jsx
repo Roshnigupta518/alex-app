@@ -65,7 +65,7 @@ const DeleteNotificationSheet = forwardRef(
                 color: colors.black,
                 textAlign: 'center',
               }}>
-              Are you sure to delete your Notification?
+              Are you sure you want to delete this notification?
             </Text>
           </View>
 

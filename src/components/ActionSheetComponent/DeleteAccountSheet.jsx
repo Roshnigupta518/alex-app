@@ -54,7 +54,7 @@ const DeleteAccountSheet = forwardRef(({onSuccess = () => {}}, ref) => {
               marginHorizontal: 20,
               textAlign: 'center',
             }}>
-            Are you sure to delete your account?
+            Are you sure you want to delete your account?
           </Text>
         </View>
 

@@ -54,6 +54,129 @@ const checkValidation = (regexType, value, extraValue = null) => {
       }
       
 
+      if (regexType === 'address') {
+        if (!value || value.trim() === '') {
+            // If empty or only spaces, do NOT show error (valid)
+            return ''; // no error
+          }
+        const cleaned = value?.trim();
+
+        if (cleaned === '') {
+            return 'Please enter valid address';
+          }
+      
+        if (cleaned.length < 5 || cleaned.length > 150) {
+          return 'Address must be 5-150 characters';
+        }
+      
+        if (/\s{2,}/.test(value)) {
+          return 'Please enter a valid address';
+        }
+      
+        if (!RegexType[regexType]?.regex.test(value)) {
+          return RegexType[regexType]?.typeError;
+        }
+      
+        return '';
+      }
+
+      if (regexType === 'city') {
+        if (!value || value.trim() === '') {
+            // If empty or only spaces, do NOT show error (valid)
+            return ''; // no error
+          }
+        const cleaned = value?.trim();
+      
+       
+      
+        if (cleaned.length < 3 || cleaned.length > 50) {
+          return 'City must be 3-50 characters';
+        }
+      
+        if (/\s{2,}/.test(value)) {
+          return 'Please enter a valid city';
+        }
+      
+        if (!RegexType[regexType]?.regex.test(value)) {
+          return RegexType[regexType]?.typeError;
+        }
+      
+        return '';
+      }
+
+      if (regexType === 'state') {
+        if (!value || value.trim() === '') {
+            // If empty or only spaces, do NOT show error (valid)
+            return ''; // no error
+          }
+        const cleaned = value?.trim();
+      
+        
+      
+        if (cleaned.length < 5 || cleaned.length > 150) {
+          return 'State name must be 5-150 characters';
+        }
+      
+        if (/\s{2,}/.test(value)) {
+          return 'Please enter a valid state name';
+        }
+      
+        if (!RegexType[regexType]?.regex.test(value)) {
+          return RegexType[regexType]?.typeError;
+        }
+      
+        return '';
+      }
+
+      if (regexType === 'zip') {
+        if (!value || value.trim() === '') {
+            // If empty or only spaces, do NOT show error (valid)
+            return ''; // no error
+          }
+        const cleaned = value?.trim();
+      
+      
+        if (cleaned.length < 4 || cleaned.length > 10) {
+          return 'Zip code must be 4-10 characters';
+        }
+      
+        if (/\s{2,}/.test(value)) {
+          return 'Please enter a valid zip code';
+        }
+      
+        if (!RegexType[regexType]?.regex.test(value)) {
+          return RegexType[regexType]?.typeError;
+        }
+      
+        return '';
+      }
+        
+      if (regexType === 'bio') {
+        if (!value || value.trim() === '') {
+            // If empty or only spaces, do NOT show error (valid)
+            return ''; // no error
+          }
+        const cleaned = value?.trim();
+     
+      
+        if (cleaned.length > 150) {
+          return 'About yourself must not exceed 150 characters';
+        }
+      
+        if (/\s{2,}/.test(value)) {
+          return 'Please enter valid text for about yourself';
+        }
+      
+        if (!RegexType[regexType]?.regex.test(value)) {
+          return RegexType[regexType]?.typeError;
+        }
+      
+        return '';
+      }
+      
+      
+      
+
     // if (regexType === 'mobileno') {
     //     const onlyDigitsRegex = /^[0-9]+$/;
 

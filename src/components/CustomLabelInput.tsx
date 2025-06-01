@@ -40,6 +40,8 @@ interface inputProps {
   eyeStyle?: ImageStyle;
   theme?: 'light' | 'dark';
   editable?: boolean;
+  multiline?: boolean;
+  maxLength?: number
 }
 
 const CustomLabelInput = ({
@@ -56,6 +58,8 @@ const CustomLabelInput = ({
   eyeStyle,
   theme = 'light',
   editable = true,
+  multiline = false, 
+  maxLength
 }: inputProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   return (
@@ -67,6 +71,7 @@ const CustomLabelInput = ({
           style={[
             styles.inputStyle,
             {color: theme == 'dark' ? colors.white : colors.black},
+            multiline && styles.multilineInput,
           ]}
           secureTextEntry={isPassword && !isPasswordVisible}
           keyboardType={keyboardType}
@@ -77,6 +82,10 @@ const CustomLabelInput = ({
           editable={editable}
           value={value}
           onChangeText={onTextChange}
+          multiline={multiline} // NEW: enable multiline
+  numberOfLines={multiline ? 4 : 1} // NEW: 4 lines if multiline
+  textAlignVertical={multiline ? 'top' : 'center'}
+  maxLength={maxLength}
         />
 
         {typeof renderRightView == 'function' && renderRightView()}
@@ -140,6 +149,10 @@ const styles = StyleSheet.create({
     height: wp(30),
     width: wp(30),
     resizeMode: 'contain',
+  },
+  multilineInput: {
+    minHeight: wp(80),
+    paddingTop: wp(10), // padding for top-aligned text
   },
 });
 

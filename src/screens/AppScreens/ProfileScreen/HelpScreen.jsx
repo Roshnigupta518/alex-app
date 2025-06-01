@@ -19,6 +19,8 @@ import Toast from '../../../constants/Toast';
 import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../../components/NoInternetModal';
+import checkValidation from '../../../validation';
+
 const HelpScreen = ({navigation}) => {
   const [getContentLoading, setGetContentLoading] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -60,9 +62,20 @@ const HelpScreen = ({navigation}) => {
       .finally(() => setGetContentLoading(false));
   };
 
+  const validation = (qry) => {
+    const queryError = checkValidation('query', qry);
+    if (queryError?.length > 0) {
+      Toast.error('Query', queryError);
+      return false;
+    }
+    
+    return true;
+
+  }
+
   const addQuery = async qry => {
-    if (qry?.length == 0) {
-      Toast.error('Query', 'Query is required');
+    if (!validation(qry)) {
+      return;
     } else {
       setLoading(true);
       await AddQueryRequest({query: qry})

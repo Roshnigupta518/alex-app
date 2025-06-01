@@ -32,6 +32,7 @@ import NoInternetModal from '../../../components/NoInternetModal';
 import TabsHeader from '../../../components/TabsHeader';
 import NotFoundAnime from '../../../components/NotFoundAnime';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import MobileNoInput from '../../../components/MobileNoInput';
 
 const EditProfileScreen = ({ navigation, route }) => {
   const mediaRef = useRef(null);
@@ -40,6 +41,7 @@ const EditProfileScreen = ({ navigation, route }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [imageData, setImageData] = useState(null);
   const [userImage, setUserImage] = useState(userInfo?.profile_picture || '');
+  const [callingCode, setCallingCode] = useState('');
 
   const [state, setState] = useState({
     screenName: userInfo?.anonymous_name || '',
@@ -97,8 +99,38 @@ const EditProfileScreen = ({ navigation, route }) => {
     let tiktokErr = checkValidation('tiktok', state.tiktok)
     let twitterErr = checkValidation('twitter', state.twitter)
     let facebookErr = checkValidation('facebook', state.facebook)
+    let addressErr = checkValidation('address', state.address);
+    let cityErr = checkValidation('city', state.city); 
+    let stateErr = checkValidation('state', state.stateName); 
+    let zipErr = checkValidation('zip', state.zip);
+    let aboutErr = checkValidation('bio', state.bio);
 
     let nameErr = state.userName;
+
+    if (addressErr?.length > 0) {
+      Toast.error('Edit Profile', addressErr);
+      return false;
+    }
+
+    if (cityErr?.length > 0) {
+      Toast.error('Edit Profile', cityErr);
+      return false;
+    }
+
+    if (stateErr?.length > 0) {
+      Toast.error('Edit Profile', stateErr);
+      return false;
+    }
+
+    if (zipErr?.length > 0) {
+      Toast.error('Edit Profile', zipErr);
+      return false;
+    }
+
+    if (aboutErr?.length > 0) {
+      Toast.error('Edit Profile', aboutErr);
+      return false;
+    }
 
     if (anonymsErr?.length > 0) {
       Toast.error('Edit Profile', anonymsErr);
@@ -152,7 +184,6 @@ const EditProfileScreen = ({ navigation, route }) => {
           id: userInfo?.id,
           token: userInfo?.token,
         });
-        console.log({ data })
         setState({
           ...state,
           instagram: data?.socialLinks?.instagram,
@@ -167,6 +198,7 @@ const EditProfileScreen = ({ navigation, route }) => {
           address: data?.address,
           bio: data?.bio,
         })
+        setCallingCode(data?.isd)
         Storage.store('userdata', data)
           .then(() => {
             dispatch(userDataAction(data));
@@ -179,6 +211,7 @@ const EditProfileScreen = ({ navigation, route }) => {
       .finally(() => setIsLoading(false));
   };
   const submitProfile = () => {
+    console.log({callingCode,telephone: state.telephone})
     if (!validateFields()) {
       return;
     } else {
@@ -199,7 +232,9 @@ const EditProfileScreen = ({ navigation, route }) => {
       data.append('zip', state.zip);
       data.append('state', state.state);
       data.append('bio', state.bio);
-      data.append('phone', state.telephone);
+      data.append('phone',state.telephone);
+      data.append('isd', callingCode);
+
       setIsLoading(true);
       updateProfileRequest(data)
         .then(res => {
@@ -308,9 +343,9 @@ const EditProfileScreen = ({ navigation, route }) => {
                 containerStyle={{ marginVertical: wp(10) }}
               />
 
-              <CustomLabelInput
+              {/* <CustomLabelInput
                 placeholderColor="white"
-                label="Telephone"
+                label="Mobile Number"
                 placeholder=""
                 value={state.telephone}
                 onTextChange={txt =>
@@ -318,6 +353,15 @@ const EditProfileScreen = ({ navigation, route }) => {
                 }
                 containerStyle={{ marginVertical: wp(10) }}
                 keyboardType='numeric'
+              /> */}
+                 <MobileNoInput
+                callingCode={callingCode}
+                label="Mobile Number"
+                value={state.telephone}
+                onCountryChange={code => setCallingCode(code)}
+                onTextChange={txt =>
+                  setState(prevState => ({...prevState, telephone: txt}))
+                }
               />
 
               <CustomLabelInput
@@ -329,6 +373,8 @@ const EditProfileScreen = ({ navigation, route }) => {
                   setState(prevState => ({ ...prevState, bio: txt }))
                 }
                 containerStyle={{ marginVertical: wp(10) }}
+                multiline={true}
+                maxLength={150}
               />
 
             </View>
@@ -425,32 +471,32 @@ const EditProfileScreen = ({ navigation, route }) => {
       <SafeAreaView style={styles.container}>
         <BackHeader label='Edit Profile' labelStyle={{ textAlign: 'center' }} />
         {!isLoading ? (
-  <ScrollView
-  showsVerticalScrollIndicator={false}
-  showsHorizontalScrollIndicator={false}>
-          <View style={{ flex: 1 }}>
-            <View style={styles.UserImageView}>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => mediaRef.current?.open()}>
-                <Image
-                  source={userImage ? { uri: userImage } : ImageConstants.user}
-                  style={styles.userImagesStyle}
-                />
-              </TouchableOpacity>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}>
+            <View style={{ flex: 1 }}>
+              <View style={styles.UserImageView}>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => mediaRef.current?.open()}>
+                  <Image
+                    source={userImage ? { uri: userImage } : ImageConstants.user}
+                    style={styles.userImagesStyle}
+                  />
+                </TouchableOpacity>
 
-              <View style={{ margin: 20 }}>
-                <Text numberOfLines={2} style={styles.userNameStyle}>
-                  {userInfo?.name}
-                </Text>
+                <View style={{ margin: 20 }}>
+                  <Text numberOfLines={2} style={styles.userNameStyle}>
+                    {userInfo?.name}
+                  </Text>
+                </View>
               </View>
+
+
+              <TabsHeader activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabList} />
+              {renderTabContent()}
+
             </View>
-
-           
-            <TabsHeader activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabList} />
-           {renderTabContent()}
-
-          </View>
           </ScrollView>
 
         ) :

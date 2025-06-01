@@ -220,34 +220,34 @@ const UserProfileDetail = ({ navigation, route }) => {
                 </View>
               </View>
 
-              <View style={[styles.profileCounts, { marginTop: 10, justifyContent: 'space-evenly', flexDirection: 'row' }]}>
+              <View style={[styles.profileCounts, { marginTop: 10,flexDirection: 'row' }]}>
                 {userDetails?.socialLinks?.tiktok ? (
-                  <TouchableOpacity onPress={() => openSocialLink(userDetails.socialLinks.tiktok)}>
-                    <Image source={ImageConstants.tiktok} style={styles.imgsty} />
+                  <TouchableOpacity style={styles.iconsty} onPress={() => openSocialLink(userDetails.socialLinks.tiktok)}>
+                    <Image source={ImageConstants.tiktok} style={styles.imgsty} resizeMode="contain" />
                   </TouchableOpacity>
                 ) : null}
 
                 {userDetails?.socialLinks?.twitter ? (
-                  <TouchableOpacity onPress={() => openSocialLink(userDetails.socialLinks.twitter)}>
-                    <Image source={ImageConstants.twitter} style={styles.imgsty} />
+                  <TouchableOpacity style={styles.iconsty} onPress={() => openSocialLink(userDetails.socialLinks.twitter)}>
+                    <Image source={ImageConstants.twitter} style={styles.imgsty} resizeMode="contain" />
                   </TouchableOpacity>
                 ) : null}
 
                 {userDetails?.socialLinks?.instagram ? (
-                  <TouchableOpacity onPress={() => openSocialLink(userDetails.socialLinks.instagram)}>
-                    <Image source={ImageConstants.instagram} style={styles.imgsty} />
+                  <TouchableOpacity style={styles.iconsty} onPress={() => openSocialLink(userDetails.socialLinks.instagram)}>
+                    <Image source={ImageConstants.instagram} style={styles.imgsty} resizeMode="contain" />
                   </TouchableOpacity>
                 ) : null}
 
                 {userDetails?.socialLinks?.facebook ? (
-                  <TouchableOpacity onPress={() => openSocialLink(userDetails.socialLinks.facebook)}>
-                    <Image source={ImageConstants.facebook} style={styles.imgsty} />
+                  <TouchableOpacity style={styles.iconsty} onPress={() => openSocialLink(userDetails.socialLinks.facebook)}>
+                    <Image source={ImageConstants.facebook} style={styles.imgsty} resizeMode="contain" />
                   </TouchableOpacity>
                 ) : null}
 
                 {userDetails?.socialLinks?.youtube ? (
-                  <TouchableOpacity onPress={() => openSocialLink(userDetails.socialLinks.youtube)}>
-                    <Image source={ImageConstants.youtube} style={styles.imgsty} />
+                  <TouchableOpacity style={styles.iconsty} onPress={() => openSocialLink(userDetails.socialLinks.youtube)}>
+                    <Image source={ImageConstants.youtube} style={styles.imgsty} resizeMode="contain" />
                   </TouchableOpacity>
                 ) : null}
               </View>
@@ -349,6 +349,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'green',
     margin: 4,
     borderRadius: 18,
+  },
+  iconsty:{
+    overflow: 'visible',
+    marginHorizontal:wp(10)
   },
   masonryHeader: {
     position: 'absolute',

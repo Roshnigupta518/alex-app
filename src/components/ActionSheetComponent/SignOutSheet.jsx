@@ -43,7 +43,7 @@ const SignOutSheet = forwardRef(({onSuccess = () => {}}, ref) => {
               marginHorizontal: 20,
               textAlign: 'center',
             }}>
-            Are you sure to sign out the application?
+            Are you sure you want to sign out of the application?
           </Text>
         </View>
 

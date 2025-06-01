@@ -120,7 +120,7 @@ const ChangePasswordScreen = ({navigation, route}) => {
               onTextChange={txt =>
                 setState(prevState => ({...prevState, oldPassword: txt}))
               }
-              eyeStyle={{tintColor: colors.black}}
+              eyeStyle={{tintColor: colors.primaryColor}}
               containerStyle={{marginBottom: wp(30)}}
             />
 
@@ -132,7 +132,7 @@ const ChangePasswordScreen = ({navigation, route}) => {
               onTextChange={txt =>
                 setState(prevState => ({...prevState, newPassword: txt}))
               }
-              eyeStyle={{tintColor: colors.black}}
+              eyeStyle={{tintColor: colors.primaryColor}}
               containerStyle={{marginBottom: wp(30)}}
             />
 
@@ -144,7 +144,7 @@ const ChangePasswordScreen = ({navigation, route}) => {
               onTextChange={txt =>
                 setState(prevState => ({...prevState, confirmPassword: txt}))
               }
-              eyeStyle={{tintColor: colors.black}}
+              eyeStyle={{tintColor: colors.primaryColor}}
               containerStyle={{marginBottom: wp(30)}}
             />
           </View>

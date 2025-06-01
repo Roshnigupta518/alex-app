@@ -7,17 +7,18 @@ export const RegexType = {
   },
 
   loginPassword: {
-    regex: /^.{1,100}$/,
+    regex: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/,
     emptyError: 'Please enter password',
-    typeError: 'Please enter valid password displays.',
+    typeError:
+      'Password should be 8-16 characters long and include at least one uppercase letter, one lowercase letter, one special character, and one digit.',
   },
 
   registerPassword: {
-    regex: /^[A-Za-z0-9@$!%*?&]{6,18}$/,
+    regex: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/,
     emptyError: 'Please enter password',
     typeError:
-      'Password should be Between 8-16 characters long. And it should contain Atleast One Number, One Special Character, One Uppercase and One Lowercase.',
-  },
+      'Password should be 8-16 characters long and include at least one uppercase letter, one lowercase letter, one special character, and one digit.',
+  },  
 
   firstname: {
     regex: /^[A-Za-z\s]{3,100}$/,
@@ -88,9 +89,12 @@ export const RegexType = {
   },
 
   address: {
-    regex: /^[A-Za-z0-9\s\.,#'-]+$/,
-    emptyError: 'Please enter address',
-    typeError: 'Please enter valid address',
+    // regex: /^[A-Za-z0-9\s\.,#'-]+$/,
+    // emptyError: 'Please enter address',
+    // typeError: 'Please enter valid address',
+
+    regex: /^(?!.*\s{2,})(?!^\s*$).{5,150}$/, // no consecutive spaces, min 5, max 150, not empty
+    typeError: 'Please enter a valid address',
   },
 
   amount: {
@@ -138,5 +142,29 @@ export const RegexType = {
   tiktok:{
     regex: /^https?:\/\/(www\.)?tiktok\.com\/@[\w._]+\/?(?:\?.*)?$/,
     typeError: 'Please enter valid tiktok Url',
-  }
+  },
+  city: {
+    regex: /^[A-Za-z\s'-]+$/,   // Letters, space, hyphen, apostrophe
+    typeError: 'Please enter a valid city',
+  },
+  state: {
+    regex: /^[A-Za-z\s'-]+$/,   // Letters, space, hyphen, apostrophe
+    typeError: 'Please enter a valid state name',
+  },
+  zip: {
+    regex: /^[0-9A-Za-z\s-]+$/,   // digits, letters, space, hyphen
+    typeError: 'Please enter a valid zip code',
+  },
+  bio: {
+    regex: /^[A-Za-z0-9\s.,'"\-?!()]+$/, // allows letters, numbers, spaces, basic punctuation
+    typeError: 'Please enter valid text for about yourself',
+  },
+  query: {
+    regex: /^(?!.* {2,})(?!^ )[A-Za-z0-9\s.,#'"\-!?]{10,500}(?<! )$/,
+    emptyError: 'Please enter query',
+    typeError:
+      'Query must be 10-500 characters long, no leading/trailing spaces, and no consecutive blank spaces.',
+  },
+      
+
 };
