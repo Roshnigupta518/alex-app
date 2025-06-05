@@ -1116,3 +1116,54 @@ export const DeleteAccountRequest = async () => {
     }
   });
 };
+
+export const getAllPlacesRequest = async id => {
+  return await new Promise((resolve, reject) => {
+    try {
+      HttpRequests.getAPI(api.getAllPlaces + id)
+        .then(res => {
+          if (res?.data) resolve(res?.data);
+          else reject(res?.data);
+        })
+        .catch(err => {
+          reject(err?.response?.data);
+        });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+export const getAllCountryRequest = async id => {
+  return await new Promise((resolve, reject) => {
+    try {
+      HttpRequests.getAPI(api.getAllCountry + id)
+        .then(res => {
+          if (res?.data) resolve(res?.data);
+          else reject(res?.data);
+        })
+        .catch(err => {
+          reject(err?.response?.data);
+        });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+export const getAllCitiesRequest = async id => {
+  return await new Promise((resolve, reject) => {
+    try {
+      HttpRequests.getAPI(api.getAllCities + id)
+        .then(res => {
+          if (res?.data) resolve(res?.data);
+          else reject(res?.data);
+        })
+        .catch(err => {
+          reject(err?.response?.data);
+        });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};

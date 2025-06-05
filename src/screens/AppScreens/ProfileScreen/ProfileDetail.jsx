@@ -201,24 +201,41 @@ const ProfileDetail = ({ navigation, route }) => {
               <View style={[styles.profileCounts, { marginTop: 10 }]}>
                 <View style={styles.wdh33}>
 
-                  <View>
+                  <View 
+                  // onPress={() =>
+                  //   navigation.navigate('UserPlaces', {
+                  //     id: userInfo?.id,
+                  //     type: 'Places',
+                  //   })
+                  // }
+                  >
                     <Text style={styles.contentTextStyle}>{formatCount(userDetails?.places_count)}</Text>
                     <Text style={styles.contentTitleStyle}>Places</Text>
                   </View>
                 </View>
                 <View style={styles.wdh33}>
 
-                  <View>
+                  <TouchableOpacity onPress={() =>
+                    navigation.navigate('UserPlaces', {
+                      id: userInfo?.id,
+                      type: 'Cities',
+                    })
+                  }>
                     <Text style={styles.contentTextStyle}>{formatCount(userDetails?.cityes_count)}</Text>
                     <Text style={styles.contentTitleStyle}>Cities</Text>
-                  </View>
+                  </TouchableOpacity>
                 </View>
                 <View style={styles.wdh33}>
 
-                  <View>
+                  <TouchableOpacity onPress={() =>
+                    navigation.navigate('UserPlaces', {
+                      id: userInfo?.id,
+                      type: 'Countries',
+                    })
+                  }>
                     <Text style={styles.contentTextStyle}>{formatCount(userDetails?.countries_count)}</Text>
                     <Text style={styles.contentTitleStyle}>Countries</Text>
-                  </View>
+                  </TouchableOpacity>
                 </View>
               </View>
 

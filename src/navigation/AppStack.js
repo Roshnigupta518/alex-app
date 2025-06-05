@@ -42,6 +42,8 @@ import GetAddress from '../screens/AppScreens/PostMediaScreen/GetAddress';
 import BusinessChildScreen from '../screens/AppScreens/BusinessScreen/BusinessChildScreen';
 import BusinessListWithChild from '../screens/AppScreens/BusinessScreen/BusinessListWithChild';
 import Setting from  '../screens/AppScreens/ProfileScreen/Setting'
+import UserPlaces from '../screens/AppScreens/ProfileScreen/Places';
+import PostByPlaces from '../screens/AppScreens/ProfileScreen/PostByPlaces';
 
 const Stack = createStackNavigator();
 
@@ -129,6 +131,9 @@ function AppStack({isLoggedIn = false}) {
       />
       <Stack.Screen name="GetAddress" component={GetAddress} />
       <Stack.Screen name="Setting" component={Setting} />
+      <Stack.Screen name="UserPlaces" component={UserPlaces} />
+      <Stack.Screen name="PostByPlaces" component={PostByPlaces} />
+      {/* PostByPlaces */}
     </Stack.Navigator>
   );
 }

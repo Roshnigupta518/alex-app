@@ -364,16 +364,16 @@ const HomeScreen = ({ navigation, route }) => {
         <ScrollView contentContainerStyle={{ flex: 1 }} nestedScrollEnabled={true} refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
-          {(isLoading && postArray?.length == 0) ? (
+          {(isLoading) ? (
             // Show loader
-            // <View style={{
-            //   alignItems: 'center',
-            //   height: screenHeight / 1.2,
-            //   justifyContent: 'center',
-            // }}>
-            //   <ActivityIndicator size="large" color={colors.white} />
-            // </View>
-            null
+            <View style={{
+              alignItems: 'center',
+              height: screenHeight / 1.2,
+              justifyContent: 'center',
+            }}>
+              <ActivityIndicator size="large" color={colors.white} />
+            </View>
+            // null
 
           ) : postArray?.length > 0 ? (
             // Show post list
@@ -419,7 +419,7 @@ const HomeScreen = ({ navigation, route }) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-              {(city != null && !isLoading) ? (
+              {(city != null) ? (
                 <Text
                   onPress={() => {
                     if (selectedCityData?.locationType === 'current') {

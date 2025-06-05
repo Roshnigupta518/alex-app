@@ -61,4 +61,7 @@ export const api = {
   claimBusiness: '/api/v1/user/business-clame/',
   childBusiness: '/api/v1/user/get-sub-child-category-by-sub-category/',
   getChildBusinesses: '/api/v1/user/business-list-by-child/',
+  getAllPlaces : '/api/v1/user/get_places_by_user/',
+  getAllCountry : '/api/v1/user/get_country_by_user/',
+  getAllCities : '/api/v1/user/get_cities_by_user/'
 };
