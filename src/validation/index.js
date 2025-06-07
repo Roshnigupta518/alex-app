@@ -35,7 +35,7 @@ const checkValidation = (regexType, value, extraValue = null) => {
         return '';
     }
 
-    if (regexType === 'mobileno') {
+    if (regexType === 'mobileno' || regexType === 'telephone') {
         const onlyDigitsRegex = /^[0-9]+$/;
       
         if (!onlyDigitsRegex.test(value)) {

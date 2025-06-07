@@ -20,6 +20,7 @@ import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../../components/NoInternetModal';
 import checkValidation from '../../../validation';
+import styles from '../../../global/styles';
 
 const HelpScreen = ({navigation}) => {
   const [getContentLoading, setGetContentLoading] = useState(false);
@@ -175,7 +176,7 @@ const HelpScreen = ({navigation}) => {
           }}>
           Raise your query!
         </Text>
-
+         <View>
         <TextInput
           placeholder="Write here..."
           placeholderTextColor={colors.gray}
@@ -197,6 +198,8 @@ const HelpScreen = ({navigation}) => {
             elevation: 2,
           }}
         />
+        <Text style={styles.rightTxt}>{queryTxt.length}/500</Text>
+        </View>
 
         <View
           style={{

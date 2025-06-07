@@ -43,6 +43,13 @@ card:{
     fontSize: wp(16),
     color: colors.black,
     width: WIDTH / 2.2,
-  }
+  },
+    rightTxt:{
+      fontFamily: fonts.regular,
+      fontSize: wp(12),
+      color: colors.black,
+      textAlign:'right',
+      marginRight:15
+    },
 })
 

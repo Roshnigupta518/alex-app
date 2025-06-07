@@ -104,11 +104,17 @@ const EditProfileScreen = ({ navigation, route }) => {
     let stateErr = checkValidation('state', state.stateName); 
     let zipErr = checkValidation('zip', state.zip);
     let aboutErr = checkValidation('bio', state.bio);
+    let phoneErr = checkValidation('telephone', state.telephone)
 
     let nameErr = state.userName;
 
     if (addressErr?.length > 0) {
       Toast.error('Edit Profile', addressErr);
+      return false;
+    }
+
+    if (phoneErr?.length > 0) {
+      Toast.error('Edit Profile', phoneErr);
       return false;
     }
 
@@ -343,17 +349,7 @@ const EditProfileScreen = ({ navigation, route }) => {
                 containerStyle={{ marginVertical: wp(10) }}
               />
 
-              {/* <CustomLabelInput
-                placeholderColor="white"
-                label="Mobile Number"
-                placeholder=""
-                value={state.telephone}
-                onTextChange={txt =>
-                  setState(prevState => ({ ...prevState, telephone: txt }))
-                }
-                containerStyle={{ marginVertical: wp(10) }}
-                keyboardType='numeric'
-              /> */}
+              
                  <MobileNoInput
                 callingCode={callingCode}
                 label="Mobile Number"
@@ -363,7 +359,8 @@ const EditProfileScreen = ({ navigation, route }) => {
                   setState(prevState => ({...prevState, telephone: txt}))
                 }
               />
-
+             
+             <View>
               <CustomLabelInput
                 placeholderColor="white"
                 label="About yourself"
@@ -376,6 +373,8 @@ const EditProfileScreen = ({ navigation, route }) => {
                 multiline={true}
                 maxLength={150}
               />
+              <Text style={styles.rightTxt}>{state.bio.length}/150</Text>
+              </View>
 
             </View>
             <View style={{ marginVertical: wp(20) }}>
@@ -610,6 +609,12 @@ const styles = StyleSheet.create({
     fontFamily: fonts.semiBold,
     fontSize: wp(16),
     color: colors.black,
+  },
+  rightTxt:{
+    fontFamily: fonts.regular,
+    fontSize: wp(12),
+    color: colors.black,
+    textAlign:'right'
   },
 
   numberContentContainer: {
