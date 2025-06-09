@@ -10,6 +10,7 @@ import OnlineUserSlice from './Slices/OnlineUserSlice';
 import NotificationCountSlice from './Slices/NotificationCount';
 import ReelIndexSlice from './Slices/ReelIndexSlice';
 import AddAddressSlice from './Slices/AddAddressSlice';
+import ChatReadSlice from './Slices/ChatReadSlice';
 
 const Store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ const Store = configureStore({
     NotificationCountSlice,
     ReelIndexSlice,
     AddAddressSlice,
+    ChatReadSlice
   },
 });
 

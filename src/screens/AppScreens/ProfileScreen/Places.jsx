@@ -104,7 +104,7 @@ const UserPlaces = ({ navigation, route }) => {
         return (
             <PlacesItem item={item}
                 index={index}
-                onPress={() => navigation.navigate('PostByPlaces',{id:item._id, type})} />
+                onPress={() => navigation.navigate('PostByPlaces',{id:item._id, type, userId: id})} />
         )
     })
 

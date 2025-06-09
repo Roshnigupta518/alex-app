@@ -61,16 +61,19 @@ const App = () => {
     return () => unsubscribe();
   }, []);
   const getUserChat = () => {
-    let reference = database().ref('/recent_chat');
     try {
+      // console.log('calling user chat function********************')
+      let reference = database().ref('/recent_chat');
+      // console.log('*****************reference', reference)
       reference.on('value', snapshot => {
+        // console.log('Got snapshot from database', snapshot.val());
         dispatch(ChatListAction(JSON.stringify(snapshot)));
       });
     } catch (err) {
-      console.log('err', err);
-      Toast.error('Chat', 'Something went wrong');
+      console.log('getUserChat error:', err);
     }
   };
+  
 
   const getUserInfo = async () => {
     setIsLoading(true);

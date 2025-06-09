@@ -199,20 +199,12 @@ const ProfileDetail = ({ navigation, route }) => {
               </View>
 
               <View style={[styles.profileCounts, { marginTop: 10 }]}>
-                <View style={styles.wdh33}>
-
-                  <View 
-                  // onPress={() =>
-                  //   navigation.navigate('UserPlaces', {
-                  //     id: userInfo?.id,
-                  //     type: 'Places',
-                  //   })
-                  // }
-                  >
+                {/* <View style={styles.wdh33}>
+                  <View >
                     <Text style={styles.contentTextStyle}>{formatCount(userDetails?.places_count)}</Text>
                     <Text style={styles.contentTitleStyle}>Places</Text>
                   </View>
-                </View>
+                </View> */}
                 <View style={styles.wdh33}>
 
                   <TouchableOpacity onPress={() =>

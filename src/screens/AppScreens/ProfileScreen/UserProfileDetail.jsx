@@ -197,26 +197,36 @@ const UserProfileDetail = ({ navigation, route }) => {
               </View>
 
               <View style={[styles.profileCounts, { marginTop: 10 }]}>
-                <View style={styles.wdh33}>
+                {/* <View style={styles.wdh33}>
 
                   <View>
                     <Text style={styles.contentTextStyle}>{formatCount(userDetails?.places_count)}</Text>
                     <Text style={styles.contentTitleStyle}>Places</Text>
                   </View>
-                </View>
+                </View> */}
                 <View style={styles.wdh33}>
 
-                  <View>
+                <TouchableOpacity onPress={() =>
+                    navigation.navigate('UserPlaces', {
+                      id: userDetails?._id,
+                      type: 'Cities',
+                    })
+                  }>
                     <Text style={styles.contentTextStyle}>{formatCount(userDetails?.cityes_count)}</Text>
                     <Text style={styles.contentTitleStyle}>Cities</Text>
-                  </View>
+                  </TouchableOpacity>
                 </View>
                 <View style={styles.wdh33}>
 
-                  <View>
+                <TouchableOpacity onPress={() =>
+                    navigation.navigate('UserPlaces', {
+                      id: userDetails?._id,
+                      type: 'Countries',
+                    })
+                  }>
                     <Text style={styles.contentTextStyle}>{formatCount(userDetails?.countries_count)}</Text>
                     <Text style={styles.contentTitleStyle}>Countries</Text>
-                  </View>
+                  </TouchableOpacity>
                 </View>
               </View>
 

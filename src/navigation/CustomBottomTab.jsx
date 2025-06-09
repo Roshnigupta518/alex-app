@@ -13,6 +13,7 @@ import {WIDTH, colors, fonts, wp} from '../constants';
 import {useDispatch, useSelector} from 'react-redux';
 import ImageConstants from '../constants/ImageConstants';
 import {ReelIndexAction} from '../redux/Slices/ReelIndexSlice';
+import { ChatReadAction } from '../redux/Slices/ChatReadSlice';
 
 const {width} = Dimensions.get('window');
 function timeAgo(timestamp) {
@@ -30,6 +31,7 @@ function timeAgo(timestamp) {
 const CustomBottomTab = ({state, descriptors, navigation}) => {
   const dispatch = useDispatch();
   const chatInfo = useSelector(state => state.ChatListSlice.data);
+  const chatRead = useSelector(state => state.ChatReadSlice.data);
   const userInfo = useSelector(state => state.UserInfoSlice.data);
 
   const navigationUserScreens = [
@@ -90,8 +92,12 @@ const CustomBottomTab = ({state, descriptors, navigation}) => {
     setShowingScreen(
       userInfo?.role == '1' ? navigationUserScreens : navigationBusinessScreen,
     );
-    getAllUsers();
   }, [userInfo]);
+
+  useEffect(() => {
+    getAllUsers();
+  }, [chatInfo]);
+
   const getAllUsers = (id = '') => {
     let data = {...JSON.parse(chatInfo)};
     //
@@ -116,9 +122,16 @@ const CustomBottomTab = ({state, descriptors, navigation}) => {
         }
 
         if (Object.keys(reciever_user)?.length > 0) {
-          if (chat_detail?.isRead) {
-            setRead(chat_detail?.isRead);
+         
+          if (
+            chat_detail?.reciever?._id === userInfo?.id && // the logged-in user is the receiver
+            chat_detail?.isRead === false // message is unread
+          ) {
+            console.log('🚀 New unread message detected!');
+            dispatch(ChatReadAction(true))
+            setRead(true); // set dot to show
           }
+          
           let chatObject = {
             msg_detail: {
               message: chat_detail?.last_msg,
@@ -158,10 +171,11 @@ const CustomBottomTab = ({state, descriptors, navigation}) => {
         const timeB = new Date(b.msg_detail.createdAt);
         return timeB - timeA;
       });
-      console.log('self', JSON.stringify(self_data));
+      // console.log('self bottom tab', JSON.stringify(self_data));
       setUserList([...self_data]);
     }
   };
+  console.log({Read, chatRead})
   return (
     <View style={styles.mainContainer}>
       {state.routes.map((route, index) => {
@@ -203,7 +217,7 @@ const CustomBottomTab = ({state, descriptors, navigation}) => {
                 style={{}}>
                 <View>
                   <View style={styles.parentView}>
-                    {Read && navigationUserObj[label]?.name == 'Chat' && (
+                    {chatRead && navigationUserObj[label]?.name == 'Chat' && (
                       <View
                         style={{
                           width: 10,

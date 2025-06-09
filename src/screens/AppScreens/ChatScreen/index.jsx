@@ -13,7 +13,7 @@ import {SwipeListView} from 'react-native-swipe-list-view';
 import {colors, fonts, HEIGHT, WIDTH, wp} from '../../../constants';
 import ImageConstants from '../../../constants/ImageConstants';
 import SearchInput from '../../../components/SearchInput';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import DeleteChatSheet from '../../../components/ActionSheetComponent/DeleteChatSheet';
 import NotFoundAnime from '../../../components/NotFoundAnime';
@@ -159,7 +159,7 @@ const ChatScreen = ({navigation}) => {
         const timeB = new Date(b.msg_detail.createdAt);
         return timeB - timeA;
       });
-      console.log('self', JSON.stringify(self_data));
+      // console.log('self chat screen', JSON.stringify(self_data));
       setUserList([...self_data]);
       setSearchedUserList([...self_data]);
     }

@@ -24,15 +24,15 @@ const PostByPlaces = ({ navigation, route }) => {
     const [postData, setPostData] = useState([]);
     const [isLoading, setIsLoading] = useState(false)
 
-    const { id, type } = route?.params
+    const { id, type, userId } = route?.params
 
     const getUsersPosts = async () => {
         setIsLoading(true)
         let url
         if (type == 'Cities') {
-            url = `${userInfo?.id}?city=${id}`
+            url = `${userId}?city=${id}`
         } else {
-            url = `${userInfo?.id}?country=${id}`
+            url = `${userId}?country=${id}`
         }
         GetUserPostsRequest(url)
             .then(res => {
@@ -48,7 +48,7 @@ const PostByPlaces = ({ navigation, route }) => {
 
     useEffect(() => {
         getUsersPosts();
-    }, [id, type]);
+    }, [id, type, userId]);
 
     return (
         <>

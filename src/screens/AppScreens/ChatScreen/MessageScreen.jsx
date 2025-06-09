@@ -10,15 +10,19 @@ import {
 import {colors, fonts, wp} from '../../../constants';
 import ImageConstants from '../../../constants/ImageConstants';
 import {GiftedChat} from 'react-native-gifted-chat';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import database from '@react-native-firebase/database';
 import Toast from '../../../constants/Toast';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../../components/NoInternetModal';
+import { ChatReadAction } from '../../../redux/Slices/ChatReadSlice';
+
 const MessageScreen = ({navigation, route}) => {
   const {chatId, chatObjKey, reciever, isSelfReadable, isOppReadable} =
     route?.params;
   const userInfo = useSelector(state => state.UserInfoSlice.data);
+  const dispatch = useDispatch();
+
   const [messages, setMessages] = useState([]);
   const [isInternetConnected, setIsInternetConnected] = useState(true);
   useEffect(() => {
@@ -76,9 +80,54 @@ const MessageScreen = ({navigation, route}) => {
     }
   };
 
+  // useEffect(() => {
+  //   let readUpdateRef = database().ref(`/recent_chat/${chatId}/${chatObjKey}`);
+  //   let reference = database().ref(`/chats/${chatId}`);
+  //   try {
+  //     reference.on('value', snapshot => {
+  //       const data = snapshot.val();
+  //       if (data != null) {
+  //         const sortedArray = Object.values(data)
+  //           .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+  //           ?.reverse();
+  //         setMessages([...sortedArray]);
+
+  //         let reverseArr = sortedArray?.reverse();
+
+  //         //make read message...
+  //         if (reverseArr[reverseArr?.length - 1]?.user?._id != userInfo?.id) {
+  //           readUpdateRef.update({
+  //             isRead: true,
+  //           });
+  //         }
+  //       }
+  //     });
+  //   } catch (err) {
+  //     console.log('err', err);
+  //     Toast.error('Chat', 'Something went wrong');
+  //   }
+
+  //   return () => {
+  //     reference.off();
+  //     readUpdateRef.off();
+  //   };
+  // }, []);
+
+  
   useEffect(() => {
-    let readUpdateRef = database().ref(`/recent_chat/${chatId}/${chatObjKey}`);
-    let reference = database().ref(`/chats/${chatId}`);
+    // Update the isRead status immediately when the chat is opened
+    const readUpdateRef = database().ref(`/recent_chat/${chatId}/${chatObjKey}`);
+    readUpdateRef.update({
+      isRead: true,
+    }).then(() => {
+      console.log('✅ Marked as read when opened the chat.');
+      dispatch(ChatReadAction(false))
+    }).catch(err => {
+      console.log('❌ Error marking as read:', err);
+    });
+  
+    // Listen for new messages
+    const reference = database().ref(`/chats/${chatId}`);
     try {
       reference.on('value', snapshot => {
         const data = snapshot.val();
@@ -87,28 +136,20 @@ const MessageScreen = ({navigation, route}) => {
             .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
             ?.reverse();
           setMessages([...sortedArray]);
-
-          let reverseArr = sortedArray?.reverse();
-
-          //make read message...
-          if (reverseArr[reverseArr?.length - 1]?.user?._id != userInfo?.id) {
-            readUpdateRef.update({
-              isRead: true,
-            });
-          }
         }
       });
     } catch (err) {
       console.log('err', err);
       Toast.error('Chat', 'Something went wrong');
     }
-
+  
     return () => {
       reference.off();
       readUpdateRef.off();
     };
-  }, []);
-
+  }, []);  
+  
+  
   const onSend = useCallback((messages = []) => {
     let epochTime = new Date();
     let msg = {
