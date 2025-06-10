@@ -33,6 +33,7 @@ import useLocation from '../../../hooks/useLocation';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import DeviceInfo from 'react-native-device-info';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { useFocusEffect } from '@react-navigation/native';
 
 const staticValues = {
   skip: 0,
@@ -109,7 +110,7 @@ const HomeScreen = ({ navigation, route }) => {
     return () => unsubscribe();
   }, []);
   const onRefresh = React.useCallback(async() => {
-    setRefreshing(true);
+    // setRefreshing(true);
     console.log('call this refresh***************')
     console.log({ selectedCityData, paramsValues, currentCity: city })
 
@@ -141,7 +142,6 @@ const HomeScreen = ({ navigation, route }) => {
     }
 
     pagination.isLoading = true;
-    setIsLoading(true);
     let url = {
       // skip: pagination.skip,
       // limit: pagination.limit,
@@ -224,7 +224,7 @@ const HomeScreen = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    setIsLoading(true)
+    // setIsLoading(true)
     paramsValues.location_title = nearByType?.location_title;
     paramsValues.location_type = nearByType?.location_type;
     paramsValues.location_coordinates = nearByType?.location_coordinates;
@@ -276,7 +276,8 @@ const HomeScreen = ({ navigation, route }) => {
   }, [isFocused, city, selectedCityData, error]);
 
 
-  useEffect(() => {
+  useFocusEffect(
+    useCallback(() => {
     const backAction = () => {
       Alert.alert(
         'Exit From Alex',
@@ -299,7 +300,9 @@ const HomeScreen = ({ navigation, route }) => {
     );
 
     return () => backHandler.remove();
-  }, []);
+  }, [navigation]) 
+);
+
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => { });
 

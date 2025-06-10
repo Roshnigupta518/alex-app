@@ -18,6 +18,7 @@ import { GetUserPostsRequest } from '../../../services/Utills';
 import Toast from '../../../constants/Toast';
 import MediaItem from '../../../components/GridView';
 import NotFoundAnime from '../../../components/NotFoundAnime';
+import st from '../../../global/styles';
 
 const PostByPlaces = ({ navigation, route }) => {
     const userInfo = useSelector(state => state.UserInfoSlice.data);
@@ -53,7 +54,24 @@ const PostByPlaces = ({ navigation, route }) => {
     return (
         <>
             <SafeAreaView style={styles.container}>
-                <BackHeader label="" />
+                <BackHeader
+                label={`Posts of ${id}`}
+                />
+                {/* <View style={[st.card,{paddingHorizontal:20}]}>
+                    <View
+                        style={st.cardContent}>
+                        <View style={st.cardBar} />
+                        <View
+                            style={st.internalCard}>
+
+                            <Text
+                                numberOfLines={2}
+                                style={st.cardTitle}>
+                                {id}
+                            </Text>
+                        </View>
+                    </View>
+                </View> */}
                 <View
                     style={{
                         flex: 1,

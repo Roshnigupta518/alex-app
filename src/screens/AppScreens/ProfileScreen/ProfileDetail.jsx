@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Platform,
   StyleSheet,
-  FlatList, Dimensions
+  FlatList, Dimensions, BackHandler
 } from 'react-native';
 import { colors, fonts, HEIGHT, WIDTH, wp } from '../../../constants';
 import BackHeader from '../../../components/BackHeader';
@@ -26,6 +26,7 @@ import { formatCount, openSocialLink, tabList } from '../../../validation/helper
 import MediaItem from '../../../components/GridView';
 import NotFoundAnime from '../../../components/NotFoundAnime';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import { useFocusEffect } from '@react-navigation/native';
 
 const ProfileDetail = ({ navigation, route }) => {
   const isFocused = useIsFocused();
@@ -134,6 +135,24 @@ const ProfileDetail = ({ navigation, route }) => {
   useEffect(() => {
     getUsersPosts();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        // Navigate to the desired screen when the hardware back button is pressed
+        navigation.navigate('HomeScreen') // replace 'AnotherScreen' with your target screen name
+        return true; // returning true means you have handled the back press
+      };
+
+      // Add event listener
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      // Remove the listener when the screen is unfocused or unmounted
+      return () => {
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+      };
+    }, [navigation]) // dependencies: add anything else you’re using inside useCallback
+  );
 
   return (
     <>
