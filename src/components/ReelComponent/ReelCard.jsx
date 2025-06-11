@@ -78,6 +78,29 @@ const ReelCard = ({
     }, 2000);
   };
 
+  function formatPostDate(isoDate) {
+    const createdAt = new Date(isoDate);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now - createdAt) / 1000);
+  
+    if (diffInSeconds < 60) {
+      return "just now";
+    } else if (diffInSeconds < 3600) {
+      const minutes = Math.floor(diffInSeconds / 60);
+      return `${minutes} minute${minutes === 1 ? "" : "s"} ago`;
+    } else if (diffInSeconds < 86400) {
+      const hours = Math.floor(diffInSeconds / 3600);
+      return `${hours} hour${hours === 1 ? "" : "s"} ago`;
+    } else if (diffInSeconds < 604800) {
+      const days = Math.floor(diffInSeconds / 86400);
+      return `${days} day${days === 1 ? "" : "s"} ago`;
+    } else {
+      // Show as date (e.g., Nov 28, 2024)
+      const options = { year: "numeric", month: "short", day: "numeric" };
+      return createdAt.toLocaleDateString("en-US", options);
+    }
+  }
+ 
   return (
     <View style={[styles.container,{height:screenHeight}]} key={idx}>
       {data?.postData?.post?.mimetype == 'video/mp4' ? (
@@ -298,6 +321,9 @@ const ReelCard = ({
             );
           })}
         </View>
+        <Text numberOfLines={1} style={styles.locationTxtStyle}>
+                {formatPostDate(data?.postData?.created_at)}
+              </Text>
       </View>
 
       {muteIconVisible && (
