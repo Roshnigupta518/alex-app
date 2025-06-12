@@ -111,6 +111,7 @@ const HomeScreen = ({ navigation, route }) => {
   }, []);
   const onRefresh = React.useCallback(async() => {
     // setRefreshing(true);
+    setIsLoading(true)
     console.log('call this refresh***************')
     console.log({ selectedCityData, paramsValues, currentCity: city })
 
@@ -257,6 +258,7 @@ const HomeScreen = ({ navigation, route }) => {
   // }, [isFocused, city, selectedCityData, error]);
 
   useEffect(() => {
+    setIsLoading(true)
     if (!isFocused) {
       setIsOnFocusItem(false);
     } else {
