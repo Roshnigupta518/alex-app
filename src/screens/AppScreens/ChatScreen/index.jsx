@@ -224,6 +224,18 @@ const ChatScreen = ({navigation}) => {
             }}
             // ListEmptyComponent={<EmptyListRender />}
             renderItem={({item}, rowMap) => {
+              const isUnreadAndReceivedByMe =
+  // item?.chat_info?.reciever?._id === userInfo?.id &&
+  item?.msg_detail?.isRead === false;
+           // Message is unread
+            
+              // console.log(
+              //   'Receiver:', item?.chat_info?.reciever?._id,
+              //   'User:', userInfo?.id,
+              //   'Is Read:', item?.msg_detail?.isRead
+              // );
+              
+
               return (
                 <>
                   {item?.chat_info?.isSelfReadable ? (
@@ -232,7 +244,12 @@ const ChatScreen = ({navigation}) => {
                       onPress={() =>
                         navigation.navigate('MessageScreen', item?.chat_info)
                       }
-                      style={styles.userImageStyle}>
+                      style={[
+                        styles.userImageStyle,
+                         { backgroundColor:isUnreadAndReceivedByMe? '#E6F7FF':'#fff' },
+                      ]}
+                      
+                      >
                       <View
                         style={{
                           flexDirection: 'row',
@@ -338,7 +355,7 @@ const ChatScreen = ({navigation}) => {
 
 const styles = StyleSheet.create({
   userImageStyle: {
-    backgroundColor: colors.white,
+    // backgroundColor: colors.white,
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: wp(10),
