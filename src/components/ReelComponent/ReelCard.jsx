@@ -187,14 +187,14 @@ const ReelCard = ({
 
           {/* horizontal menu icon */}
           <View>
-            {userInfo?.id != data?.postData?.user_id?._id && (
+            {/* {userInfo?.id != data?.postData?.user_id?._id && ( */}
               <TouchableOpacity onPress={onMenuClick}>
                 <Image
                   source={ImageConstants.h_menu}
                   style={styles.hmenuStyle}
                 />
               </TouchableOpacity>
-            )}
+            {/* )} */}
           </View>
         </View>
 

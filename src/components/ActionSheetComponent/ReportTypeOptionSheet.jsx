@@ -8,6 +8,7 @@ import {
   blockUserRequest,
   reportPostRequest,
   reportUserRequest,
+  deletePostRequest
 } from '../../services/Utills';
 import Toast from '../../constants/Toast';
 
@@ -30,6 +31,7 @@ const ReportTypeOptionSheet = forwardRef(({onActionDone = () => {}}, ref) => {
   // Expose actionSheetRef to parent component through forwarded ref
   React.useImperativeHandle(ref, () => ({
     show: (userId, postId, type) => {
+      console.log({type})
       setSelectedUser(userId);
       setSelectedPost(postId);
       setSelectedReportType(type);
@@ -41,6 +43,21 @@ const ReportTypeOptionSheet = forwardRef(({onActionDone = () => {}}, ref) => {
       actionSheetRef.current?.hide(false);
     },
   }));
+
+  const DeletePost = async () => {
+    setIsLoading(true);
+   
+    await deletePostRequest(selectedPost)
+      .then(res => {
+        Toast.success('delete Post', res?.message);
+        onActionDone();
+        actionSheetRef.current?.hide();
+      })
+      .catch(err => {
+        Toast.error('delete Post', err?.message);
+      })
+      .finally(() => setIsLoading(false));
+  };
 
   const ReportPost = async () => {
     setIsLoading(true);
@@ -104,7 +121,7 @@ const ReportTypeOptionSheet = forwardRef(({onActionDone = () => {}}, ref) => {
       onClose={() => setSelectedOption(null)}>
       <View style={styles.subView}>
         <View style={styles.drawerHandleStyle} />
-
+         
         <View
           style={{
             marginTop: wp(20),
@@ -117,12 +134,15 @@ const ReportTypeOptionSheet = forwardRef(({onActionDone = () => {}}, ref) => {
               color: colors.primaryColor,
               textAlign: 'center',
             }}>
-            Choose one option to report.
+         {selectedReportType != 'delete_post'  ?
+            "Choose one option to report." : "Delete Post" }
           </Text>
         </View>
+        
 
         <View style={styles.commentListContainer}>
-          {reportItems?.map((item, index) => {
+        {selectedReportType != 'delete_post' &&
+          reportItems?.map((item, index) => {
             return (
               <View
                 style={{
@@ -171,7 +191,23 @@ const ReportTypeOptionSheet = forwardRef(({onActionDone = () => {}}, ref) => {
                 </TouchableOpacity>
               </View>
             );
-          })}
+          })
+        }
+          {selectedReportType == 'delete_post' &&
+          <View>
+             <Text
+              style={{
+                fontFamily: fonts.medium,
+                fontSize: wp(20),
+                color: colors.black,
+                textAlign: 'center',
+              }}>
+              Are you sure to delete this Post?
+            </Text>
+
+            <Image source={ImageConstants.trash} style={styles.imageStyle} />
+            </View>
+          }
         </View>
 
         <View
@@ -180,8 +216,10 @@ const ReportTypeOptionSheet = forwardRef(({onActionDone = () => {}}, ref) => {
           }}>
           <CustomButton
             isLoading={isLoading}
-            disabled={selectedOption == null}
-            label="Report"
+            disabled={
+              selectedReportType !== 'delete_post' && selectedOption == null
+            }
+            label={selectedReportType != 'delete_post'? "Report" : "Delete" }
             onPress={() => {
               if (selectedReportType == 'report_post') {
                 ReportPost();
@@ -189,6 +227,8 @@ const ReportTypeOptionSheet = forwardRef(({onActionDone = () => {}}, ref) => {
                 ReportUser();
               } else if (selectedReportType == 'block_user') {
                 BlockUser();
+              } else if (selectedReportType == 'delete_post') {
+                DeletePost()
               }
             }}
           />
@@ -209,7 +249,13 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: wp(20),
     borderTopRightRadius: wp(20),
   },
-
+  imageStyle: {
+    height: wp(60),
+    width: wp(60),
+    alignSelf: 'center',
+    tintColor: colors.lightBlack,
+    marginVertical: wp(30),
+  },
   drawerHandleStyle: {
     height: wp(7),
     width: wp(60),

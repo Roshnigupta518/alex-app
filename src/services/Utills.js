@@ -611,6 +611,23 @@ export const reportPostRequest = async data => {
   });
 };
 
+export const deletePostRequest = async id => {
+  return await new Promise((resolve, reject) => {
+    try {
+      HttpRequests.deleteAPI(api.deletePost+id)
+        .then(res => {
+          if (res?.data) resolve(res?.data);
+          else reject(res?.data);
+        })
+        .catch(err => {
+          reject(err?.response?.data);
+        });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 export const reportUserRequest = async data => {
   return await new Promise((resolve, reject) => {
     try {

@@ -5,8 +5,14 @@ import {colors, fonts, HEIGHT, WIDTH, wp} from '../../constants';
 import ImageConstants from '../../constants/ImageConstants';
 
 const ReportActionSheet = forwardRef(
-  ({postId = '', userId = '', onActionClick = (type = '') => {}}, ref) => {
-    const reportItems = [
+  ({postId = '', userId = '', loggedInUserId='', onActionClick = (type = '') => {}}, ref) => {
+    const reportItems = 
+    userId === loggedInUserId
+    ? [
+      {
+        label: 'Delete Post',
+        action: () => onActionClick(userId, postId, 'delete_post'),
+      }]:[
       {
         label: 'Report Post',
         action: () => onActionClick(userId, postId, 'report_post'),
@@ -114,7 +120,7 @@ const styles = StyleSheet.create({
   },
 
   commentListContainer: {
-    height: HEIGHT / 4,
+    // height: HEIGHT / 4,
     backgroundColor: colors.white,
     justifyContent: 'center',
   },

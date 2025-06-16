@@ -47,6 +47,7 @@ const HomeScreen = ({ navigation, route }) => {
   const nearByType = useSelector(state => state.NearBySlice?.data);
   const selectedCityData = useSelector(state => state.SelectedCitySlice?.data);
   const reelIndex = useSelector(state => state.ReelIndexSlice?.data);
+  const userInfo = useSelector(state => state.UserInfoSlice.data);
 
   const tabBarHeight = useBottomTabBarHeight();
   const screenHeight = HEIGHT - tabBarHeight
@@ -494,6 +495,7 @@ const HomeScreen = ({ navigation, route }) => {
           ref={menuSheetRef}
           postId={postArray[currentItemIndex]?.postData?._id}
           userId={postArray[currentItemIndex]?.postData?.user_id?._id}
+          loggedInUserId={userInfo?.id}
           onActionClick={(userId, postId, type) =>
             reportOptionSheet?.current?.show(userId, postId, type)
           }
