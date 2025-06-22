@@ -13,8 +13,12 @@ import FollowUserSheet from '../../../components/ActionSheetComponent/FollowUser
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../../components/NoInternetModal';
 import crashlytics from '@react-native-firebase/crashlytics';
+import { useSelector } from 'react-redux';
+import NotFoundAnime from '../../../components/NotFoundAnime';
 
-const ReelViewer = ({navigation, route}) => {
+const ReelViewer = ({route}) => {
+
+  const screenHeight = Platform.OS == 'ios' ? HEIGHT : HEIGHT -30
  
   const flashListRef = useRef();
   const deleteCommentRef = useRef();
@@ -28,6 +32,12 @@ const ReelViewer = ({navigation, route}) => {
   const [currentItemIndex, setCurrentItemIndex] = useState(0);
   const [postArray, setPostArray] = useState(route?.params?.data || []);
   const [isInternetConnected, setIsInternetConnected] = useState(true);
+  const userInfo = useSelector(state => state.UserInfoSlice.data);
+
+  const { params } = route;
+  const onDeletePost = params?.onDeletePost;
+
+
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       if (state.isConnected !== null && state.isConnected === false) {
@@ -66,19 +76,20 @@ const ReelViewer = ({navigation, route}) => {
   useEffect(() => {
     if (isFocused && flashListRef.current && postArray.length > 0) {
       setTimeout(() => {
-        // flashListRef.current.scrollToIndex({
-        //   index: route?.params?.currentIndex || 0,
-        //   animated: false,
-        // });
+        flashListRef.current.scrollToIndex({
+          index: route?.params?.currentIndex || 0,
+          animated: false,
+          viewPosition: 0,
+        });
       }, 500); // Adjust timeout as needed
     }
   }, [isFocused, postArray.length]);
 
   const _renderReels = useCallback(
     ({item, index}) => {
-      console.log({index, HEIGHT})
+      // console.log({index, HEIGHT})
       return (
-        <View style={styles.cardContainer}>
+        <View style={[styles.cardContainer,{height:screenHeight}]}>
           <ReelCard
             idx={index}
             screen={'Reel'}
@@ -92,7 +103,7 @@ const ReelViewer = ({navigation, route}) => {
             onMenuClick={() => menuSheetRef.current?.show()}
             onShareClick={() => shareSheetRef.current?.show()}
             isItemOnFocus={currentItemIndex == index && isOnFocusItem}
-            screenHeight={HEIGHT}
+            screenHeight={screenHeight}
           />
         </View>
       );
@@ -108,22 +119,12 @@ const ReelViewer = ({navigation, route}) => {
       // });
     }
   }, []);
-  // const getItemLayout = (data, index) => ({
-  //   length: HEIGHT, // Replace with your item height
-  //   offset: HEIGHT * index,
-  //   index,
-  // });
 
-  const getItemLayout = (data, index) => {
-    const ITEM_HEIGHT = Math.round(HEIGHT);
-    console.log({ITEM_HEIGHT})
-    return {
-      length: ITEM_HEIGHT,
-      offset: ITEM_HEIGHT * index,
-      index,
-    };
-  };
-
+  const ListEmptyComponent = () => {
+    return(
+      <NotFoundAnime />
+    )
+  }
   
   return (
     <>
@@ -133,43 +134,49 @@ const ReelViewer = ({navigation, route}) => {
         <View
           style={{
             position: 'absolute',
-            marginVertical: Platform.OS == 'ios' ? wp(40) : wp(10),
+            top: Platform.OS == 'ios' ? wp(40) : wp(10),
             zIndex: 3,
           }}>
           <BackHeader />
         </View>
-      
+
+            <View
+              style={{
+                alignItems: 'center',
+                height: screenHeight,
+                justifyContent: 'center',
+              }}>   
         <FlatList
           ref={flashListRef}
           data={postArray}
           renderItem={_renderReels}
-          keyExtractor={item => item.id} // Ensure you have a unique key for each item
+          keyExtractor={(item, index) => item.id?.toString() || index.toString()}
           showsVerticalScrollIndicator={false}
-          initialScrollIndex={route?.params?.currentIndex || 0}
+          // initialScrollIndex={route?.params?.currentIndex || 0}
           disableIntervalMomentum
           onViewableItemsChanged={_onViewableItemsChanged}
           viewabilityConfig={_viewabilityConfig}
           // estimatedItemSize={2}
           pagingEnabled
-          snapToInterval={Math.round(HEIGHT)}
+          snapToInterval={Math.round(screenHeight)}
           initialNumToRender={5}
           windowSize={10}
           removeClippedSubviews={false}
           // getItemLayout={getItemLayout}
           getItemLayout={(data, index) => ({
-            length: Math.round(HEIGHT),
-            offset: Math.round(HEIGHT) * index,
+            length: Math.round(screenHeight),
+            offset: Math.round(screenHeight) * index,
             index
           })}
           contentInset={{top: 0, bottom: 0, left: 0, right: 0}}
           contentInsetAdjustmentBehavior="automatic"
           // contentContainerStyle={{alignSelf: 'center'}}
           // extraData={HEIGHT}
-          extraData={Math.round(HEIGHT)}
+          extraData={Math.round(screenHeight)}
           contentContainerStyle={{ padding: 0, margin: 0 }}
-
+          ListEmptyComponent={ListEmptyComponent}
         />
-     
+      </View>
         {/* comment actionsheets */}
         <CommentListSheet
           ref={actionsheetRef}
@@ -207,11 +214,28 @@ const ReelViewer = ({navigation, route}) => {
           ref={menuSheetRef}
           postId={postArray[currentItemIndex]?.postData?._id}
           userId={postArray[currentItemIndex]?.postData?.user_id?._id}
+          loggedInUserId={userInfo?.id}
           onActionClick={(userId, postId, type) =>
             reportOptionSheet?.current?.show(userId, postId, type)
           }
         />
-        <ReportTypeOptionSheet ref={reportOptionSheet} />
+        <ReportTypeOptionSheet ref={reportOptionSheet}
+         onActionDone={() => {
+          const deletedId = postArray[currentItemIndex]?.postData?._id;
+
+          if (onDeletePost) {
+            onDeletePost(deletedId); // Inform ProfileDetail to remove the post
+          }
+
+          // Remove current post from postArray
+          const updatedArray = [...postArray];
+          updatedArray.splice(currentItemIndex, 1); // remove current post
+          setPostArray(updatedArray);
+      
+          // Reset index to avoid overflow
+          setCurrentItemIndex(prev => Math.max(prev - 1, 0));
+        }}
+         />
         <FollowUserSheet
           ref={followingUserRef}
           userDetail={postArray[currentItemIndex]?.postData?.user_id}
@@ -251,7 +275,7 @@ const ReelViewer = ({navigation, route}) => {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    height: Math.round(HEIGHT),
+    // height: Math.round(HEIGHT),
     backgroundColor: colors.black,
   },
 

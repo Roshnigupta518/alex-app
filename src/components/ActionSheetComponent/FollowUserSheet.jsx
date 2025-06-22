@@ -18,7 +18,6 @@ const FollowUserSheet = forwardRef(
     ref,
   ) => {
     const actionSheetRef = useRef(null);
-
     const [isLoading, setIsLoading] = useState(false);
     // Expose actionSheetRef to parent component through forwarded ref
     React.useImperativeHandle(ref, () => ({

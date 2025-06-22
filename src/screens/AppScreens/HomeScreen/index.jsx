@@ -50,7 +50,10 @@ const HomeScreen = ({ navigation, route }) => {
   const userInfo = useSelector(state => state.UserInfoSlice.data);
 
   const tabBarHeight = useBottomTabBarHeight();
-  const screenHeight = HEIGHT - tabBarHeight
+  // const screenHeight = (HEIGHT-tabBarHeight) 
+  const screenHeight = Platform .OS == 'ios' ? HEIGHT : HEIGHT-tabBarHeight
+
+  console.log({tabBarHeight, screenHeight})
 
   const prevNearBy = useRef(nearByType);
   const flashListRef = useRef();
@@ -315,11 +318,23 @@ const HomeScreen = ({ navigation, route }) => {
     };
   }, []);
 
+  // useEffect(() => {
+  //   if (reelIndex == 0 && postArray?.length > 0) {
+  //     flashListRef.current.scrollToOffset({ animated: true, offset: 0 });
+  //   }
+  // }, [reelIndex]);
+
   useEffect(() => {
-    if (reelIndex == 0 && postArray?.length > 0) {
-      flashListRef.current.scrollToOffset({ animated: true, offset: 0 });
+    if (reelIndex === 0 && postArray?.length > 0) {
+      const timer = setTimeout(() => {
+        if (flashListRef?.current) {
+          flashListRef.current.scrollToOffset({ animated: true, offset: 0 });
+        }
+      }, 100); // wait for the list to mount
+      return () => clearTimeout(timer);
     }
   }, [reelIndex]);
+  
 
   const _renderReels = useCallback(
     ({ item, index }) => {

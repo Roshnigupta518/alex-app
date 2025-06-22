@@ -86,6 +86,8 @@
     <string>$(PRODUCT_NAME) requires access to the microphone to enable voice recording for videos.</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>$(PRODUCT_NAME) would like to access your photo library to allow you to post images and update your profile.</string>
+    <key>NSUserNotificationAlertUsageDescription</key>
+    <string>We need to send you notifications for important updates.</string>
     <key>FirebaseCrashlyticsCollectionEnabled</key>
     <true/>
     <key>UIAppFonts</key>

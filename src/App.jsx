@@ -25,6 +25,8 @@ import NoInternetModal from './components/NoInternetModal';
 import NetInfo from '@react-native-community/netinfo';
 import {navigationRef} from './navigation/NavigationRefProp';
 import RequestNotificationPermission from './constants/NotificationPermission';
+import { request, PERMISSIONS, check, RESULTS } from 'react-native-permissions';
+import AppUpdateChecker from './components/AppUpdateChecker';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -88,9 +90,9 @@ const App = () => {
         }
       })
       .finally(() => {
-        RequestNotificationPermission().finally(() => {
+        // RequestNotificationPermission().finally(() => {
           setIsLoading(false);
-        });
+        // });
       });
   };
 
@@ -110,6 +112,34 @@ const App = () => {
       });
     }
   }, [userInfo]);
+
+
+  const requestIOSPermissions = async () => {
+    const permissionsToRequest = [
+      PERMISSIONS.IOS.CAMERA,
+      PERMISSIONS.IOS.MICROPHONE,
+      PERMISSIONS.IOS.PHOTO_LIBRARY,
+      PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+      PERMISSIONS.IOS.LOCATION_ALWAYS,
+    ];
+  
+    for (let permission of permissionsToRequest) {
+      try {
+        const result = await request(permission);
+        console.log(`Permission ${permission} result:`, result);
+      } catch (err) {
+        console.warn(`Error requesting ${permission}`, err);
+      }
+    }
+  
+    // Add slight delay before requesting notifications
+    setTimeout(() => {
+      RequestNotificationPermission().finally(() => {
+        console.log('Notification permission flow completed.');
+      });
+    }, 1000); // delay in ms
+  };
+  
 
   const GetRequiredPermissions = async () => {
     try {
@@ -154,8 +184,11 @@ const App = () => {
   };
 
   useEffect(() => {
-    if (Platform.OS == 'android') {
+    if (Platform.OS === 'android') {
       GetRequiredPermissions();
+      RequestNotificationPermission(); // For Android, it's okay to call right away
+    } else if (Platform.OS === 'ios') {
+      requestIOSPermissions(); // Will handle all iOS permissions including notification
     }
     getUserInfo();
     getUserChat();
@@ -176,7 +209,7 @@ const App = () => {
           <AppStack isLoggedIn={isLoggedInUser} />
         </NavigationContainer>
       )}
-
+      <AppUpdateChecker />
       <FlashMessage position="top" style={{zIndex: 2}} />
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </View>

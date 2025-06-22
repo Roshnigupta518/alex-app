@@ -113,6 +113,9 @@ const ProfileDetail = ({ navigation, route }) => {
               navigation.navigate('ReelViewer', {
                 data: filteredData,
                 currentIndex: index,
+                onDeletePost: deletedId => {
+                  setPostData(prev => prev.filter(item => item?.postData?._id !== deletedId));
+                },
               })
             }
             index={index}

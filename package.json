@@ -76,6 +76,7 @@
     "react-native-swipe-list-view": "^3.2.9",
     "react-native-tab-view": "^4.1.0",
     "react-native-uuid": "^2.0.2",
+    "react-native-version-check": "^3.5.0",
     "react-redux": "^9.1.0",
     "redux": "^5.0.1",
     "uuid": "^9.0.0"
