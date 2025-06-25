@@ -36,7 +36,7 @@ const ReelViewer = ({route}) => {
 
   const { params } = route;
   const onDeletePost = params?.onDeletePost;
-
+  const currentIndex = params?.currentIndex;
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -77,13 +77,32 @@ const ReelViewer = ({route}) => {
     if (isFocused && flashListRef.current && postArray.length > 0) {
       setTimeout(() => {
         flashListRef.current.scrollToIndex({
-          index: route?.params?.currentIndex || 0,
+          index: currentIndex,
           animated: false,
           viewPosition: 0,
         });
-      }, 500); // Adjust timeout as needed
+      }); // Adjust timeout as needed
     }
-  }, [isFocused, postArray.length]);
+  }, [isFocused, postArray.length, currentIndex]);
+
+  const handleDeletePost = () => {
+    if (postArray.length === 0) return;
+
+    const deletedId = postArray[currentItemIndex]?.postData?._id;
+
+      if (onDeletePost) {
+        onDeletePost(deletedId); // Inform ProfileDetail to remove the post
+      }
+  
+    const updatedArray = [...postArray];
+    updatedArray.splice(currentItemIndex, 1); // Safely remove current item
+  
+    // Avoid crashing due to invalid index
+    const newIndex = Math.max(currentItemIndex - 1, 0);
+  
+    setPostArray(updatedArray);
+    setCurrentItemIndex(newIndex);
+  };  
 
   const _renderReels = useCallback(
     ({item, index}) => {
@@ -111,15 +130,6 @@ const ReelViewer = ({route}) => {
     [currentItemIndex, isOnFocusItem, postArray],
   );
 
-  const handleScrollToIndexFailed = React.useCallback(info => {
-    if (flashListRef.current) {
-      // flashListRef.current.scrollToOffset({
-      //   offset: info.averageItemLength * info.index,
-      //   animated: false,
-      // });
-    }
-  }, []);
-
   const ListEmptyComponent = () => {
     return(
       <NotFoundAnime />
@@ -129,8 +139,7 @@ const ReelViewer = ({route}) => {
   return (
     <>
       <View 
-      style={styles.container}
-      >
+      style={styles.container}>
         <View
           style={{
             position: 'absolute',
@@ -152,17 +161,14 @@ const ReelViewer = ({route}) => {
           renderItem={_renderReels}
           keyExtractor={(item, index) => item.id?.toString() || index.toString()}
           showsVerticalScrollIndicator={false}
-          // initialScrollIndex={route?.params?.currentIndex || 0}
           disableIntervalMomentum
           onViewableItemsChanged={_onViewableItemsChanged}
           viewabilityConfig={_viewabilityConfig}
-          // estimatedItemSize={2}
           pagingEnabled
           snapToInterval={Math.round(screenHeight)}
           initialNumToRender={5}
           windowSize={10}
           removeClippedSubviews={false}
-          // getItemLayout={getItemLayout}
           getItemLayout={(data, index) => ({
             length: Math.round(screenHeight),
             offset: Math.round(screenHeight) * index,
@@ -170,14 +176,14 @@ const ReelViewer = ({route}) => {
           })}
           contentInset={{top: 0, bottom: 0, left: 0, right: 0}}
           contentInsetAdjustmentBehavior="automatic"
-          // contentContainerStyle={{alignSelf: 'center'}}
-          // extraData={HEIGHT}
           extraData={Math.round(screenHeight)}
           contentContainerStyle={{ padding: 0, margin: 0 }}
           ListEmptyComponent={ListEmptyComponent}
         />
       </View>
         {/* comment actionsheets */}
+        {postArray[currentItemIndex] && (
+         <>
         <CommentListSheet
           ref={actionsheetRef}
           postId={postArray[currentItemIndex]?.postData?._id}
@@ -220,21 +226,7 @@ const ReelViewer = ({route}) => {
           }
         />
         <ReportTypeOptionSheet ref={reportOptionSheet}
-         onActionDone={() => {
-          const deletedId = postArray[currentItemIndex]?.postData?._id;
-
-          if (onDeletePost) {
-            onDeletePost(deletedId); // Inform ProfileDetail to remove the post
-          }
-
-          // Remove current post from postArray
-          const updatedArray = [...postArray];
-          updatedArray.splice(currentItemIndex, 1); // remove current post
-          setPostArray(updatedArray);
-      
-          // Reset index to avoid overflow
-          setCurrentItemIndex(prev => Math.max(prev - 1, 0));
-        }}
+        onActionDone={handleDeletePost}
          />
         <FollowUserSheet
           ref={followingUserRef}
@@ -267,6 +259,8 @@ const ReelViewer = ({route}) => {
             setPostArray([...temp]);
           }}
         />
+         </>
+       )}
       </View>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>

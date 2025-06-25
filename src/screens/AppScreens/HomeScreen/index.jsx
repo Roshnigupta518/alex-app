@@ -51,7 +51,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   const tabBarHeight = useBottomTabBarHeight();
   // const screenHeight = (HEIGHT-tabBarHeight) 
-  const screenHeight = Platform .OS == 'ios' ? HEIGHT : HEIGHT-tabBarHeight
+  const screenHeight = Platform .OS == 'ios' ? HEIGHT : HEIGHT
 
   console.log({tabBarHeight, screenHeight})
 
@@ -84,6 +84,8 @@ const HomeScreen = ({ navigation, route }) => {
   });
   const [refreshing, setRefreshing] = React.useState(false);
   const [isInternetConnected, setIsInternetConnected] = useState(true);
+  const [hasTriedFetchingPosts, setHasTriedFetchingPosts] = useState(false);
+
   // const { city, location, error } = useLocation()
   const { location, city, error, permissionGranted, refreshLocation } = useLocation();
 
@@ -134,80 +136,69 @@ const HomeScreen = ({ navigation, route }) => {
   }, [paramsValues, selectedCityData, city, refreshLocation]);
 
   const getAllPosts = () => {
-    console.log({ selectedCityData, paramsValues, currentCity: city })
-    // 💡 Handle case when current location is required but not available
+    console.log({ selectedCityData, paramsValues, currentCity: city });
+  
     if (selectedCityData?.locationType == 'current') {
-      if (city == null || !!error) {
-        console.log('Current location not available:', error);
-       
+      if (city == null && error == null) {
+        // Still resolving location – do nothing
+        return;
+      }
+      if (!!error) {
+        // Got location error
         setIsLoading(false);
-        setRefreshing(false);
-        return; 
+        setHasTriedFetchingPosts(true);
+        return;
       }
     }
-
+  
     pagination.isLoading = true;
-    let url = {
-      // skip: pagination.skip,
-      // limit: pagination.limit,
-    };
-    if (pagination.skip !== 0 || pagination.limit !== 0) {
-      Object.assign(url, {
-        skip: pagination.skip,
-        limit: pagination.limit,
-      });
+  
+    // Only set isLoading when postArray is empty (for UX reasons)
+    if (postArray?.length === 0) {
+      setIsLoading(true);
     }
+  
+    let url = { skip: pagination.skip, limit: pagination.limit };
+  
     if (selectedCityData?.locationType == 'current') {
-
       Object.assign(url, { city: city });
-
-      console.log('current location data');
     } else if (paramsValues?.location_type == 'city') {
       Object.assign(url, { city: paramsValues?.city });
-      console.log('selectedCity data')
     } else if (paramsValues?.location_type == 'nearme') {
-      console.log('nearme data')
       Object.assign(url, {
         latitude: paramsValues?.location_coordinates?.latitude,
         longitude: paramsValues?.location_coordinates?.longitude,
         distance: paramsValues?.location_distance,
       });
     }
-
-    if (postArray?.length == 0) {
-      setIsLoading(true);
-    }
+  
     GetAllPostsRequest(url)
       .then(res => {
         setPostArray(prevPosts => [...prevPosts, ...res?.result]);
-        console.log({ length: res })
-        currentTotalItems = postArray?.length + (res?.result?.length || 0);
+  
+        // Prefetch images
+        res?.result?.forEach(item => {
+          if (item?.postData?.post?.mimetype == 'image/jpeg') {
+            Image.prefetch(item?.postData?.post?.data);
+          }
+        });
+  
         pagination.totalRecords = res?.totalrecord;
-
-        if (res?.result?.length > 0) {
-          res?.result?.forEach(item => {
-            if (item?.postData?.post?.mimetype == 'image/jpeg') {
-              Image.prefetch(item?.postData?.post?.data);
-            }
-          });
-        }
-        setIsLoading(false)
-        setRefreshing(false)
-        // flashListRef.current.scrollToOffset({animated: true, offset: 0});
+        setHasTriedFetchingPosts(true);
       })
       .catch(err => {
-        console.log('err', err);
-
-        if (err?.message != undefined) {
-          Toast.error('Posts', err?.message);
+        if (err?.message) {
+          Toast.error('Posts', err.message);
         }
+        setHasTriedFetchingPosts(true);
       })
       .finally(() => {
         pagination.isLoading = false;
         setIsLoading(false);
-        setRefreshing(false)
+        setRefreshing(false);
       });
   };
+  
 
   const _onViewableItemsChanged = ({ viewableItems }) => {
     if (viewableItems[0]) {
@@ -366,6 +357,13 @@ const HomeScreen = ({ navigation, route }) => {
     index,
   });
 
+  const shouldShowLoader =
+  !hasTriedFetchingPosts || isLoading || (selectedCityData?.locationType === 'current' && city == null && error == null);
+
+const shouldShowEmptyMessage =
+  hasTriedFetchingPosts && !isLoading && postArray.length === 0 && (city !== null || error !== null);
+
+
   return (
     <>
       <View style={styles.container}>
@@ -385,7 +383,7 @@ const HomeScreen = ({ navigation, route }) => {
         <ScrollView contentContainerStyle={{ flex: 1 }} nestedScrollEnabled={true} refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
-          {(isLoading) ? (
+         {shouldShowLoader ? (
             // Show loader
             <View style={{
               alignItems: 'center',
@@ -432,45 +430,30 @@ const HomeScreen = ({ navigation, route }) => {
                 extraData={screenHeight}
               />
             </View>
-          ) : (
-            // No posts found view
+          ) : shouldShowEmptyMessage ? (
             <View style={{
               flex: 1,
               backgroundColor: colors.black,
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-              {(city != null) ? (
-                <Text
-                  onPress={() => {
-                    if (selectedCityData?.locationType === 'current') {
-                      navigation.navigate('PostMediaScreen');
-                    }
-                  }}
-                  style={{
-                    fontFamily: fonts.bold,
-                    fontSize: wp(16),
-                    color: colors.white,
-                  }}>
-                  {selectedCityData?.locationType === 'current'
-                    ? 'Be the first one to post in this city'
-                    : 'No post found!'}
-                </Text>
-              ) :
-
-                <Text
-                  style={{
-                    fontFamily: fonts.regular,
-                    fontSize: wp(12),
-                    color: colors.white,
-                    textAlign: 'center'
-                  }}>
-                  {selectedCityData.locationType == 'current' && error}
-                </Text>
-              }
+              <Text
+                onPress={() => {
+                  if (selectedCityData?.locationType === 'current') {
+                    navigation.navigate('PostMediaScreen');
+                  }
+                }}
+                style={{
+                  fontFamily: fonts.bold,
+                  fontSize: wp(16),
+                  color: colors.white,
+                }}>
+                {selectedCityData?.locationType === 'current'
+                  ? 'Be the first one to post in this city'
+                  : 'No post found!'}
+              </Text>
             </View>
-          )}
-
+          ) : null}
         </ScrollView>
 
         {/* Comment List Screen */}
