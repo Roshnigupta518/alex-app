@@ -51,5 +51,14 @@ card:{
       textAlign:'right',
       marginRight:15
     },
+    imgsty: { width: wp(20), height: wp(20) },
+  profileCounts: {
+    flexDirection: 'row',
+    // marginLeft: 15
+  },
+  iconsty:{
+    overflow: 'visible', 
+    marginRight:wp(10)
+  },
 })
 

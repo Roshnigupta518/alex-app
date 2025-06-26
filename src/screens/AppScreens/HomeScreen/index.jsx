@@ -51,7 +51,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   const tabBarHeight = useBottomTabBarHeight();
   // const screenHeight = (HEIGHT-tabBarHeight) 
-  const screenHeight = Platform .OS == 'ios' ? HEIGHT : HEIGHT
+  const screenHeight = Platform .OS == 'ios' ? HEIGHT : HEIGHT-tabBarHeight
 
   console.log({tabBarHeight, screenHeight})
 

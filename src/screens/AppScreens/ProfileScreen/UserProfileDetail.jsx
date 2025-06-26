@@ -29,6 +29,7 @@ import TabsHeader from '../../../components/TabsHeader';
 import NotFoundAnime from '../../../components/NotFoundAnime';
 import MediaItem from '../../../components/GridView';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import { SocialLinks } from '../../../components/social';
 
 const UserProfileDetail = ({ navigation, route }) => {
   const userInfo = useSelector(state => state.UserInfoSlice.data);
@@ -230,36 +231,8 @@ const UserProfileDetail = ({ navigation, route }) => {
                 </View>
               </View>
 
-              <View style={[styles.profileCounts, { marginTop: 10,flexDirection: 'row' }]}>
-                {userDetails?.socialLinks?.tiktok ? (
-                  <TouchableOpacity style={styles.iconsty} onPress={() => openSocialLink(userDetails.socialLinks.tiktok)}>
-                    <Image source={ImageConstants.tiktok} style={styles.imgsty} resizeMode="contain" />
-                  </TouchableOpacity>
-                ) : null}
-
-                {userDetails?.socialLinks?.twitter ? (
-                  <TouchableOpacity style={styles.iconsty} onPress={() => openSocialLink(userDetails.socialLinks.twitter)}>
-                    <Image source={ImageConstants.twitter} style={styles.imgsty} resizeMode="contain" />
-                  </TouchableOpacity>
-                ) : null}
-
-                {userDetails?.socialLinks?.instagram ? (
-                  <TouchableOpacity style={styles.iconsty} onPress={() => openSocialLink(userDetails.socialLinks.instagram)}>
-                    <Image source={ImageConstants.instagram} style={styles.imgsty} resizeMode="contain" />
-                  </TouchableOpacity>
-                ) : null}
-
-                {userDetails?.socialLinks?.facebook ? (
-                  <TouchableOpacity style={styles.iconsty} onPress={() => openSocialLink(userDetails.socialLinks.facebook)}>
-                    <Image source={ImageConstants.facebook} style={styles.imgsty} resizeMode="contain" />
-                  </TouchableOpacity>
-                ) : null}
-
-                {userDetails?.socialLinks?.youtube ? (
-                  <TouchableOpacity style={styles.iconsty} onPress={() => openSocialLink(userDetails.socialLinks.youtube)}>
-                    <Image source={ImageConstants.youtube} style={styles.imgsty} resizeMode="contain" />
-                  </TouchableOpacity>
-                ) : null}
+              <View style={styles.ml20}>
+              <SocialLinks  data={userDetails}/>
               </View>
             </View>
           </View>
@@ -364,6 +337,9 @@ const styles = StyleSheet.create({
     overflow: 'visible',
     marginHorizontal:wp(10)
   },
+  ml20:{
+  marginLeft:40
+  }, 
   masonryHeader: {
     position: 'absolute',
     zIndex: 10,

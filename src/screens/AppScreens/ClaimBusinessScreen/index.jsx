@@ -26,6 +26,12 @@ import {
 import Toast from '../../../constants/Toast';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../../components/NoInternetModal';
+import { SocialLinks } from '../../../components/social';
+import TabsHeader from '../../../components/TabsHeader';
+import { tabList } from '../../../validation/helper';
+import MediaItem from '../../../components/GridView';
+import NotFoundAnime from '../../../components/NotFoundAnime';
+
 const ClaimBusinessScreen = ({navigation, route}) => {
   const {place_id, name} = route?.params || {};
   const [isLoading, setIsLoading] = useState(false);
@@ -34,6 +40,8 @@ const ClaimBusinessScreen = ({navigation, route}) => {
   const [claimLoading, setClaimLoading] = useState(false);
   const [mediaData, setMediaData] = useState([]);
   const [isInternetConnected, setIsInternetConnected] = useState(true);
+  const [activeTab, setActiveTab] = useState('photo');
+
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       if (state.isConnected !== null && state.isConnected === false) {
@@ -177,44 +185,43 @@ const ClaimBusinessScreen = ({navigation, route}) => {
       });
   };
 
-  const RenderUserPost = ({item, index}) => {
+  const renderTabContent = () => {
+    let filteredData = [];
+
+    if (activeTab === 'photo') {
+      filteredData = mediaData.filter(item => item?.postData?.post?.mimetype !== 'video/mp4');
+    } else if (activeTab === 'video') {
+      filteredData = mediaData.filter(item => item?.postData?.post?.mimetype === 'video/mp4');
+    }
+
+    if (filteredData.length === 0) {
+      return (
+        <NotFoundAnime isLoading={isLoading} />
+      );
+    }
+
     return (
-      <TouchableOpacity
-        style={{margin: 0, padding: 4}}
-        onPress={() =>
-          navigation.navigate('ReelViewer', {
-            data: mediaData,
-            currentIndex: index,
-          })
-        }>
-        {item?.postData?.post?.mimetype != 'video/mp4' ? (
-          <Image
-            source={{uri: item?.postData?.post?.data}}
-            style={styles.userPostImage}
+      <FlatList
+        data={filteredData}
+        renderItem={({ item, index }) => (
+          <MediaItem
+            item={item}
+            onPress={() =>
+              navigation.navigate('ReelViewer', {
+                data: filteredData,
+                currentIndex: index,
+                onDeletePost: deletedId => {
+                  setPostData(prev => prev.filter(item => item?.postData?._id !== deletedId));
+                },
+              })
+            }
+            index={index}
           />
-        ) : (
-          <View style={styles.videoContainer}>
-            <View style={styles.playIconStyle}>
-              <Image
-                source={ImageConstants.play}
-                style={{
-                  height: 60,
-                  width: 60,
-                  alignSelf: 'center',
-                }}
-              />
-            </View>
-            <Image
-              source={{uri: item?.postData?.post_thumbnail}}
-              style={{
-                height: 200,
-                width: WIDTH / 2.3,
-                borderRadius: 10,
-              }}
-            />
-          </View>
         )}
-      </TouchableOpacity>
+        numColumns={3}
+        keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={{ padding: 15 }}
+      />
     );
   };
 
@@ -282,9 +289,8 @@ const ClaimBusinessScreen = ({navigation, route}) => {
             <View
               style={{
                 flex: 1,
-                marginHorizontal: wp(15),
               }}>
-              <View>
+              <View style={{marginHorizontal:20}}>
                 <View style={{width: 30}} />
                 <View style={{marginTop: 50}}>
                   <Text
@@ -295,13 +301,19 @@ const ClaimBusinessScreen = ({navigation, route}) => {
                     }}>
                     {name}
                   </Text>
+                  <SocialLinks data={data} />
+                  <Text style={styles.txtstyle}>Open until 2:00 AM{'\n'}
+                    Food & Drink, Entertainment, Concerts, Cocktail Bar{'\n'}
+                    555-555-5555 - 1234 Main St, St Petersburg FL 34609
+                  </Text>
+
                 </View>
 
                 <View
                   style={{
                     flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
+                    // alignItems: 'center',
+                    // justifyContent: 'space-between',
                     marginTop: 20,
                   }}>
                   <TouchableOpacity
@@ -309,15 +321,7 @@ const ClaimBusinessScreen = ({navigation, route}) => {
                     // onPress={() => console.log('route?.params', route?.params)}
                     onPress={() => getLocationFromGoogle(true)}
                     activeOpacity={0.9}
-                    style={{
-                      backgroundColor: colors.primaryColor,
-                      paddingHorizontal: wp(20),
-                      paddingVertical: wp(13),
-                      borderRadius: 5,
-                      marginHorizontal: 2,
-                      flex: 1,
-                      alignItems: 'center',
-                    }}>
+                    style={[styles.button,{backgroundColor: isClaimed ? colors.primaryColor : colors.white}]}>
                     {claimLoading ? (
                       <ActivityIndicator size={'small'} color={colors.white} />
                     ) : (
@@ -327,7 +331,7 @@ const ClaimBusinessScreen = ({navigation, route}) => {
                           fontSize: wp(11),
                           color: colors.black,
                         }}>
-                        {!isClaimed ? 'Claim Your Business' : 'Already Claimed'}
+                        {!isClaimed ? 'Claim' : 'Claimed'}
                       </Text>
                     )}
                   </TouchableOpacity>
@@ -335,15 +339,7 @@ const ClaimBusinessScreen = ({navigation, route}) => {
                   <TouchableOpacity
                     onPress={() => getLocationFromGoogle(false)}
                     activeOpacity={0.9}
-                    style={{
-                      backgroundColor: colors.primaryColor,
-                      paddingHorizontal: wp(20),
-                      paddingVertical: wp(13),
-                      borderRadius: 5,
-                      marginHorizontal: 5,
-                      flex: 1,
-                      alignItems: 'center',
-                    }}>
+                    style={styles.button}>
                     <Text
                       style={{
                         fontFamily: fonts.semiBold,
@@ -353,28 +349,46 @@ const ClaimBusinessScreen = ({navigation, route}) => {
                       Direction
                     </Text>
                   </TouchableOpacity>
+
+                  <TouchableOpacity
+                    disabled={claimLoading || data?.isClaimed}
+                    // onPress={() => console.log('route?.params', route?.params)}
+                    // onPress={() => getLocationFromGoogle(true)}
+                    activeOpacity={0.9}
+                    style={styles.button}>
+                    {claimLoading ? (
+                      <ActivityIndicator size={'small'} color={colors.white} />
+                    ) : (
+                      <Text
+                        style={{
+                          fontFamily: fonts.semiBold,
+                          fontSize: wp(11),
+                          color: colors.black,
+                        }}>
+                        {'Website'}
+                      </Text>
+                    )}
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={() => getLocationFromGoogle(false)}
+                    activeOpacity={0.9}
+                    style={styles.button}>
+                    <Text
+                      style={{
+                        fontFamily: fonts.semiBold,
+                        fontSize: wp(11),
+                        color: colors.black,
+                      }}>
+                     Call
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
 
-              <View
-                style={{
-                  marginTop: 30,
-                  flex: 1,
-                }}>
-                <Text
-                  style={{
-                    fontFamily: fonts.semiBold,
-                    fontSize: wp(14),
-                    color: colors.primaryColor,
-                  }}>
-                  Photos
-                </Text>
-                <FlatList
-                  data={mediaData}
-                  renderItem={RenderUserPost}
-                  numColumns={2}
-                />
-              </View>
+              <TabsHeader activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabList} />
+              {renderTabContent()}
+
             </View>
           </ScrollView>
         </View>
@@ -391,6 +405,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'green',
     margin: 4,
     borderRadius: 18,
+  },
+  button:{
+    backgroundColor: colors.white,
+    paddingHorizontal: wp(2),
+    paddingVertical: wp(5),
+    borderRadius: 50,
+    borderWidth:1, 
+    borderColor:colors.black,
+    marginHorizontal: 2,
+    flex: 1,
+    alignItems: 'center',
   },
   masonryHeader: {
     position: 'absolute',
@@ -518,6 +543,11 @@ const styles = StyleSheet.create({
     width: WIDTH / 2.3,
     zIndex: 2,
   },
+  txtstyle:{
+    fontFamily: fonts.regular,
+    fontSize: wp(12),
+    color: colors.gray,
+  }
 });
 
 export default ClaimBusinessScreen;
