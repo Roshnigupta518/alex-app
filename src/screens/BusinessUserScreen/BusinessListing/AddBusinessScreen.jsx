@@ -66,6 +66,12 @@ const AddBusinessScreen = ({navigation, route}) => {
     city: '',
     state: '',
     country: '',
+    website:'',
+    instagram: '',
+    twitter: '',
+    tiktok: '',
+    facebook: '',
+    youtube: '',
   });
 
   useEffect(() => {
@@ -315,7 +321,7 @@ const AddBusinessScreen = ({navigation, route}) => {
             }
           />
 
-          <BusinessImagePicker
+          {/* <BusinessImagePicker
             extraImage={
               route?.params?.data?.image?.length > 0
                 ? route?.params?.data?.image[0]
@@ -325,7 +331,68 @@ const AddBusinessScreen = ({navigation, route}) => {
             label="Add photos of your Business"
             image={businessImage}
             getImageFile={res => setBusinessImage(res)}
+          /> */}
+
+          <BusinessUserInputs
+            theme="light"
+            label="Add Webiste Link"
+            placeholder="Write here"
+            value={state.website}
+            onChangeText={txt =>
+              setState(prevState => ({...prevState, website: txt}))
+            }
           />
+
+          {/* ------------------- */}
+
+          <BusinessUserInputs
+            theme="light"
+            label="Add Tiktok Link"
+            placeholder="Write here"
+            value={state.tiktok}
+            onChangeText={txt =>
+              setState(prevState => ({...prevState, tiktok: txt}))
+            }
+          />
+
+         <BusinessUserInputs
+            theme="light"
+            label="Add Instagram Link"
+            placeholder="Write here"
+            value={state.instagram}
+            onChangeText={txt =>
+              setState(prevState => ({...prevState, instagram: txt}))
+            }
+          />
+          <BusinessUserInputs
+            theme="light"
+            label="Add Youtube Link"
+            placeholder="Write here"
+            value={state.youtube}
+            onChangeText={txt =>
+              setState(prevState => ({...prevState, youtube: txt}))
+            }
+          />
+          <BusinessUserInputs
+            theme="light"
+            label="Add Facebook Link"
+            placeholder="Write here"
+            value={state.facebook}
+            onChangeText={txt =>
+              setState(prevState => ({...prevState, facebook: txt}))
+            }
+          />
+          <BusinessUserInputs
+            theme="light"
+            label="Add X Link"
+            placeholder="Write here"
+            value={state.twitter}
+            onChangeText={txt =>
+              setState(prevState => ({...prevState, twitter: txt}))
+            }
+          />
+         {/* ----------------------- */}
+
 
           <BusinessImagePicker
             extraImage={route?.params?.data?.certificate || ''}

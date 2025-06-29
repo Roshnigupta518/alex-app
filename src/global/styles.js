@@ -9,6 +9,9 @@ content:{
     padding: wp(15),
     // flex: 1,
 },
+alignC:{
+alignItems:'center'
+},
 card:{
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -60,5 +63,25 @@ card:{
     overflow: 'visible', 
     marginRight:wp(10)
   },
+  row:{
+    flexDirection:'row'
+  },
+  wdh50:{
+    width:'50%'
+  },
+  circle:{
+    width:wp(30),
+    height:wp(30),
+    alignItems:'center',
+    backgroundColor: 'white',
+    borderRadius:100,
+    justifyContent:'center',
+    marginBottom:15
+},
+cir_pos:{
+  position:'absolute',
+  top:30,
+  right:15
+}
 })
 

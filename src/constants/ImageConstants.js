@@ -22,6 +22,7 @@ const ImageConstants = {
   h_menu: require('./../assets/images/h_menu.png'),
   save: require('./../assets/images/save.png'),
   send: require('./../assets/images/send.png'),
+  send_1: require('./../assets/images/send_1.png'),
   filled_like: require('./../assets/images/filled_like.png'),
   unlike: require('./../assets/images/unlike.png'),
   add_post: require('./../assets/images/add_post.png'),
@@ -82,6 +83,8 @@ const ImageConstants = {
 
   facebook : require('./../assets/images/communication.png'),
   youtube : require('./../assets/images/youtube.png'),
+  add_user: require('./../assets/images/add_user.png'),
+  share: require('./../assets/images/share.png'),
 };
 
 export default ImageConstants;

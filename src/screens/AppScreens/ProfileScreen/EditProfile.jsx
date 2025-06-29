@@ -390,7 +390,6 @@ const EditProfileScreen = ({ navigation, route }) => {
         return (
           <View>
             <View style={{ margin: wp(20) }}>
-
               <CustomLabelInput
                 placeholderColor="white"
                 label="Tiktok"

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -13,7 +13,7 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
-import {colors, fonts, HEIGHT, WIDTH, wp} from '../../../constants';
+import { colors, fonts, HEIGHT, WIDTH, wp } from '../../../constants';
 import BackHeader from '../../../components/BackHeader';
 import ImageConstants from '../../../constants/ImageConstants';
 import {
@@ -31,9 +31,10 @@ import TabsHeader from '../../../components/TabsHeader';
 import { tabList } from '../../../validation/helper';
 import MediaItem from '../../../components/GridView';
 import NotFoundAnime from '../../../components/NotFoundAnime';
-
-const ClaimBusinessScreen = ({navigation, route}) => {
-  const {place_id, name} = route?.params || {};
+import { formatCount } from '../../../validation/helper';
+import st from '../../../global/styles';
+const ClaimBusinessScreen = ({ navigation, route }) => {
+  const { place_id, name } = route?.params || {};
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState(null);
   const [isClaimed, setIsClaimed] = useState(false);
@@ -228,6 +229,9 @@ const ClaimBusinessScreen = ({navigation, route}) => {
   useEffect(() => {
     getAllData();
   }, []);
+
+  const isLogoAvailable = !!data?.certificate;
+
   return (
     <>
       <View
@@ -237,15 +241,24 @@ const ClaimBusinessScreen = ({navigation, route}) => {
         }}>
         <ImageBackground
           source={
-            data?.banner ? {uri: data?.banner} : ImageConstants.business_banner
+            data?.banner ? { uri: data?.banner } : ImageConstants.business_banner
           }
           style={{
-            height: HEIGHT / 3,
+            height: HEIGHT / 3.5,
             width: WIDTH,
           }}>
           <SafeAreaView>
             <BackHeader />
           </SafeAreaView>
+
+          <View style={st.cir_pos}>
+            <View style={st.circle}>
+            <Image source={ImageConstants.add_user} style={st.imgsty} />
+            </View>
+            <View style={st.circle}>
+            <Image source={ImageConstants.send_1} style={st.imgsty}  />
+            </View>
+          </View>
         </ImageBackground>
 
         <View
@@ -257,42 +270,32 @@ const ClaimBusinessScreen = ({navigation, route}) => {
             marginTop: -40,
           }}>
           <View>
-            {data?.certificate != '' && data?.certificate != undefined ? (
-              <Image
-                source={{uri: data?.certificate}}
-                style={{
-                  height: wp(80),
-                  width: wp(80),
-                  alignSelf: 'center',
-                  borderRadius: 100,
-                  marginTop: -40,
-                  borderWidth: 3,
-                  borderColor: colors.white,
-                  resizeMode: 'stretch',
-                }}
-              />
-            ) : (
-              <Image
-                source={ImageConstants.business_logo}
-                style={{
-                  alignSelf: 'center',
-                  borderRadius: 100,
-                  marginTop: -40,
-                }}
-              />
-            )}
+            <Image
+              source={isLogoAvailable ? { uri: data?.certificate } : ImageConstants.business_logo}
+              style={{
+                height: isLogoAvailable ? wp(80) : wp(130),
+                width: isLogoAvailable ? wp(80) : wp(110),
+                alignSelf: 'center',
+                borderRadius: 100,
+                marginTop: isLogoAvailable ? -40 : -40, 
+                borderWidth: isLogoAvailable ? 3 : 0,
+                borderColor: colors.white,
+                resizeMode: isLogoAvailable ? 'cover' : null,
+              }}
+            />
+
           </View>
 
           <ScrollView
-            style={{marginTop: -30}}
-            contentContainerStyle={{flexGrow: 1}}>
+            style={{ marginTop: -30 }}
+            contentContainerStyle={{ flexGrow: 1 }}>
             <View
               style={{
                 flex: 1,
               }}>
-              <View style={{marginHorizontal:20}}>
-                <View style={{width: 30}} />
-                <View style={{marginTop: 50}}>
+              <View style={{ marginHorizontal: 20 }}>
+                {/* <View style={{width: 30}} /> */}
+                <View style={{ marginTop: isLogoAvailable && 50 }}>
                   <Text
                     style={{
                       fontFamily: fonts.bold,
@@ -310,42 +313,12 @@ const ClaimBusinessScreen = ({navigation, route}) => {
                 </View>
 
                 <View
-                  style={{
-                    flexDirection: 'row',
-                    // alignItems: 'center',
-                    // justifyContent: 'space-between',
-                    marginTop: 20,
-                  }}>
-                  <TouchableOpacity
-                    disabled={claimLoading || data?.isClaimed}
-                    // onPress={() => console.log('route?.params', route?.params)}
-                    onPress={() => getLocationFromGoogle(true)}
-                    activeOpacity={0.9}
-                    style={[styles.button,{backgroundColor: isClaimed ? colors.primaryColor : colors.white}]}>
-                    {claimLoading ? (
-                      <ActivityIndicator size={'small'} color={colors.white} />
-                    ) : (
-                      <Text
-                        style={{
-                          fontFamily: fonts.semiBold,
-                          fontSize: wp(11),
-                          color: colors.black,
-                        }}>
-                        {!isClaimed ? 'Claim' : 'Claimed'}
-                      </Text>
-                    )}
-                  </TouchableOpacity>
-
+                  style={styles.socialContent}>
                   <TouchableOpacity
                     onPress={() => getLocationFromGoogle(false)}
                     activeOpacity={0.9}
                     style={styles.button}>
-                    <Text
-                      style={{
-                        fontFamily: fonts.semiBold,
-                        fontSize: wp(11),
-                        color: colors.black,
-                      }}>
+                    <Text style={styles.btntxt}>
                       Direction
                     </Text>
                   </TouchableOpacity>
@@ -360,11 +333,7 @@ const ClaimBusinessScreen = ({navigation, route}) => {
                       <ActivityIndicator size={'small'} color={colors.white} />
                     ) : (
                       <Text
-                        style={{
-                          fontFamily: fonts.semiBold,
-                          fontSize: wp(11),
-                          color: colors.black,
-                        }}>
+                        style={styles.btntxt}>
                         {'Website'}
                       </Text>
                     )}
@@ -375,15 +344,37 @@ const ClaimBusinessScreen = ({navigation, route}) => {
                     activeOpacity={0.9}
                     style={styles.button}>
                     <Text
-                      style={{
-                        fontFamily: fonts.semiBold,
-                        fontSize: wp(11),
-                        color: colors.black,
-                      }}>
-                     Call
+                      style={styles.btntxt}>
+                      Call
                     </Text>
                   </TouchableOpacity>
+                  <TouchableOpacity
+                    disabled={claimLoading || data?.isClaimed}
+                    // onPress={() => console.log('route?.params', route?.params)}
+                    onPress={() => getLocationFromGoogle(true)}
+                    activeOpacity={0.9}
+                    style={[styles.button, { backgroundColor: isClaimed ? colors.primaryColor : colors.white }]}>
+                    {claimLoading ? (
+                      <ActivityIndicator size={'small'} color={colors.white} />
+                    ) : (
+                      <Text
+                        style={styles.btntxt}>
+                        {!isClaimed ? 'Claim' : 'Claimed'}
+                      </Text>
+                    )}
+                  </TouchableOpacity>
                 </View>
+
+                <View style={[st.row, { marginTop: 10 }]}>
+                  <View style={st.alignC}>
+                    <Text style={styles.txtstyle}>  Followers :-  <Text style={styles.btntxt}>{'16.3K'}</Text></Text>
+                  </View>
+
+                  <View style={[st.alignC, { marginLeft: 20 }]}>
+                    <Text style={styles.txtstyle}>Likes :- <Text style={styles.btntxt}>{'78.5K'}</Text></Text>
+                  </View>
+                </View>
+
               </View>
 
               <TabsHeader activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabList} />
@@ -406,15 +397,15 @@ const styles = StyleSheet.create({
     margin: 4,
     borderRadius: 18,
   },
-  button:{
+  button: {
     backgroundColor: colors.white,
-    paddingHorizontal: wp(2),
-    paddingVertical: wp(5),
+    paddingHorizontal: wp(10),
+    paddingVertical: wp(3),
     borderRadius: 50,
-    borderWidth:1, 
-    borderColor:colors.black,
+    borderWidth: 1,
+    borderColor: colors.black,
     marginHorizontal: 2,
-    flex: 1,
+    // flex: 1,
     alignItems: 'center',
   },
   masonryHeader: {
@@ -543,10 +534,19 @@ const styles = StyleSheet.create({
     width: WIDTH / 2.3,
     zIndex: 2,
   },
-  txtstyle:{
+  txtstyle: {
     fontFamily: fonts.regular,
     fontSize: wp(12),
     color: colors.gray,
+  },
+  btntxt: {
+    fontFamily: fonts.semiBold,
+    fontSize: wp(11),
+    color: colors.black,
+  },
+  socialContent: {
+    flexDirection: 'row',
+    marginTop: 20,
   }
 });
 
