@@ -71,7 +71,7 @@ const ImageConstants = {
   timer: require('./../assets/images/timer.png'),
   event_banner: require('./../assets/images/event_banner.png'),
   wallet: require('./../assets/images/wallet.png'),
-  business_logo: require('./../assets/images/business_logo.png'),
+  business_logo: require('./../assets/images/appIcon.png'),
   apple: require('./../assets/images/apple.png'),
   settings : require('./../assets/images/setting.png'),
   edit : require('./../assets/images/write.png'),

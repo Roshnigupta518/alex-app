@@ -273,14 +273,14 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
             <Image
               source={isLogoAvailable ? { uri: data?.certificate } : ImageConstants.business_logo}
               style={{
-                height: isLogoAvailable ? wp(80) : wp(130),
-                width: isLogoAvailable ? wp(80) : wp(110),
+                height: isLogoAvailable ? wp(80) : wp(90),
+                width: isLogoAvailable ? wp(80) : wp(90),
                 alignSelf: 'center',
                 borderRadius: 100,
-                marginTop: isLogoAvailable ? -40 : -40, 
+                marginTop: isLogoAvailable ? -40 : -50, 
                 borderWidth: isLogoAvailable ? 3 : 0,
                 borderColor: colors.white,
-                resizeMode: isLogoAvailable ? 'cover' : null,
+                resizeMode: isLogoAvailable ? 'cover' : 'cover',
               }}
             />
 
@@ -295,7 +295,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
               }}>
               <View style={{ marginHorizontal: 20 }}>
                 {/* <View style={{width: 30}} /> */}
-                <View style={{ marginTop: isLogoAvailable && 50 }}>
+                <View style={{ marginTop: 50 }}>
                   <Text
                     style={{
                       fontFamily: fonts.bold,
