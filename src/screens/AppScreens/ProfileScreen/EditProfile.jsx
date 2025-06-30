@@ -192,11 +192,11 @@ const EditProfileScreen = ({ navigation, route }) => {
         });
         setState({
           ...state,
-          instagram: data?.socialLinks?.instagram,
-          twitter: data?.socialLinks?.twitter,
-          tiktok: data?.socialLinks?.tiktok,
-          facebook: data?.socialLinks?.facebook,
-          youtube: data?.socialLinks?.youtube,
+          instagram: data?.socialLinks?.instagram || '',
+          twitter: data?.socialLinks?.twitter || '',
+          tiktok: data?.socialLinks?.tiktok || '',
+          facebook: data?.socialLinks?.facebook || '',
+          youtube: data?.socialLinks?.youtube || '',
           state: data?.state,
           city: data?.city,
           zip: data?.zip,
