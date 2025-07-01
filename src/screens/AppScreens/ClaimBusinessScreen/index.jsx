@@ -11,7 +11,7 @@ import {
   Platform,
   FlatList,
   StyleSheet,
-  ActivityIndicator,
+  ActivityIndicator, TouchableWithoutFeedback
 } from 'react-native';
 import { colors, fonts, HEIGHT, WIDTH, wp } from '../../../constants';
 import BackHeader from '../../../components/BackHeader';
@@ -33,6 +33,8 @@ import MediaItem from '../../../components/GridView';
 import NotFoundAnime from '../../../components/NotFoundAnime';
 import { formatCount } from '../../../validation/helper';
 import st from '../../../global/styles';
+import FullscreenImageModal from '../../../components/InstagramProfileImageViewer';
+
 const ClaimBusinessScreen = ({ navigation, route }) => {
   const { place_id, name } = route?.params || {};
   const [isLoading, setIsLoading] = useState(false);
@@ -42,6 +44,8 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
   const [mediaData, setMediaData] = useState([]);
   const [isInternetConnected, setIsInternetConnected] = useState(true);
   const [activeTab, setActiveTab] = useState('photo');
+  const [visible, setVisible] = useState(false);
+  const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -239,6 +243,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
           flex: 1,
           backgroundColor: colors.white,
         }}>
+        <TouchableWithoutFeedback onPress={() => setShowBanner(true)}>
         <ImageBackground
           source={
             data?.banner ? { uri: data?.banner } : ImageConstants.business_banner
@@ -260,6 +265,15 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
             </View>
           </View>
         </ImageBackground>
+        </TouchableWithoutFeedback>
+
+        <FullscreenImageModal
+        visible={showBanner}
+        imageSource={
+          data?.banner ? { uri: data?.banner } : ImageConstants.business_banner
+        }
+        onClose={() => setShowBanner(false)}
+      />
 
         <View
           style={{
@@ -270,6 +284,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
             marginTop: -40,
           }}>
           <View>
+          <TouchableOpacity onPress={() => setVisible(true)}>
             <Image
               source={isLogoAvailable ? { uri: data?.certificate } : ImageConstants.business_logo}
               style={{
@@ -283,8 +298,15 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
                 resizeMode: isLogoAvailable ? 'cover' : 'cover',
               }}
             />
-
+         </TouchableOpacity>
           </View>
+
+          {/* Fullscreen Viewer */}
+            <FullscreenImageModal
+              visible={visible}
+              imageSource={isLogoAvailable ? { uri: data?.certificate } : ImageConstants.business_logo}
+              onClose={() => setVisible(false)}
+            />
 
           <ScrollView
             style={{ marginTop: -30 }}
