@@ -243,98 +243,124 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
           flex: 1,
           backgroundColor: colors.white,
         }}>
-        <TouchableWithoutFeedback onPress={() => setShowBanner(true)}>
-        <ImageBackground
-          source={
-            data?.banner ? { uri: data?.banner } : ImageConstants.business_banner
-          }
-          style={{
-            height: HEIGHT / 3.5,
-            width: WIDTH,
-          }}>
-          <SafeAreaView>
-            <BackHeader />
-          </SafeAreaView>
-
-          <View style={st.cir_pos}>
-            <View style={st.circle}>
-            <Image source={ImageConstants.add_user} style={st.imgsty} />
-            </View>
-            <View style={st.circle}>
-            <Image source={ImageConstants.send_1} style={st.imgsty}  />
-            </View>
-          </View>
-        </ImageBackground>
-        </TouchableWithoutFeedback>
-
-        <FullscreenImageModal
-        visible={showBanner}
-        imageSource={
-          data?.banner ? { uri: data?.banner } : ImageConstants.business_banner
-        }
-        onClose={() => setShowBanner(false)}
-      />
-
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: colors.white,
-            borderTopLeftRadius: 30,
-            borderTopRightRadius: 30,
-            marginTop: -40,
-          }}>
-          <View>
-          <TouchableOpacity onPress={() => setVisible(true)}>
-            <Image
-              source={isLogoAvailable ? { uri: data?.certificate } : ImageConstants.business_logo}
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}>
+          <TouchableWithoutFeedback onPress={() => setShowBanner(true)}>
+            <ImageBackground
+              source={
+                data?.banner ? { uri: data?.banner } : ImageConstants.business_banner
+              }
               style={{
-                height: isLogoAvailable ? wp(80) : wp(90),
-                width: isLogoAvailable ? wp(80) : wp(90),
-                alignSelf: 'center',
-                borderRadius: 100,
-                marginTop: isLogoAvailable ? -40 : -50, 
-                borderWidth: isLogoAvailable ? 3 : 0,
-                borderColor: colors.white,
-                resizeMode: isLogoAvailable ? 'cover' : 'cover',
-              }}
-            />
-         </TouchableOpacity>
-          </View>
+                height: HEIGHT / 4,
+                width: WIDTH,
+              }}>
+              <SafeAreaView>
+                <BackHeader />
+              </SafeAreaView>
 
-          {/* Fullscreen Viewer */}
+              <View style={st.cir_pos}>
+                
+                <View style={st.circle}>
+                  <Image source={ImageConstants.send_1} style={st.imgsty} />
+                </View>
+                <View style={st.circle}>
+                  <Image source={ImageConstants.web} style={st.imgsty} />
+                </View>
+                <View style={st.circle}>
+                  <Image source={ImageConstants.call} style={st.imgsty} />
+                </View>
+              </View>
+            </ImageBackground>
+          </TouchableWithoutFeedback>
+
+          <FullscreenImageModal
+            visible={showBanner}
+            imageSource={
+              data?.banner ? { uri: data?.banner } : ImageConstants.business_banner
+            }
+            onClose={() => setShowBanner(false)}
+          />
+
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: colors.white,
+            }}>
+            <View style={st.businessInfo}>
+              <View style={{width:'25%'}}>
+              <TouchableOpacity onPress={() => setVisible(true)}>
+                <Image
+                  source={isLogoAvailable ? { uri: data?.certificate } : ImageConstants.business_logo}
+                  style={{
+                    height: isLogoAvailable ? wp(70) : wp(70),
+                    width: isLogoAvailable ? wp(70) : wp(70),
+                    borderRadius: 100,
+                    borderWidth: isLogoAvailable ? 3 : 0,
+                    borderColor: colors.white,
+                    resizeMode: isLogoAvailable ? 'cover' : 'cover',
+                  }}
+                />
+              </TouchableOpacity>
+              </View>
+              <View style={{width:'65%'}}>
+                <Text
+                  style={{
+                    fontFamily: fonts.bold,
+                    fontSize: wp(16),
+                    color: colors.black,
+                  }}>
+                  {name}
+                </Text>
+
+                <View style={{flexDirection:'row'}}>
+                  <View style={{width:'50%'}}>
+                  <Text style={styles.btntxt}>{'16.3K'}</Text>
+                    <Text style={styles.txtstyle}>Followers</Text>
+                  </View>
+
+                  <View style={{width:'50%'}}>
+                  <Text style={styles.btntxt}>{'78.5K'}</Text>
+                    <Text style={styles.txtstyle}>Likes</Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+
+            {/* Fullscreen Viewer */}
             <FullscreenImageModal
               visible={visible}
               imageSource={isLogoAvailable ? { uri: data?.certificate } : ImageConstants.business_logo}
               onClose={() => setVisible(false)}
             />
+           
+              <View>
+                <View style={{padding:15}}>
+                  <Text style={styles.txtstyle}>
+                  Lively outdoor music venue & beer garden decorated with tropical kitsch.
+                  </Text>
 
-          <ScrollView
-            style={{ marginTop: -30 }}
-            contentContainerStyle={{ flexGrow: 1 }}>
-            <View
-              style={{
-                flex: 1,
-              }}>
-              <View style={{ marginHorizontal: 20 }}>
-                {/* <View style={{width: 30}} /> */}
-                <View style={{ marginTop: 50 }}>
-                  <Text
-                    style={{
-                      fontFamily: fonts.bold,
-                      fontSize: wp(16),
-                      color: colors.black,
-                    }}>
-                    {name}
+                  <View style={{ flexDirection:'row', alignItems:'center' }}>
+                   <Image source={ImageConstants.maps} style={st.minimgsty} />
+                  <Text style={[styles.txtstyle,{color:colors.secondPrimaryColor}]}>1234 Mai st. st petersburg fl 34609</Text>
+                  </View>
+
+                  <View style={{ flexDirection:'row', alignItems:'center' }}>
+                   <Image source={ImageConstants.clock} style={st.minimgsty} />
+                  <Text style={styles.txtstyle}>Open until 2:00 AM</Text>
+                  </View>
+
+                  <View style={{flexDirection:'row', alignItems:'center'}}>
+                  <Text style={styles.txtstyle}>
+                    Also connect with us on 
                   </Text>
-                  <SocialLinks data={data} />
-                  <Text style={styles.txtstyle}>Open until 2:00 AM{'\n'}
-                    Food & Drink, Entertainment, Concerts, Cocktail Bar{'\n'}
-                    555-555-5555 - 1234 Main St, St Petersburg FL 34609
-                  </Text>
+                  <View style={{marginLeft:10}}>
+                  <SocialLinks data={data} /> 
+                  </View>
+                  </View>
 
                 </View>
 
-                <View
+                {/* <View
                   style={styles.socialContent}>
                   <TouchableOpacity
                     onPress={() => getLocationFromGoogle(false)}
@@ -385,28 +411,33 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
                       </Text>
                     )}
                   </TouchableOpacity>
-                </View>
-
-                <View style={[st.row, { marginTop: 10 }]}>
-                  <View style={st.alignC}>
-                    <Text style={styles.txtstyle}>  Followers :-  <Text style={styles.btntxt}>{'16.3K'}</Text></Text>
+                </View> */}
+                
+                <View style={styles.socialContent}>
+                  <View style={st.wdh48}>
+                    <TouchableOpacity style={st.btnsty}>
+                        <Text style={styles.btntxt}>Follow</Text>
+                    </TouchableOpacity>
                   </View>
-
-                  <View style={[st.alignC, { marginLeft: 20 }]}>
-                    <Text style={styles.txtstyle}>Likes :- <Text style={styles.btntxt}>{'78.5K'}</Text></Text>
+                  <View style={[st.wdh48, {marginLeft:'4%'}]}>
+                    <TouchableOpacity style={[st.btnsty, {backgroundColor:colors.white, borderColor:colors.black}]}>
+                        <Text style={styles.btntxt}>Claim</Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
+               
 
               </View>
 
               <TabsHeader activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabList} />
               {renderTabContent()}
+            
+          </View>
+        </ScrollView>
 
-            </View>
-          </ScrollView>
-        </View>
       </View>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
+
     </>
   );
 };
@@ -558,17 +589,19 @@ const styles = StyleSheet.create({
   },
   txtstyle: {
     fontFamily: fonts.regular,
-    fontSize: wp(12),
+    fontSize: wp(11),
     color: colors.gray,
   },
   btntxt: {
     fontFamily: fonts.semiBold,
-    fontSize: wp(11),
+    fontSize: wp(13),
     color: colors.black,
+    lineHeight:18
   },
   socialContent: {
     flexDirection: 'row',
-    marginTop: 20,
+    paddingHorizontal:15
+    // marginTop: 20,
   }
 });
 

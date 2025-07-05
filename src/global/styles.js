@@ -54,7 +54,8 @@ card:{
       textAlign:'right',
       marginRight:15
     },
-    imgsty: { width: wp(20), height: wp(20) },
+    imgsty: { width: wp(16), height: wp(16) },
+    minimgsty: { width: wp(12), height: wp(12), marginRight:5 },
   profileCounts: {
     flexDirection: 'row',
     // marginLeft: 15
@@ -82,6 +83,17 @@ cir_pos:{
   position:'absolute',
   top:30,
   right:15
-}
+},
+businessInfo:{
+  paddingHorizontal:15, 
+  flexDirection:'row', 
+  marginTop:5
+},
+btnsty:{borderWidth:1,borderColor:colors.primaryColor,backgroundColor:colors.primaryColor,
+   borderRadius:5, padding:10, alignItems:'center'},
+
+   wdh48:{
+    width:'48%'
+   }
 })
 

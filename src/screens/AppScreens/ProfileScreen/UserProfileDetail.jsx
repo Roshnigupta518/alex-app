@@ -197,7 +197,7 @@ const UserProfileDetail = ({ navigation, route }) => {
                 </View>
               </View>
 
-              <View style={[styles.profileCounts, { marginTop: 10 }]}>
+              <View style={[styles.profileCounts, { marginVertical: 10 }]}>
                 {/* <View style={styles.wdh33}>
 
                   <View>

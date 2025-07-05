@@ -85,6 +85,12 @@ const ImageConstants = {
   youtube : require('./../assets/images/youtube.png'),
   add_user: require('./../assets/images/add_user.png'),
   share: require('./../assets/images/share.png'),
+
+  maps: require('./../assets/images/maps.png'),
+  clock: require('./../assets/images/clock.png'),
+
+  call: require('./../assets/images/call.png'),
+  web: require('./../assets/images/web.png'),
 };
 
 export default ImageConstants;

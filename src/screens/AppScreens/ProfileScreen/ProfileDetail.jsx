@@ -221,7 +221,7 @@ const ProfileDetail = ({ navigation, route }) => {
                 </View>
               </View>
 
-              <View style={[styles.profileCounts, { marginTop: 10 }]}>
+              <View style={[styles.profileCounts, { marginVertical: 10 }]}>
                 {/* <View style={styles.wdh33}>
                   <View >
                     <Text style={styles.contentTextStyle}>{formatCount(userDetails?.places_count)}</Text>
