@@ -679,6 +679,23 @@ export const MakeFollowedUserRequest = async data => {
   });
 };
 
+export const MakeFollowedBusinessRequest = async data => {
+  return await new Promise((resolve, reject) => {
+    try {
+      HttpRequests.postAPI(api.makeFollowBusiness, data)
+        .then(res => {
+          if (res?.data) resolve(res?.data);
+          else reject(res?.data);
+        })
+        .catch(err => {
+          reject(err?.response?.data);
+        });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 export const AddQueryRequest = async data => {
   return await new Promise((resolve, reject) => {
     try {
@@ -871,6 +888,24 @@ export const getAllFollowerRequest = async id => {
   return await new Promise((resolve, reject) => {
     try {
       HttpRequests.getAPI(api.getAllFollowers + id)
+        .then(res => {
+          if (res?.data) resolve(res?.data);
+          else reject(res?.data);
+        })
+        .catch(err => {
+          reject(err?.response?.data);
+        });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+
+export const getAllBusinessFollowerRequest = async id => {
+  return await new Promise((resolve, reject) => {
+    try {
+      HttpRequests.getAPI(api.getAllBusinessFollowers + id)
         .then(res => {
           if (res?.data) resolve(res?.data);
           else reject(res?.data);

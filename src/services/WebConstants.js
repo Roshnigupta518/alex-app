@@ -64,5 +64,7 @@ export const api = {
   getChildBusinesses: '/api/v1/user/business-list-by-child/',
   getAllPlaces : '/api/v1/user/get_places_by_user/',
   getAllCountry : '/api/v1/user/get_country_by_user/',
-  getAllCities : '/api/v1/user/get_cities_by_user/'
+  getAllCities : '/api/v1/user/get_cities_by_user/',
+  getAllBusinessFollowers : '/api/v1/user/get-business-follower-list/',
+  makeFollowBusiness:'/api/v1/user/business-follow'
 };

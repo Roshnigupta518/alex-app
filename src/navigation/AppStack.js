@@ -44,6 +44,7 @@ import BusinessListWithChild from '../screens/AppScreens/BusinessScreen/Business
 import Setting from  '../screens/AppScreens/ProfileScreen/Setting'
 import UserPlaces from '../screens/AppScreens/ProfileScreen/Places';
 import PostByPlaces from '../screens/AppScreens/ProfileScreen/PostByPlaces';
+import FollowBusiness from '../screens/AppScreens/ClaimBusinessScreen/followBusiness';
 
 const Stack = createStackNavigator();
 
@@ -133,7 +134,7 @@ function AppStack({isLoggedIn = false}) {
       <Stack.Screen name="Setting" component={Setting} />
       <Stack.Screen name="UserPlaces" component={UserPlaces} />
       <Stack.Screen name="PostByPlaces" component={PostByPlaces} />
-      {/* PostByPlaces */}
+      <Stack.Screen name="FollowBusiness" component={FollowBusiness} />
     </Stack.Navigator>
   );
 }

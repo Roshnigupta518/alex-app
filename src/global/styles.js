@@ -99,6 +99,9 @@ btnsty:{borderWidth:1,borderColor:colors.primaryColor,backgroundColor:colors.pri
     flex:1,
     alignItems:'center', 
     justifyContent:'center'
+   },
+   mt_10:{
+    marginTop:10
    }
 })
 

@@ -37,6 +37,7 @@ import FullscreenImageModal from '../../../components/InstagramProfileImageViewe
 import ReadMore from '@fawazahmed/react-native-read-more';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import Share from 'react-native-share';
+import { MakeFollowedBusinessRequest } from '../../../services/Utills';
 
 const ClaimBusinessScreen = ({ navigation, route }) => {
   const { place_id, name } = route?.params || {};
@@ -49,6 +50,8 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
   const [activeTab, setActiveTab] = useState('photo');
   const [visible, setVisible] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
+  const [isFollowLoading, setIsFollowLoading] = useState(false);
+  const [isFollow, setIsFollow] = useState(false);
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -304,6 +307,24 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
     }
   };
 
+  const makeFollowBusiness = () => {
+    setIsFollowLoading(true);
+    MakeFollowedBusinessRequest({ business_id: data?._id })
+      .then(res => {
+        console.log({res})
+        Toast.success('Request', res?.message);
+        setIsFollow(!isFollow);
+        setData(prev => ({
+          ...prev,
+          isbusinessFollow: !prev.isbusinessFollow,
+        }));
+      })
+      .catch(err => {
+        Toast.error('Request', err?.message);
+      })
+      .finally(() => setIsFollowLoading(false));
+  };
+
   return (
     <>
       <View
@@ -392,8 +413,10 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
 
                   <View style={{ flexDirection: 'row' }}>
                     <View style={{ width: '50%' }}>
+                      <TouchableOpacity onPress={()=>navigation.navigate('FollowBusiness',{id: data?._id})} >
                       <Text style={styles.btntxt}>{formatCount(data?.businessFollowerCount)}</Text>
                       <Text style={styles.txtstyle}>Followers</Text>
+                      </TouchableOpacity>
                     </View>
 
                     <View style={{ width: '50%' }}>
@@ -448,62 +471,15 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
 
                 </View>
 
-                {/* <View
-                  style={styles.socialContent}>
-                  <TouchableOpacity
-                    onPress={() => getLocationFromGoogle(false)}
-                    activeOpacity={0.9}
-                    style={styles.button}>
-                    <Text style={styles.btntxt}>
-                      Direction
-                    </Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    disabled={claimLoading || data?.isClaimed}
-                    // onPress={() => console.log('route?.params', route?.params)}
-                    // onPress={() => getLocationFromGoogle(true)}
-                    activeOpacity={0.9}
-                    style={styles.button}>
-                    {claimLoading ? (
-                      <ActivityIndicator size={'small'} color={colors.white} />
-                    ) : (
-                      <Text
-                        style={styles.btntxt}>
-                        {'Website'}
-                      </Text>
-                    )}
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    onPress={() => getLocationFromGoogle(false)}
-                    activeOpacity={0.9}
-                    style={styles.button}>
-                    <Text
-                      style={styles.btntxt}>
-                      Call
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    disabled={claimLoading || data?.isClaimed}
-                    // onPress={() => console.log('route?.params', route?.params)}
-                    onPress={() => getLocationFromGoogle(true)}
-                    activeOpacity={0.9}
-                    style={[styles.button, { backgroundColor: isClaimed ? colors.primaryColor : colors.white }]}>
-                    {claimLoading ? (
-                      <ActivityIndicator size={'small'} color={colors.white} />
-                    ) : (
-                      <Text
-                        style={styles.btntxt}>
-                        {!isClaimed ? 'Claim' : 'Claimed'}
-                      </Text>
-                    )}
-                  </TouchableOpacity>
-                </View> */}
-
                 <View style={styles.socialContent}>
-                  <TouchableOpacity style={styles.button}>
-                    <Text style={styles.btntxt}>Follow</Text>
+                  <TouchableOpacity style={styles.button} onPress={()=>makeFollowBusiness()} >
+                    {isFollowLoading ? (
+                  <ActivityIndicator size={'small'} color={colors.white} />
+                ) : (
+                  <Text style={styles.btntxt}>
+                    {data?.isbusinessFollow ? 'Following' : 'Follow'}
+                  </Text>
+                )}
                   </TouchableOpacity>
 
                   <TouchableOpacity style={styles.button}
