@@ -34,6 +34,9 @@ import NotFoundAnime from '../../../components/NotFoundAnime';
 import { formatCount } from '../../../validation/helper';
 import st from '../../../global/styles';
 import FullscreenImageModal from '../../../components/InstagramProfileImageViewer';
+import ReadMore from '@fawazahmed/react-native-read-more';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
+import Share from 'react-native-share';
 
 const ClaimBusinessScreen = ({ navigation, route }) => {
   const { place_id, name } = route?.params || {};
@@ -71,6 +74,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
     // Unsubscribe
     return () => unsubscribe();
   }, []);
+
   const getAllData = () => {
     setIsLoading(true);
     GetBusinessDetailById(place_id || '')
@@ -98,17 +102,20 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
   };
 
   const redirectOnMap = (lat, lng, address) => {
-    let fullAddress = `${lat},${lng}`;
-    console.log(
-      '`maps:0,0?q=${fullAddress}`',
-      `maps:0,0?q=${fullAddress === '0,0' ? address : fullAddress}`,
-    );
+    const fullAddress = `${lat},${lng}`;
+    const isInvalidLocation = fullAddress === '0,0';
+    const query = isInvalidLocation ? address : fullAddress;
+
     const url = Platform.select({
-      ios: `maps:0,0?q=${fullAddress === '0,0' ? address : fullAddress}`,
-      android: `geo:0,0?q=${fullAddress === '0,0' ? address : fullAddress}`,
+      ios: `maps:0,0?q=${encodeURIComponent(query)}`,
+      android: `geo:0,0?q=${encodeURIComponent(query)}`,
     });
 
-    Linking.openURL(url);
+    console.log('Opening Map URL:', url);
+
+    Linking.openURL(url).catch(err =>
+      console.error('Failed to open map URL:', err)
+    );
   };
 
   const claimBusiness = async data => {
@@ -236,6 +243,67 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
 
   const isLogoAvailable = !!data?.certificate;
 
+  const openWebsite = async (businessUrl) => {
+    const supported = await Linking.canOpenURL(businessUrl);
+    if (supported) {
+      await Linking.openURL(businessUrl);
+    } else {
+      console.warn(`Don't know how to open this URL: ${businessUrl}`);
+    }
+  }
+
+  const handleCallPress = async (phoneNumber) => {
+    const dialUrl = `tel:${phoneNumber}`;
+    const supported = await Linking.canOpenURL(dialUrl);
+
+    if (supported) {
+      Linking.openURL(dialUrl);
+    } else {
+      alert('Unable to open the dialer.');
+    }
+  };
+
+  const handleShare = async () => {
+    try {
+      const dynamicLink = await dynamicLinks().buildShortLink({
+        link: `https://www.thealexapp.com/business/${place_id}`, // this should match Firebase config
+        domainUriPrefix: 'https://alexsocial.page.link',
+        android: {
+          packageName: 'com.alexsocial',
+        },
+        ios: {
+          bundleId: 'com.alexsocial',
+          appStoreId: '6470377502',
+        },
+        social: {
+          title: data?.name || 'Check out this business',
+          descriptionText: data?.details || 'Explore this amazing place!',
+          imageUrl:
+            data?.banner ||
+            data?.certificate ||
+            'https://alexsocial.com/default_image.jpg',
+        },
+      });
+
+      console.log('Generated dynamic link:', dynamicLink);
+
+      Share.open({
+        message: `Explore ${data?.name || 'this business'} on our app!`,
+        url: dynamicLink,
+      })
+        .then(res => {
+          console.log('Share success:', res);
+        })
+        .catch(err => {
+          console.log('Share error:', JSON.stringify(err));
+          // alert('This may not work on emulator.');
+        });
+    } catch (err) {
+      console.log('Dynamic link error:', err);
+      alert('Failed to create dynamic link');
+    }
+  };
+
   return (
     <>
       <View
@@ -243,120 +311,140 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
           flex: 1,
           backgroundColor: colors.white,
         }}>
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}>
-          <TouchableWithoutFeedback onPress={() => setShowBanner(true)}>
-            <ImageBackground
-              source={
+      
+          <ScrollView
+            contentContainerStyle={{ flexGrow: 1 }}>
+              {!isLoading ? (
+              <View>
+            <TouchableWithoutFeedback onPress={() => setShowBanner(true)}>
+              <ImageBackground
+                source={
+                  data?.banner ? { uri: data?.banner } : ImageConstants.business_banner
+                }
+                style={{
+                  height: HEIGHT / 4,
+                  width: WIDTH,
+                }}>
+                <SafeAreaView>
+                  <BackHeader />
+                </SafeAreaView>
+
+                <View style={st.cir_pos}>
+
+                  <TouchableOpacity style={st.circle}
+                    onPress={handleShare}
+                  >
+                    <Image source={ImageConstants.send_1} style={st.imgsty} />
+                  </TouchableOpacity>
+
+                  <TouchableOpacity style={st.circle}
+                    onPress={() => openWebsite(data?.business_website)}
+                  >
+                    <Image source={ImageConstants.web} style={st.imgsty} />
+                  </TouchableOpacity>
+                  <TouchableOpacity style={st.circle}
+                    onPress={() => handleCallPress(data?.phone_no)}
+                  >
+                    <Image source={ImageConstants.call} style={st.imgsty} />
+                  </TouchableOpacity>
+                </View>
+              </ImageBackground>
+            </TouchableWithoutFeedback>
+
+            <FullscreenImageModal
+              visible={showBanner}
+              imageSource={
                 data?.banner ? { uri: data?.banner } : ImageConstants.business_banner
               }
-              style={{
-                height: HEIGHT / 4,
-                width: WIDTH,
-              }}>
-              <SafeAreaView>
-                <BackHeader />
-              </SafeAreaView>
-
-              <View style={st.cir_pos}>
-                
-                <View style={st.circle}>
-                  <Image source={ImageConstants.send_1} style={st.imgsty} />
-                </View>
-                <View style={st.circle}>
-                  <Image source={ImageConstants.web} style={st.imgsty} />
-                </View>
-                <View style={st.circle}>
-                  <Image source={ImageConstants.call} style={st.imgsty} />
-                </View>
-              </View>
-            </ImageBackground>
-          </TouchableWithoutFeedback>
-
-          <FullscreenImageModal
-            visible={showBanner}
-            imageSource={
-              data?.banner ? { uri: data?.banner } : ImageConstants.business_banner
-            }
-            onClose={() => setShowBanner(false)}
-          />
-
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: colors.white,
-            }}>
-            <View style={st.businessInfo}>
-              <View style={{width:'25%'}}>
-              <TouchableOpacity onPress={() => setVisible(true)}>
-                <Image
-                  source={isLogoAvailable ? { uri: data?.certificate } : ImageConstants.business_logo}
-                  style={{
-                    height: isLogoAvailable ? wp(70) : wp(70),
-                    width: isLogoAvailable ? wp(70) : wp(70),
-                    borderRadius: 100,
-                    borderWidth: isLogoAvailable ? 3 : 0,
-                    borderColor: colors.white,
-                    resizeMode: isLogoAvailable ? 'cover' : 'cover',
-                  }}
-                />
-              </TouchableOpacity>
-              </View>
-              <View style={{width:'65%'}}>
-                <Text
-                  style={{
-                    fontFamily: fonts.bold,
-                    fontSize: wp(16),
-                    color: colors.black,
-                  }}>
-                  {name}
-                </Text>
-
-                <View style={{flexDirection:'row'}}>
-                  <View style={{width:'50%'}}>
-                  <Text style={styles.btntxt}>{'16.3K'}</Text>
-                    <Text style={styles.txtstyle}>Followers</Text>
-                  </View>
-
-                  <View style={{width:'50%'}}>
-                  <Text style={styles.btntxt}>{'78.5K'}</Text>
-                    <Text style={styles.txtstyle}>Likes</Text>
-                  </View>
-                </View>
-              </View>
-            </View>
-
-            {/* Fullscreen Viewer */}
-            <FullscreenImageModal
-              visible={visible}
-              imageSource={isLogoAvailable ? { uri: data?.certificate } : ImageConstants.business_logo}
-              onClose={() => setVisible(false)}
+              onClose={() => setShowBanner(false)}
             />
-           
+
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: colors.white,
+              }}>
+              <View style={st.businessInfo}>
+                <View style={{ width: '25%' }}>
+                  <TouchableOpacity onPress={() => setVisible(true)}>
+                    <Image
+                      source={isLogoAvailable ? { uri: data?.certificate } : ImageConstants.business_logo}
+                      style={{
+                        height: isLogoAvailable ? wp(70) : wp(70),
+                        width: isLogoAvailable ? wp(70) : wp(70),
+                        borderRadius: 100,
+                        borderWidth: isLogoAvailable ? 3 : 0,
+                        borderColor: colors.white,
+                        resizeMode: isLogoAvailable ? 'cover' : 'cover',
+                      }}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View style={{ width: '65%' }}>
+                  <Text numberOfLines={2} adjustsFontSizeToFit
+                    style={{
+                      fontFamily: fonts.bold,
+                      fontSize: wp(16),
+                      color: colors.black,
+                    }}>
+                    {name}
+                  </Text>
+
+                  <View style={{ flexDirection: 'row' }}>
+                    <View style={{ width: '50%' }}>
+                      <Text style={styles.btntxt}>{formatCount(data?.businessFollowerCount)}</Text>
+                      <Text style={styles.txtstyle}>Followers</Text>
+                    </View>
+
+                    <View style={{ width: '50%' }}>
+                      <Text style={styles.btntxt}>{formatCount(data?.total_likes)}</Text>
+                      <Text style={styles.txtstyle}>Likes</Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+
+              {/* Fullscreen Viewer */}
+              <FullscreenImageModal
+                visible={visible}
+                imageSource={isLogoAvailable ? { uri: data?.certificate } : ImageConstants.business_logo}
+                onClose={() => setVisible(false)}
+              />
+
               <View>
-                <View style={{padding:15}}>
-                  <Text style={styles.txtstyle}>
-                  Lively outdoor music venue & beer garden decorated with tropical kitsch.
-                  </Text>
+                <View style={{ padding: 15 }}>
 
-                  <View style={{ flexDirection:'row', alignItems:'center' }}>
-                   <Image source={ImageConstants.maps} style={st.minimgsty} />
-                  <Text style={[styles.txtstyle,{color:colors.secondPrimaryColor}]}>1234 Mai st. st petersburg fl 34609</Text>
+                  <ReadMore
+                    numberOfLines={2}
+                    style={styles.descriptionTxtStyle}
+                    seeMoreStyle={{ color: colors.primaryColor }}
+                    seeLessStyle={{ color: colors.primaryColor }}>
+                    {data?.details}
+                  </ReadMore>
+
+                  <View style={styles.content}>
+                    <Image source={ImageConstants.maps} style={st.minimgsty} />
+                    <Text style={[styles.txtstyle, { color: colors.primaryColor }]}
+                      onPress={() => redirectOnMap(data?.latitude, data?.longitude, data?.address)}
+                    >{data?.address}</Text>
                   </View>
 
-                  <View style={{ flexDirection:'row', alignItems:'center' }}>
-                   <Image source={ImageConstants.clock} style={st.minimgsty} />
-                  <Text style={styles.txtstyle}>Open until 2:00 AM</Text>
+                  <View style={styles.content}>
+                    <Image source={ImageConstants.clock} style={st.minimgsty} />
+                    <Text style={styles.txtstyle}>Open from {data?.time_from} to {data?.time_to}</Text>
                   </View>
 
-                  <View style={{flexDirection:'row', alignItems:'center'}}>
-                  <Text style={styles.txtstyle}>
-                    Also connect with us on 
-                  </Text>
-                  <View style={{marginLeft:10}}>
-                  <SocialLinks data={data} /> 
-                  </View>
-                  </View>
+                  {data?.socialLinks && Object.values(data.socialLinks).some(link => link?.trim()) && (
+                    <View style={styles.content}>
+                      <Text style={styles.txtstyle}>
+                        Also connect with us on
+                      </Text>
+                      <View style={{ marginLeft: 10 }}>
+                        <SocialLinks data={data} />
+                      </View>
+                    </View>
+                  )}
+
 
                 </View>
 
@@ -412,29 +500,47 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
                     )}
                   </TouchableOpacity>
                 </View> */}
-                
+
                 <View style={styles.socialContent}>
-                  <View style={st.wdh48}>
-                    <TouchableOpacity style={st.btnsty}>
-                        <Text style={styles.btntxt}>Follow</Text>
-                    </TouchableOpacity>
-                  </View>
-                  <View style={[st.wdh48, {marginLeft:'4%'}]}>
-                    <TouchableOpacity style={[st.btnsty, {backgroundColor:colors.white, borderColor:colors.black}]}>
-                        <Text style={styles.btntxt}>Claim</Text>
-                    </TouchableOpacity>
-                  </View>
+                  <TouchableOpacity style={styles.button}>
+                    <Text style={styles.btntxt}>Follow</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity style={styles.button}
+                    onPress={() => openWebsite(data?.ecommerce_website)} >
+                    <Text style={styles.btntxt}>Order now</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={() => getLocationFromGoogle(true)}
+                    disabled={claimLoading || data?.isClaimed}
+                    style={[styles.button, { opacity: data?.isClaimed ? 0.6 : 1 }]}>
+                    {claimLoading ? (
+                      <ActivityIndicator size={'small'} color={colors.white} />
+                    ) : (
+                      <Text
+                        style={styles.btntxt}>
+                        {!isClaimed ? 'Claim' : 'Claimed'}
+                      </Text>
+                    )}
+                  </TouchableOpacity>
                 </View>
-               
+
 
               </View>
 
               <TabsHeader activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabList} />
               {renderTabContent()}
-            
-          </View>
-        </ScrollView>
 
+            </View>
+            </View>
+            ) : 
+            <View style={st.center}>
+            <ActivityIndicator size="large" color={colors.primaryColor} />
+            </View>
+            }
+          </ScrollView>
+       
       </View>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
 
@@ -451,7 +557,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
   },
   button: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.primaryColor,
     paddingHorizontal: wp(10),
     paddingVertical: wp(3),
     borderRadius: 50,
@@ -596,12 +702,15 @@ const styles = StyleSheet.create({
     fontFamily: fonts.semiBold,
     fontSize: wp(13),
     color: colors.black,
-    lineHeight:18
+    lineHeight: 18
   },
   socialContent: {
     flexDirection: 'row',
-    paddingHorizontal:15
+    paddingHorizontal: 15
     // marginTop: 20,
+  },
+  content: {
+    flexDirection: 'row', alignItems: 'center'
   }
 });
 

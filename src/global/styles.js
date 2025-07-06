@@ -94,6 +94,11 @@ btnsty:{borderWidth:1,borderColor:colors.primaryColor,backgroundColor:colors.pri
 
    wdh48:{
     width:'48%'
+   },
+   center:{
+    flex:1,
+    alignItems:'center', 
+    justifyContent:'center'
    }
 })
 

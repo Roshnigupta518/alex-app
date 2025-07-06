@@ -72,6 +72,7 @@ const AddBusinessScreen = ({navigation, route}) => {
     tiktok: '',
     facebook: '',
     youtube: '',
+    e_commerce:''
   });
 
   useEffect(() => {
@@ -340,6 +341,16 @@ const AddBusinessScreen = ({navigation, route}) => {
             value={state.website}
             onChangeText={txt =>
               setState(prevState => ({...prevState, website: txt}))
+            }
+          />
+
+        <BusinessUserInputs
+            theme="light"
+            label="Add your e-commerce website link"
+            placeholder="Write here"
+            value={state.e_commerce}
+            onChangeText={txt =>
+              setState(prevState => ({...prevState, e_commerce: txt}))
             }
           />
 

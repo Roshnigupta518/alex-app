@@ -9,7 +9,7 @@ import {
   Platform,
 } from 'react-native';
 import AppStack from './navigation/AppStack';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import FlashMessage from 'react-native-flash-message';
 import SplashScreen from 'react-native-splash-screen';
 import {colors, HEIGHT, wp} from './constants';
@@ -27,6 +27,8 @@ import {navigationRef} from './navigation/NavigationRefProp';
 import RequestNotificationPermission from './constants/NotificationPermission';
 import { request, PERMISSIONS, check, RESULTS } from 'react-native-permissions';
 import AppUpdateChecker from './components/AppUpdateChecker';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
+import { Linking } from 'react-native';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -198,6 +200,54 @@ const App = () => {
     }, 2000);
   }, []);
 
+  
+  const HandleDeepLink = () => {
+    const handleLink = async (link) => {
+      try {
+        const urlParts = link.url.split('/');
+        const placeId = urlParts[urlParts.length - 1];
+        console.log('Deep link place_id:', placeId);
+  
+        // if (placeId) {
+        //   navigationRef.current?.navigate('ClaimBusinessScreen', {
+        //     place_id: placeId,
+        //   });
+        // }
+
+        if (placeId && navigationRef.isReady()) {
+          navigationRef.navigate('ClaimBusinessScreen', { place_id: placeId });
+        }else {
+          // Wait and try again until navigation is ready
+          const interval = setInterval(() => {
+            if (navigationRef.isReady()) {
+              navigationRef.navigate('ClaimBusinessScreen', { place_id: placeId });
+              clearInterval(interval);
+            }
+          }, 100);
+        }
+
+      } catch (error) {
+        console.log('Deep link parse error:', error);
+      }
+    };
+  
+    useEffect(() => {
+      // When app is in background or foreground
+      const unsubscribe = dynamicLinks().onLink(handleLink);
+  
+      // When app is launched from a killed state
+      dynamicLinks()
+        .getInitialLink()
+        .then(link => {
+          if (link?.url) handleLink(link);
+        });
+  
+      return () => unsubscribe();
+    }, []);
+  
+    return null;
+  };
+
   return (
     <View style={{flex: 1}}>
       {isLoading ? (
@@ -206,6 +256,7 @@ const App = () => {
         </View>
       ) : (
         <NavigationContainer ref={navigationRef}>
+          <HandleDeepLink />
           <AppStack isLoggedIn={isLoggedInUser} />
         </NavigationContainer>
       )}

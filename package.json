@@ -22,6 +22,7 @@
     "@react-native-firebase/auth": "^20.4.0",
     "@react-native-firebase/crashlytics": "^20.4.0",
     "@react-native-firebase/database": "^20.4.0",
+    "@react-native-firebase/dynamic-links": "^20.4.0",
     "@react-native-firebase/messaging": "^20.4.0",
     "@react-native-google-signin/google-signin": "^11.0.0",
     "@react-native-masked-view/masked-view": "^0.3.1",
