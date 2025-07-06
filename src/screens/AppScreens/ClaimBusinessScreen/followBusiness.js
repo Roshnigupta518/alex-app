@@ -18,7 +18,7 @@ const FollowBusiness = ({ navigation, route }) => {
 
     const getAllFollowers = () => {
         setIsLoading(true)
-        getAllBusinessFollowerRequest('66c5fbc6ce4bcc658fab35f6')
+        getAllBusinessFollowerRequest(id)
             .then(res => {
                 setUsers(res?.result);
                 setSearchedUser(res?.result);
