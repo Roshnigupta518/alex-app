@@ -81,7 +81,7 @@ card:{
 },
 cir_pos:{
   position:'absolute',
-  top:30,
+  top:40,
   right:15
 },
 businessInfo:{

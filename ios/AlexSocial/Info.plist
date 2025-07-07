@@ -29,6 +29,16 @@
             <array>
                 <string>fb742487000924268</string>
                 <string>com.googleusercontent.apps.859541725168-49gfec5mcb0v33g80is4n4f7orlbt08t</string>
+                 <string>com.alexapp</string>
+            </array>
+            <key>FirebaseDynamicLinksCustomDomains</key>
+            <array>
+            <string>https://alexsocial.page.link</string>
+            </array>
+            <key>LSApplicationQueriesSchemes</key>
+            <array>
+            <string>tel</string>
+            <string>https</string>
             </array>
         </dict>
         <dict>
