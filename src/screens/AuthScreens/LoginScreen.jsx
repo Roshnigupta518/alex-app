@@ -151,8 +151,29 @@ const LoginScreen = ({navigation}) => {
       showsVerticalScrollIndicator={false}>
         <View>
         <BackHeader />
+ 
+     <View style={{alignItems:'center'}}>
+        <View style={{
+           backgroundColor: colors.primaryColor ,
+          paddingHorizontal:15,
+          paddingVertical:10,
+           borderRadius: 10,
+          marginTop: 20,
+          minWidth:150
+        }}>
+        <Text style={styles.titleTxtStyle}>Sign in with password</Text>
+        </View>
+        </View>
 
-        <Text style={styles.titleTxtStyle}>Login / Sign Up</Text>
+        <View style={styles.footerViewStyle}>
+          <View style={styles.footerSubView}>
+            <Text style={styles.footerTxtStyle}>Don’t have an account? </Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('BirthScreen')}>
+              <Text style={styles.signTxtStyle}>Sign Up</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
 
         <View style={styles.switchBoxContainer}>
           <TouchableOpacity
@@ -227,7 +248,7 @@ const LoginScreen = ({navigation}) => {
           </View>
         </View>
 
-        <View style={styles.footerViewStyle}>
+        {/* <View style={styles.footerViewStyle}>
           <View style={styles.footerSubView}>
             <Text style={styles.footerTxtStyle}>Don’t have an account? </Text>
             <TouchableOpacity
@@ -235,7 +256,8 @@ const LoginScreen = ({navigation}) => {
               <Text style={styles.signTxtStyle}>Sign Up</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </View> */}
+
         </View>
         </ScrollView>
         </TouchableWithoutFeedback>
@@ -257,7 +279,7 @@ const styles = StyleSheet.create({
     fontSize: wp(20),
     color: colors.black,
     textAlign: 'center',
-    marginTop: 20,
+    // textDecorationLine:'underline'
   },
 
   switchBoxContainer: {
@@ -327,7 +349,7 @@ const styles = StyleSheet.create({
   footerViewStyle: {
     flex: 1,
     justifyContent: 'flex-end',
-    marginBottom: wp(30),
+    marginTop: wp(30),
   },
 
   footerSubView: {
@@ -344,7 +366,7 @@ const styles = StyleSheet.create({
 
   signTxtStyle: {
     fontFamily: fonts.semiBold,
-    fontSize: wp(14),
+    fontSize: wp(16),
     color: colors.primaryColor,
   },
 });

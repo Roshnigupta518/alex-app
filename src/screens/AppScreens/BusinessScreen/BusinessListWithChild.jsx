@@ -130,7 +130,7 @@ const BusinessListWithChild = ({navigation, route}) => {
                         }}>
                         {item?.name}
                       </Text>
-                      <Text
+                      <Text numberOfLines={3}
                         style={{
                           fontFamily: fonts.regular,
                           fontSize: wp(12),

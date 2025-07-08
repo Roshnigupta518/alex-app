@@ -35,6 +35,7 @@ const BusinessUserListingScreen = ({navigation}) => {
 
   const getBusinessList = () => {
     try {
+      setIsLoading(true);
       setEventList([]);
       setEventSearchList([]);
       getMyBusinessListRequest()
@@ -59,13 +60,22 @@ const BusinessUserListingScreen = ({navigation}) => {
   };
 
   useEffect(() => {
-    if (isFocused) {
-      setIsLoading(true);
-      setTimeout(() => {
-        getBusinessList();
-      }, 800);
-    }
-  }, [isFocused]);
+    const unsubscribe = navigation.addListener('focus', () => {
+      getBusinessList();
+    });
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, [navigation]);
+
+  // useEffect(() => {
+  //   if (isFocused) {
+  //     setIsLoading(true);
+  //     setTimeout(() => {
+  //       getBusinessList();
+  //     }, 800);
+  //   }
+  // }, [isFocused]);
 
   const EmptyView = () => {
     return (

@@ -229,49 +229,65 @@ const HomeScreen = ({ navigation, route }) => {
   }, [nearByType]);
 
   // useEffect(() => {
+  //   setIsLoading(true)
   //   if (!isFocused) {
   //     setIsOnFocusItem(false);
   //   } else {
-  //     if (
-  //       route?.params?.shouldScrollTopReel ||
-  //       prevNearBy.current !== nearByType
-  //     ) {
+  //     if ((error || !city) && selectedCityData?.locationType == 'current') {
+  //       console.log('Skipping location-based logic because of error or missing city.');
+  //       setIsLoading(false);
+  //       return;
+  //     }
+  //     if (route?.params?.shouldScrollTopReel || prevNearBy.current !== nearByType) {
   //       setPostArray([]);
-  //        console.log('calling when refresh the page')
   //       onRefresh();
-  //     } else if (postArray?.length == 0) {
-  //       console.log('isfouces');
-  //       if (city) {
-  //         getAllPosts();
-  //       }
-  //       if (error) {
-  //         setIsLoading(false)
-  //       }
+  //     } else if (postArray?.length === 0) {
+  //       getAllPosts();
   //     }
   //     setIsOnFocusItem(true);
   //   }
   // }, [isFocused, city, selectedCityData, error]);
 
+
   useEffect(() => {
-    setIsLoading(true)
+    setIsLoading(true);
+  
     if (!isFocused) {
       setIsOnFocusItem(false);
-    } else {
-      if ((error || !city) && selectedCityData?.locationType == 'current') {
-        console.log('Skipping location-based logic because of error or missing city.');
-        setIsLoading(false);
+      return;
+    }
+  
+    // Handle locationType === 'current'
+    if (selectedCityData?.locationType === 'current') {
+      if (city == null && error == null) {
+        console.log('Waiting for location to resolve...');
         return;
       }
-      if (route?.params?.shouldScrollTopReel || prevNearBy.current !== nearByType) {
-        setPostArray([]);
-        onRefresh();
-      } else if (postArray?.length === 0) {
-        getAllPosts();
+  
+      if (error) {
+        console.log('Location error occurred.');
+        setIsLoading(false);
+        setHasTriedFetchingPosts(true);
+        return;
       }
-      setIsOnFocusItem(true);
+    }else{
+      getAllPosts();
     }
+  
+    // For other location types ('city', 'nearme', 'other') — continue with API
+    if (
+      route?.params?.shouldScrollTopReel ||
+      prevNearBy.current !== nearByType
+    ) {
+      setPostArray([]);
+      onRefresh();
+    } else if (postArray?.length === 0) {
+      getAllPosts();
+    }
+  
+    setIsOnFocusItem(true);
   }, [isFocused, city, selectedCityData, error]);
-
+  
 
   useFocusEffect(
     useCallback(() => {

@@ -11,7 +11,7 @@ import {
   Platform,
   FlatList,
   StyleSheet,
-  ActivityIndicator, TouchableWithoutFeedback
+  ActivityIndicator, TouchableWithoutFeedback, Alert
 } from 'react-native';
 import { colors, fonts, HEIGHT, WIDTH, wp } from '../../../constants';
 import BackHeader from '../../../components/BackHeader';
@@ -240,9 +240,18 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
     );
   };
 
+  // useEffect(() => {
+  //   getAllData();
+  // }, []);
+
   useEffect(() => {
-    getAllData();
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      getAllData();
+    });
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, [navigation]);
 
   const isLogoAvailable = !!data?.certificate;
 
@@ -257,12 +266,25 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
 
   const handleCallPress = async (phoneNumber) => {
     const dialUrl = `tel:${phoneNumber}`;
-    const supported = await Linking.canOpenURL(dialUrl);
-
-    if (supported) {
-      Linking.openURL(dialUrl);
-    } else {
-      alert('Unable to open the dialer.');
+  
+    try {
+      const supported = await Linking.canOpenURL(dialUrl);
+  
+      if (!supported) {
+        Alert.alert(
+          'Call not supported',
+          'Your device does not support this feature.'
+        );
+        return;
+      }
+  
+      await Linking.openURL(dialUrl);
+    } catch (error) {
+      console.log('Dialer error:', error);
+      Alert.alert(
+        'Error',
+        'Unable to open the phone dialer. Please try manually.'
+      );
     }
   };
 
@@ -314,10 +336,17 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
         console.log({res})
         Toast.success('Request', res?.message);
         setIsFollow(!isFollow);
-        setData(prev => ({
-          ...prev,
-          isbusinessFollow: !prev.isbusinessFollow,
-        }));
+        setData(prev => {
+          const newIsFollowed = !prev.isbusinessFollow;
+        
+          return {
+            ...prev,
+            isbusinessFollow: newIsFollowed,
+            businessFollowerCount: newIsFollowed
+              ? prev.businessFollowerCount + 1
+              : Math.max(0, prev.businessFollowerCount - 1), // prevent going negative
+          };
+        });
       })
       .catch(err => {
         Toast.error('Request', err?.message);
@@ -357,12 +386,14 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
                   >
                     <Image source={ImageConstants.send_1} style={st.imgsty} />
                   </TouchableOpacity>
-
+ 
+                {data?.business_website &&
                   <TouchableOpacity style={st.circle}
                     onPress={() => openWebsite(data?.business_website)}
                   >
                     <Image source={ImageConstants.web} style={st.imgsty} />
                   </TouchableOpacity>
+                  }
                   <TouchableOpacity style={st.circle}
                     onPress={() => handleCallPress(data?.phone_no)}
                   >
@@ -444,18 +475,20 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
                     seeLessStyle={{ color: colors.primaryColor }}>
                     {data?.details}
                   </ReadMore>
-
+                   
+                   {data?.address&&
                   <View style={styles.content}>
                     <Image source={ImageConstants.maps} style={st.minimgsty} />
                     <Text style={[styles.txtstyle, { color: colors.primaryColor }]}
                       onPress={() => redirectOnMap(data?.latitude, data?.longitude, data?.address)}
                     >{data?.address}</Text>
-                  </View>
-
+                  </View>}
+                  
+                  {data?.time_from || data?.time_to &&
                   <View style={styles.content}>
                     <Image source={ImageConstants.clock} style={st.minimgsty} />
                     <Text style={styles.txtstyle}>Open from {data?.time_from} to {data?.time_to}</Text>
-                  </View>
+                  </View>}
 
                   {data?.socialLinks && Object.values(data.socialLinks).some(link => link?.trim()) && (
                     <View style={styles.content}>
