@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -7,22 +7,24 @@ import {
   Image,
   FlatList,
   StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
 import BusinessHeader from '../commonComponents/BusinessHeader';
 import SearchInput from '../../../components/SearchInput';
-import {colors, fonts, HEIGHT, WIDTH, wp} from '../../../constants';
+import { colors, fonts, HEIGHT, WIDTH, wp } from '../../../constants';
 import ImageConstants from '../../../constants/ImageConstants';
 import {
   DeleteBusinessRequest,
   getMyBusinessListRequest,
 } from '../../../services/Utills';
 import Toast from '../../../constants/Toast';
-import {SwipeListView} from 'react-native-swipe-list-view';
-import {useSelector} from 'react-redux';
-import {useIsFocused} from '@react-navigation/native';
+import { SwipeListView } from 'react-native-swipe-list-view';
+import { useSelector } from 'react-redux';
+import { useIsFocused } from '@react-navigation/native';
 import DeleteBusinessSheet from '../../../components/ActionSheetComponent/DeleteBusinessSheet';
+import st from '../../../global/styles';
 
-const BusinessUserListingScreen = ({navigation}) => {
+const BusinessUserListingScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
   const swipeRef = useRef();
   const deleteSheet = useRef();
@@ -78,64 +80,66 @@ const BusinessUserListingScreen = ({navigation}) => {
   // }, [isFocused]);
 
   const EmptyView = () => {
-    return (
-      <View
-        style={{
-          alignItems: 'center',
-          height: HEIGHT / 2,
-          justifyContent: 'center',
-        }}>
-        <Text
+    if (!isLoading) {
+      return (
+        <View
           style={{
-            fontFamily: fonts.bold,
-            fontSize: wp(16),
-            color: colors.black,
+            alignItems: 'center',
+            height: HEIGHT / 2,
+            justifyContent: 'center',
           }}>
-          No Business has been listed!
-        </Text>
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('BusinessCategoryScreen', {
-              addBusiness: true,
-              shouldGoBack: true,
-            })
-          }>
           <Text
             style={{
               fontFamily: fonts.bold,
               fontSize: wp(16),
-              color: colors.primaryColor,
-              marginTop: 10,
+              color: colors.black,
             }}>
-            Add Your Business
+            No Business has been listed!
           </Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('BusinessCategoryScreen', {
+                addBusiness: true,
+                shouldGoBack: true,
+              })
+            }>
+            <Text
+              style={{
+                fontFamily: fonts.bold,
+                fontSize: wp(16),
+                color: colors.primaryColor,
+                marginTop: 10,
+              }}>
+              Add Your Business
+            </Text>
+          </TouchableOpacity>
 
-        <View
-          style={{
-            marginTop: wp(40),
-          }}>
-          <Image
-            source={ImageConstants.not_found}
+          <View
             style={{
-              height: wp(140),
-              width: wp(140),
-              resizeMode: 'contain',
-              tintColor: colors.primaryColor,
-            }}
-          />
+              marginTop: wp(40),
+            }}>
+            <Image
+              source={ImageConstants.not_found}
+              style={{
+                height: wp(140),
+                width: wp(140),
+                resizeMode: 'contain',
+                tintColor: colors.primaryColor,
+              }}
+            />
+          </View>
         </View>
-      </View>
-    );
+      );
+    }
   };
 
-  const _renderEventList = ({item, index}) => {
+  const _renderEventList = ({ item, index }) => {
     console.log('item?.certificate', item?.certificate);
 
     return (
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate('BusinessDetailScreen', {data: item})
+          navigation.navigate('BusinessDetailScreen', { data: item })
         }
         activeOpacity={1}
         style={{
@@ -176,7 +180,7 @@ const BusinessUserListingScreen = ({navigation}) => {
             flex: 1,
             margin: 10,
           }}>
-          <Text
+          <Text numberOfLines={2} adjustsFontSizeToFit
             style={{
               fontFamily: fonts.semiBold,
               fontSize: wp(14),
@@ -185,7 +189,7 @@ const BusinessUserListingScreen = ({navigation}) => {
             {item?.name}
           </Text>
           <Text
-            numberOfLines={4}
+            numberOfLines={2}
             style={{
               fontFamily: fonts.regular,
               fontSize: wp(12),
@@ -226,63 +230,69 @@ const BusinessUserListingScreen = ({navigation}) => {
           }}
         />
       </View>
+      {!isLoading ? (
+        <View
+          style={{
+            padding: wp(15),
+            flex: 1,
+          }}>
+          <SwipeListView
+            ref={swipeRef}
+            data={eventSearchList}
+            showsVerticalScrollIndicator={false}
+            renderItem={_renderEventList}
+            disableRightSwipe={true}
+            ListEmptyComponent={<EmptyView />}
+            renderHiddenItem={({ item }, rowMap) => {
+              return (
+                <View style={styles.drawerStyle}>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => {
+                      rowMap[item?._id]?.closeRow();
+                      deleteSheet.current?.show(item?._id);
+                    }}
+                    style={styles.deleteIconView}>
+                    <Image
+                      source={ImageConstants.delete}
+                      style={styles.iconStyle}
+                    />
+                    <Text style={styles.itemNameStyle}>Delete</Text>
+                  </TouchableOpacity>
+                  <View style={{ width: 2 }} />
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() =>
+                      navigation.navigate('AddBusinessScreen', {
+                        data: item,
+                        isEdit: true,
+                      })
+                    }
+                    style={styles.deleteIconView}>
+                    <Image
+                      source={ImageConstants.edit_comment}
+                      style={styles.iconStyle}
+                    />
+                    <Text style={[styles.itemNameStyle, { paddingHorizontal: 10 }]}>
+                      Edit
+                    </Text>
+                  </TouchableOpacity>
+                  <View style={{ width: 10 }} />
+                </View>
+              );
+            }}
+            leftOpenValue={75}
+            rightOpenValue={-150}
+            keyExtractor={item => item?._id}
+            ListFooterComponent={<View style={{ height: 160 }} />}
+          />
+        </View>
+      ) :
+        <View style={st.center}>
+          <ActivityIndicator size="large" color={colors.primaryColor} />
+        </View>
+      }
 
-      <View
-        style={{
-          padding: wp(15),
-          flex: 1,
-        }}>
-        <SwipeListView
-          ref={swipeRef}
-          data={eventSearchList}
-          showsVerticalScrollIndicator={false}
-          renderItem={_renderEventList}
-          disableRightSwipe={true}
-          ListEmptyComponent={<EmptyView />}
-          renderHiddenItem={({item}, rowMap) => {
-            return (
-              <View style={styles.drawerStyle}>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={() => {
-                    rowMap[item?._id]?.closeRow();
-                    deleteSheet.current?.show(item?._id);
-                  }}
-                  style={styles.deleteIconView}>
-                  <Image
-                    source={ImageConstants.delete}
-                    style={styles.iconStyle}
-                  />
-                  <Text style={styles.itemNameStyle}>Delete</Text>
-                </TouchableOpacity>
-                <View style={{width: 2}} />
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={() =>
-                    navigation.navigate('AddBusinessScreen', {
-                      data: item,
-                      isEdit: true,
-                    })
-                  }
-                  style={styles.deleteIconView}>
-                  <Image
-                    source={ImageConstants.edit_comment}
-                    style={styles.iconStyle}
-                  />
-                  <Text style={[styles.itemNameStyle, {paddingHorizontal: 10}]}>
-                    Edit
-                  </Text>
-                </TouchableOpacity>
-                <View style={{width: 10}} />
-              </View>
-            );
-          }}
-          leftOpenValue={75}
-          rightOpenValue={-150}
-          keyExtractor={item => item?._id}
-          ListFooterComponent={<View style={{height: 160}} />}
-        />
-      </View>
       <DeleteBusinessSheet ref={deleteSheet} onDelete={getBusinessList} />
     </SafeAreaView>
   );

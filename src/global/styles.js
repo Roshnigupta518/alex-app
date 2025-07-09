@@ -102,6 +102,22 @@ btnsty:{borderWidth:1,borderColor:colors.primaryColor,backgroundColor:colors.pri
    },
    mt_10:{
     marginTop:10
-   }
+   },
+   inputStyle: {
+      backgroundColor: colors.lightPrimaryColor,
+      paddingVertical: wp(15),
+      paddingHorizontal: wp(10),
+      color:  colors.black,
+      borderRadius: 5,
+      marginTop: 7,
+      marginBottom: wp(13),
+    },
+    businessTimeCon: {flexDirection:'row', justifyContent:'space-between'},
+    labelStyle: {
+      fontFamily: fonts.medium,
+      fontSize: wp(14),
+      color: colors.black,
+    },
+  
 })
 

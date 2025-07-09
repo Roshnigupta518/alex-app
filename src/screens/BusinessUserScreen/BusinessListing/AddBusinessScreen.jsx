@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Platform,
+  TouchableOpacity, Image
 } from 'react-native';
 import {colors, fonts, wp} from '../../../constants';
 import BackHeader from '../../../components/BackHeader';
@@ -25,12 +26,28 @@ import {
 import Toast from '../../../constants/Toast';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../../components/NoInternetModal';
+import DatePicker from 'react-native-date-picker';
+import st from '../../../global/styles';
+import ImageConstants from '../../../constants/ImageConstants';
+
 const AddBusinessScreen = ({navigation, route}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [businessImage, setBusinessImage] = useState(null);
   const [certificateImage, setCertificateImage] = useState(null);
   const [bannerImage, setBannerImage] = useState(null);
   const [isInternetConnected, setIsInternetConnected] = useState(true);
+  const [fromTime, setFromTime] = useState(null);
+  const [toTime, setToTime] = useState(null);
+
+  const [openFrom, setOpenFrom] = useState(false);
+  const [openTo, setOpenTo] = useState(false);
+
+  const [tempFromTime, setTempFromTime] = useState(new Date());
+  const [tempToTime, setTempToTime] = useState(new Date());
+
+  const formatTime = (date) =>
+    date?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       if (state.isConnected !== null && state.isConnected === false) {
@@ -103,7 +120,7 @@ const AddBusinessScreen = ({navigation, route}) => {
         state.lng,
         state.phn,
         state.desc,
-        'skip-image',
+        // 'skip-image',
         'skip-image',
         'skip-image',
       )
@@ -159,9 +176,19 @@ const AddBusinessScreen = ({navigation, route}) => {
         state.lng,
         state.phn,
         state.desc?.trim(),
-        businessImage,
+        // businessImage,
         bannerImage,
         certificateImage,
+        state.twitter,
+        state.instagram,
+        state.facebook,
+        state.tiktok,
+        state.youtube,
+        state.e_commerce,
+        state.website,
+        state.fromTime,
+        state.toTime,
+        
       )
     ) {
       return;
@@ -170,7 +197,7 @@ const AddBusinessScreen = ({navigation, route}) => {
       let data = new FormData();
       data.append('certificate', certificateImage);
       data.append('banner', bannerImage);
-      data.append('image', businessImage);
+      // data.append('image', businessImage);
       data.append('name', state.businessName);
       data.append('phone_no', state.phn);
       data.append('details', state.desc);
@@ -182,6 +209,17 @@ const AddBusinessScreen = ({navigation, route}) => {
       data.append('city', 'xx');
       data.append('state', 'xx');
       data.append('country', 'xx');
+
+      data.append('instagram', state.instagram);
+      data.append('twitter', state.twitter);
+      data.append('tiktok', state.tiktok);
+      data.append('facebook', state.facebook);
+      data.append('youtube', state.youtube);
+      data.append('ecommerce_website', state.e_commerce);
+
+      data.append('time_from', state.fromTime);
+      data.append('time_to', state.toTime);
+
       if (route?.params?.childId != undefined) {
         data.append('sub_child_category_id', route?.params?.childId);
       }
@@ -336,7 +374,7 @@ const AddBusinessScreen = ({navigation, route}) => {
 
           <BusinessUserInputs
             theme="light"
-            label="Add Webiste Link"
+            label="Add Webiste Link (Optional)"
             placeholder="Write here"
             value={state.website}
             onChangeText={txt =>
@@ -346,7 +384,7 @@ const AddBusinessScreen = ({navigation, route}) => {
 
         <BusinessUserInputs
             theme="light"
-            label="Add your e-commerce website link"
+            label="Add your e-commerce website link (Optional)"
             placeholder="Write here"
             value={state.e_commerce}
             onChangeText={txt =>
@@ -358,7 +396,7 @@ const AddBusinessScreen = ({navigation, route}) => {
 
           <BusinessUserInputs
             theme="light"
-            label="Add Tiktok Link"
+            label="Add Tiktok Link (Optional)"
             placeholder="Write here"
             value={state.tiktok}
             onChangeText={txt =>
@@ -368,7 +406,7 @@ const AddBusinessScreen = ({navigation, route}) => {
 
          <BusinessUserInputs
             theme="light"
-            label="Add Instagram Link"
+            label="Add Instagram Link (Optional)"
             placeholder="Write here"
             value={state.instagram}
             onChangeText={txt =>
@@ -377,7 +415,7 @@ const AddBusinessScreen = ({navigation, route}) => {
           />
           <BusinessUserInputs
             theme="light"
-            label="Add Youtube Link"
+            label="Add Youtube Link (Optional)"
             placeholder="Write here"
             value={state.youtube}
             onChangeText={txt =>
@@ -386,7 +424,7 @@ const AddBusinessScreen = ({navigation, route}) => {
           />
           <BusinessUserInputs
             theme="light"
-            label="Add Facebook Link"
+            label="Add Facebook Link (Optional)"
             placeholder="Write here"
             value={state.facebook}
             onChangeText={txt =>
@@ -395,7 +433,7 @@ const AddBusinessScreen = ({navigation, route}) => {
           />
           <BusinessUserInputs
             theme="light"
-            label="Add X Link"
+            label="Add X Link (Optional)"
             placeholder="Write here"
             value={state.twitter}
             onChangeText={txt =>
@@ -420,6 +458,65 @@ const AddBusinessScreen = ({navigation, route}) => {
             image={bannerImage}
             getImageFile={res => setBannerImage(res)}
           />
+
+<Text style={st.labelStyle}>Business Hours (Optional)</Text>
+
+     <View style={st.businessTimeCon}>
+      <View style={st.wdh48}>
+      <Text style={st.labelStyle}>From:</Text>
+      <TouchableOpacity style={st.inputStyle} 
+      onPress={() => {
+          setTempFromTime(new Date()); // reset to current time
+          setOpenFrom(true);
+        }}>
+        <View style={st.businessTimeCon}>
+       <Text>{fromTime ? formatTime(fromTime) : 'Select Time'}</Text>
+       <Image source={ImageConstants.clock} style={[st.minimgsty,{marginTop:5}]} />
+       </View>
+      </TouchableOpacity>
+      </View>
+
+        <View style={st.wdh48}>
+      <Text style={st.labelStyle}>To:</Text>
+      <TouchableOpacity style={st.inputStyle} onPress={() => {
+          setTempToTime(new Date()); // reset to current time
+          setOpenTo(true);
+        }}>
+      <View style={st.businessTimeCon}>
+       <Text>{toTime ? formatTime(toTime) : 'Select Time'}</Text>
+       <Image source={ImageConstants.clock} style={[st.minimgsty,{marginTop:5}]} />
+       </View>
+      </TouchableOpacity>
+      {/* <Button title={formatTime(toTime)} onPress={() => setOpenTo(true)} /> */}
+      </View>
+       {/* From Time Picker */}
+       <DatePicker
+        modal
+        open={openFrom}
+        date={tempFromTime}
+        mode="time"
+        onConfirm={(date) => {
+          setOpenFrom(false);
+          setFromTime(date);
+        }}
+        onCancel={() => setOpenFrom(false)}
+      />
+
+       {/* To Time Picker */}
+       <DatePicker
+        modal
+        open={openTo}
+        date={tempToTime}
+        mode="time"
+        onConfirm={(date) => {
+          setOpenTo(false);
+          setToTime(date);
+        }}
+        onCancel={() => setOpenTo(false)}
+      />
+    </View>
+
+
         </KeyboardAvoidingScrollView>
       </View>
 

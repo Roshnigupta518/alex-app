@@ -149,6 +149,14 @@ export const RegexType = {
     regex: /^https?:\/\/(www\.)?tiktok\.com\/@[\w._]+\/?(?:\?.*)?$/,
     typeError: 'Please enter valid tiktok Url',
   },
+  e_commerce: {
+    regex: /^https?:\/\/[^\s]+$/, // Generic URL format
+    typeError: 'Please enter a valid E-commerce website URL',
+  },
+  website: {
+    regex: /^https?:\/\/[^\s]+$/, // Generic URL format
+    typeError: 'Please enter a valid Website URL',
+  },
   city: {
     regex: /^[A-Za-z\s'-]+$/,   // Letters, space, hyphen, apostrophe
     typeError: 'Please enter a valid city',

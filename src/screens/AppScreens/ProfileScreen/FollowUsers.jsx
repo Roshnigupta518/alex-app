@@ -15,6 +15,7 @@ import {
   getAllFollowerRequest,
   getAllFollowingRequest,
   MakeFollowedUserRequest,
+MakeFollowedBusinessRequest
 } from '../../../services/Utills';
 import Toast from '../../../constants/Toast';
 import ImageConstants from '../../../constants/ImageConstants';
@@ -100,9 +101,18 @@ const FollowUsers = ({navigation, route}) => {
     }
   };
 
-  // useEffect(() => {
-  //   callUserList();
-  // }, [id]);
+  const makeFollowBusiness = (id) => {
+    MakeFollowedBusinessRequest({ business_id: id })
+      .then(res => {
+        console.log({res})
+        Toast.success('Request', res?.message);
+        callUserList();
+      })
+      .catch(err => {
+        Toast.error('Request', err?.message);
+      })
+      .finally(() => {});
+  };
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -113,24 +123,50 @@ const FollowUsers = ({navigation, route}) => {
     return unsubscribe;
   }, [id, navigation]);
 
-  const searchUser = txt => {
-    let user_res = searchedUser.filter(item => {
-      if (
-        route?.params?.type == 'following' &&
-        item?.follow_user_id?.anonymous_name?.includes(txt)
-      ) {
-        return item;
-      } else if (item?.user_id?.anonymous_name?.includes(txt)) {
-        return item;
-      }
-    });
+  // const searchUser = txt => {
+  //   let user_res = searchedUser.filter(item => {
+  //     if (
+  //       route?.params?.type == 'following' &&
+  //       item?.follow_user_id?.anonymous_name?.includes(txt)
+  //     ) {
+  //       return item;
+  //     } else if (item?.user_id?.anonymous_name?.includes(txt)) {
+  //       return item;
+  //     }
+  //   });
 
-    setSearchedUser(txt?.length < 1 ? [...users] : [...user_res]);
+  //   setSearchedUser(txt?.length < 1 ? [...users] : [...user_res]);
+  // };
+
+  const searchUser = txt => {
+    const lowerTxt = txt.toLowerCase();
+  
+    const user_res = users.filter(item => {
+      if (route?.params?.type === 'following') {
+        // Only show followed users/businesses
+        if (item.type === 'user') {
+          return item.follow_user_id?.anonymous_name?.toLowerCase().includes(lowerTxt);
+        } else if (item.type === 'business') {
+          return item.business_id?.name?.toLowerCase().includes(lowerTxt);
+        }
+      } else {
+        // General search (not filtered by 'following' route type)
+        if (item.type === 'user') {
+          return item.follow_user_id?.anonymous_name?.toLowerCase().includes(lowerTxt);
+        } else if (item.type === 'business') {
+          return item.business_id?.name?.toLowerCase().includes(lowerTxt);
+        }
+      }
+      return false;
+    });
+  
+    setSearchedUser(txt.length < 1 ? [...users] : [...user_res]);
   };
+  
 
   const _renderUserList = useCallback(
     ({item, index}) => {
-      if (item?.follow_user_id != null) {
+      if (item?.follow_user_id != null && item.type == 'user') {
         return (
           <TouchableOpacity 
           onPress={()=> {
@@ -280,6 +316,121 @@ const FollowUsers = ({navigation, route}) => {
           </View>
           </TouchableOpacity>
         );
+      } else if( item.type == "business"){
+        return(
+          <TouchableOpacity onPress={()=> {
+            navigation.navigate('ClaimBusinessScreen', 
+              {place_id:item?.business_id?._id, name:item?.business_id?.tem?.business_id?._id});
+            }}>
+             <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              backgroundColor: colors.white,
+              marginVertical: 5,
+              borderRadius: 8,
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <View
+                style={{
+                  height: wp(60),
+                  width: wp(4),
+                  backgroundColor: colors.primaryColor,
+                  borderTopLeftRadius: 8,
+                  borderBottomLeftRadius: 8,
+                }}
+              />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  padding: 6,
+                }}>
+                {item?.business_id?.certificate && (
+                  <Image
+                    source={{
+                      uri: item?.business_id?.certificate,
+                    }}
+                    style={{
+                      height: wp(50),
+                      width: wp(50),
+                      borderRadius: 90,
+                      marginHorizontal: 10,
+                    }}
+                  />
+                )}
+                
+
+                <Text
+                  numberOfLines={2}
+                  style={{
+                    fontFamily: fonts.semiBold,
+                    fontSize: wp(16),
+                    color: colors.black,
+                    width: WIDTH / 2.2,
+                  }}>
+                  {item?.business_id?.name }
+                </Text>
+              </View>
+            </View>
+
+            {item?.isFollowed == false ? (
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: 10,
+                }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    makeFollowBusiness(
+                      item?.business_id?._id 
+                    )
+                  }
+                  style={{
+                    backgroundColor: colors.primaryColor,
+                    paddingHorizontal: 10,
+                    paddingVertical: 5,
+                    borderRadius: 5,
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: fonts.semiBold,
+                      fontSize: wp(12),
+                      color: colors.white,
+                    }}>
+                    Follow
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <TouchableOpacity
+                onPress={() =>
+                  makeFollowBusiness(
+                    item?.business_id?._id 
+                  )
+                }
+                style={{
+                  justifyContent: 'center',
+                  paddingHorizontal: 10,
+                }}>
+                <Text
+                  style={{
+                    fontFamily: fonts.medium,
+                    fontSize: wp(12),
+                    color: colors.primaryColor,
+                  }}>
+                  Following
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
+          </TouchableOpacity>
+        )
       }
     },
     [users],

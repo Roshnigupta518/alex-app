@@ -122,7 +122,7 @@ const BusinessListWithChild = ({navigation, route}) => {
                         flex: 1,
                         margin: 10,
                       }}>
-                      <Text
+                      <Text numberOfLines={2} adjustsFontSizeToFit
                         style={{
                           fontFamily: fonts.semiBold,
                           fontSize: wp(14),
@@ -130,7 +130,7 @@ const BusinessListWithChild = ({navigation, route}) => {
                         }}>
                         {item?.name}
                       </Text>
-                      <Text numberOfLines={3}
+                      <Text numberOfLines={2}
                         style={{
                           fontFamily: fonts.regular,
                           fontSize: wp(12),
