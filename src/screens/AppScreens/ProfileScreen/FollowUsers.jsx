@@ -166,7 +166,7 @@ const FollowUsers = ({navigation, route}) => {
 
   const _renderUserList = useCallback(
     ({item, index}) => {
-      if (item?.follow_user_id != null && item.type == 'user') {
+      if (item?.follow_user_id != null ) {
         return (
           <TouchableOpacity 
           onPress={()=> {

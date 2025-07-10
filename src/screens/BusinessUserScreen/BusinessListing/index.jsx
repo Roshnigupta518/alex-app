@@ -24,7 +24,7 @@ import { useIsFocused } from '@react-navigation/native';
 import DeleteBusinessSheet from '../../../components/ActionSheetComponent/DeleteBusinessSheet';
 import st from '../../../global/styles';
 
-const BusinessUserListingScreen = ({ navigation }) => {
+const BusinessUserListingScreen = ({ navigation, route }) => {
   const isFocused = useIsFocused();
   const swipeRef = useRef();
   const deleteSheet = useRef();
@@ -37,7 +37,7 @@ const BusinessUserListingScreen = ({ navigation }) => {
 
   const getBusinessList = () => {
     try {
-      setIsLoading(true);
+      setIsLoading(true)
       setEventList([]);
       setEventSearchList([]);
       getMyBusinessListRequest()
@@ -62,25 +62,15 @@ const BusinessUserListingScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    if (isFocused && (route?.params?.refresh === true || eventList.length === 0)) {
       getBusinessList();
-    });
-
-    // Return the function to unsubscribe from the event so it gets removed on unmount
-    return unsubscribe;
-  }, [navigation]);
-
-  // useEffect(() => {
-  //   if (isFocused) {
-  //     setIsLoading(true);
-  //     setTimeout(() => {
-  //       getBusinessList();
-  //     }, 800);
-  //   }
-  // }, [isFocused]);
+      navigation.setParams({ refresh: false });
+    }
+  }, [isFocused, route?.params?.refresh]);
+  
 
   const EmptyView = () => {
-    if (!isLoading) {
+    if (!isLoading ) {
       return (
         <View
           style={{
@@ -288,9 +278,9 @@ const BusinessUserListingScreen = ({ navigation }) => {
           />
         </View>
       ) :
-        <View style={st.center}>
+         <View style={st.center}>
           <ActivityIndicator size="large" color={colors.primaryColor} />
-        </View>
+         </View>
       }
 
       <DeleteBusinessSheet ref={deleteSheet} onDelete={getBusinessList} />

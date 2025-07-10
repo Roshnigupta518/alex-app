@@ -174,7 +174,15 @@ const HomeScreen = ({ navigation, route }) => {
   
     GetAllPostsRequest(url)
       .then(res => {
-        setPostArray(prevPosts => [...prevPosts, ...res?.result]);
+        // setPostArray(prevPosts => [...prevPosts, ...res?.result]);
+        setPostArray(prevPosts => {
+          const merged = [...prevPosts, ...res?.result];
+          const uniquePosts = Array.from(
+            new Map(merged.map(item => [item?.postData?._id, item])).values()
+          );
+          return uniquePosts;
+        });
+        
   
         // Prefetch images
         res?.result?.forEach(item => {
@@ -229,7 +237,7 @@ const HomeScreen = ({ navigation, route }) => {
   }, [nearByType]);
 
   useEffect(() => {
-    setIsLoading(true)
+    // setIsLoading(true)
     if (!isFocused) {
       setIsOnFocusItem(false);
     } else {

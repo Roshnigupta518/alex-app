@@ -257,11 +257,12 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
 
   const openWebsite = async (businessUrl) => {
     const supported = await Linking.canOpenURL(businessUrl);
-    if (supported) {
-      await Linking.openURL(businessUrl);
-    } else {
-      console.warn(`Don't know how to open this URL: ${businessUrl}`);
-    }
+    await Linking.openURL(businessUrl);
+    // if (supported) {
+    //   await Linking.openURL(businessUrl);
+    // } else {
+    //   console.warn(`Don't know how to open this URL: ${businessUrl}`);
+    // }
   }
 
   const handleCallPress = async (phoneNumber) => {
@@ -269,14 +270,14 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
   
     try {
       const supported = await Linking.canOpenURL(dialUrl);
-  
-      if (!supported) {
-        Alert.alert(
-          'Call not supported',
-          'Your device does not support this feature.'
-        );
-        return;
-      }
+      await Linking.openURL(dialUrl);
+      // if (!supported) {
+      //   Alert.alert(
+      //     'Call not supported',
+      //     'Your device does not support this feature.'
+      //   );
+      //   return;
+      // }
   
       await Linking.openURL(dialUrl);
     } catch (error) {
@@ -354,6 +355,26 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
       .finally(() => setIsFollowLoading(false));
   };
 
+  // const formatTime = (date) =>{
+  //  return  date?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit',  hour12: true,  });
+  // }
+
+  const formatTime = (timeString) => {
+    if (!timeString) return '';
+  
+    const date = new Date(timeString);
+  
+    // Check if date is valid
+    if (isNaN(date.getTime())) return '';
+  
+    return date.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    });
+  };
+  
+
   return (
     <>
       <View
@@ -364,7 +385,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
       
           <ScrollView
             contentContainerStyle={{ flexGrow: 1 }}>
-              {!isLoading ? (
+              {(!isLoading && data) ? (
               <View>
             <TouchableWithoutFeedback onPress={() => setShowBanner(true)}>
               <ImageBackground
@@ -484,11 +505,15 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
                     >{data?.address}</Text>
                   </View>}
                   
-                  {data?.time_from || data?.time_to &&
-                  <View style={styles.content}>
-                    <Image source={ImageConstants.clock} style={st.minimgsty} />
-                    <Text style={styles.txtstyle}>Open from {data?.time_from} to {data?.time_to}</Text>
-                  </View>}
+                  {(data?.time_from || data?.time_to) && (
+                    <View style={styles.content}>
+                      <Image source={ImageConstants.clock} style={st.minimgsty} />
+                      <Text style={styles.txtstyle}>
+                        Open from {formatTime(data?.time_from)} to {formatTime(data?.time_to)}
+                      </Text>
+                    </View>
+                  )}
+
 
                   {data?.socialLinks && Object.values(data.socialLinks).some(link => link?.trim()) && (
                     <View style={styles.content}>
@@ -514,11 +539,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
                   </Text>
                 )}
                   </TouchableOpacity>
-
-                  <TouchableOpacity style={styles.button}
-                    onPress={() => openWebsite(data?.ecommerce_website)} >
-                    <Text style={styles.btntxt}>Order now</Text>
-                  </TouchableOpacity>
+                 
 
                   <TouchableOpacity
                     onPress={() => getLocationFromGoogle(true)}
@@ -533,6 +554,12 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
                       </Text>
                     )}
                   </TouchableOpacity>
+
+                  {data?.ecommerce_website!=''&&
+                  <TouchableOpacity style={styles.button}
+                    onPress={() => openWebsite(data?.ecommerce_website)} >
+                    <Text style={styles.btntxt}>Order now</Text>
+                  </TouchableOpacity>}
                 </View>
 
 

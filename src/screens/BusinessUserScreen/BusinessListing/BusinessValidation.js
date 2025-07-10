@@ -107,20 +107,23 @@ const BusinessValidation = (
     }
   }
 
-  // ✅ Business hours validation
-  if ((fromTime && !toTime) || (!fromTime && toTime)) {
+ // ✅ Only validate if at least one value is entered
+if (fromTime || toTime) {
+  // ⛔ One is missing — show error
+  if (!fromTime || !toTime) {
     Toast.error('Business', 'Please select both From and To time');
     return false;
   }
 
-  // ✅ Check if ToTime is after FromTime
-  const fromTimeMinutes = fromTime ? getTimeValue(fromTime) : null;
-  const toTimeMinutes = toTime ? getTimeValue(toTime) : null;
-  
-  if (fromTimeMinutes !== null && toTimeMinutes !== null && toTimeMinutes <= fromTimeMinutes) {
+  const from = new Date(fromTime);
+  const to = new Date(toTime);
+
+  // ⛔ "To" must be after "From"
+  if (from >= to) {
     Toast.error('Business', 'To time must be greater than From time');
     return false;
   }
+}
   
    return true;
 };

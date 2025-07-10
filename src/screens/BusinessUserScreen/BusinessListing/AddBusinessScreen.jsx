@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -8,16 +8,16 @@ import {
   Platform,
   TouchableOpacity, Image
 } from 'react-native';
-import {colors, fonts, wp} from '../../../constants';
+import { colors, fonts, wp } from '../../../constants';
 import BackHeader from '../../../components/BackHeader';
 import {
   BusinessUserInputs,
   BusinessUserDescriptionInput,
   BusinessImagePicker,
 } from '../commonComponents/BusinessUserInputs';
-import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
+import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
 import CustomButton from '../../../components/CustomButton';
-import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import BusinessValidation from './BusinessValidation';
 import {
   CreateBusinessRequest,
@@ -30,7 +30,7 @@ import DatePicker from 'react-native-date-picker';
 import st from '../../../global/styles';
 import ImageConstants from '../../../constants/ImageConstants';
 
-const AddBusinessScreen = ({navigation, route}) => {
+const AddBusinessScreen = ({ navigation, route }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [businessImage, setBusinessImage] = useState(null);
   const [certificateImage, setCertificateImage] = useState(null);
@@ -46,7 +46,7 @@ const AddBusinessScreen = ({navigation, route}) => {
   const [tempToTime, setTempToTime] = useState(new Date());
 
   const formatTime = (date) =>
-    date?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    date?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true, });
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -83,18 +83,18 @@ const AddBusinessScreen = ({navigation, route}) => {
     city: '',
     state: '',
     country: '',
-    website:'',
+    website: '',
     instagram: '',
     twitter: '',
     tiktok: '',
     facebook: '',
     youtube: '',
-    e_commerce:''
+    e_commerce: ''
   });
 
   useEffect(() => {
     if (route?.params?.isEdit) {
-      let {data} = route?.params;
+      let { data } = route?.params;
 
       setState(prevState => ({
         ...prevState,
@@ -186,39 +186,34 @@ const AddBusinessScreen = ({navigation, route}) => {
         state.youtube,
         state.e_commerce,
         state.website,
-        state.fromTime,
-        state.toTime,
-        
+        fromTime,
+        toTime,
       )
     ) {
       return;
     } else {
       setIsLoading(true);
       let data = new FormData();
+
+      data.append("longitude", state.lng);
+      data.append("latitude", state.lat);
+      data.append("time_from", String(fromTime));
+      data.append("time_to", String(toTime));
+      data.append("business_website", state.businessName);
+      data.append("instagram", state.instagram);
+      data.append("twitter", state.twitter);
+      data.append("tiktok", state.tiktok);
+      data.append("facebook", state.facebook);
+      data.append("youtube", state.youtube);
+      data.append("ecommerce_website", state.e_commerce);
+      data.append("name", state.businessName);
+      data.append("phone_no", state.phn);
+      data.append("details", state.desc);
+      data.append("address", state.address);
+      data.append("category_id", route.params?.catId);
+      data.append("sub_category_id", route?.params?.subCatId);
       data.append('certificate', certificateImage);
       data.append('banner', bannerImage);
-      // data.append('image', businessImage);
-      data.append('name', state.businessName);
-      data.append('phone_no', state.phn);
-      data.append('details', state.desc);
-      data.append('address', state.address);
-      data.append('category_id', route.params?.catId);
-      data.append('sub_category_id', route?.params?.subCatId);
-      data.append('longitude', state.lng);
-      data.append('latitude', state.lat);
-      data.append('city', 'xx');
-      data.append('state', 'xx');
-      data.append('country', 'xx');
-
-      data.append('instagram', state.instagram);
-      data.append('twitter', state.twitter);
-      data.append('tiktok', state.tiktok);
-      data.append('facebook', state.facebook);
-      data.append('youtube', state.youtube);
-      data.append('ecommerce_website', state.e_commerce);
-
-      data.append('time_from', state.fromTime);
-      data.append('time_to', state.toTime);
 
       if (route?.params?.childId != undefined) {
         data.append('sub_child_category_id', route?.params?.childId);
@@ -227,7 +222,7 @@ const AddBusinessScreen = ({navigation, route}) => {
       CreateBusinessRequest(data)
         .then(res => {
           try {
-            navigation.navigate('BusinessUserListingScreen');
+            navigation.navigate('BusinessUserListingScreen',{ refresh: true });
           } catch (err) {
             Toast.error('Navigation', 'Something went wrong!');
           }
@@ -264,7 +259,7 @@ const AddBusinessScreen = ({navigation, route}) => {
             placeholder="Write here"
             value={state.businessName}
             onChangeText={txt =>
-              setState(prevState => ({...prevState, businessName: txt}))
+              setState(prevState => ({ ...prevState, businessName: txt }))
             }
           />
 
@@ -316,7 +311,7 @@ const AddBusinessScreen = ({navigation, route}) => {
                 key: 'AIzaSyAbFHI5aGGL3YVP0KvD9nDiFKsi_cX3bS0',
                 language: 'en',
               }}
-              textInputProps={{placeholderTextColor: colors.gray}}
+              textInputProps={{ placeholderTextColor: colors.gray }}
               styles={{
                 textInput: {
                   backgroundColor: colors.lightPrimaryColor,
@@ -346,7 +341,7 @@ const AddBusinessScreen = ({navigation, route}) => {
             placeholder="Write here"
             value={state.phn}
             onChangeText={txt =>
-              setState(prevState => ({...prevState, phn: txt}))
+              setState(prevState => ({ ...prevState, phn: txt }))
             }
           />
 
@@ -356,7 +351,7 @@ const AddBusinessScreen = ({navigation, route}) => {
             placeholder="Write here"
             value={state.desc}
             onChangeText={txt =>
-              setState(prevState => ({...prevState, desc: txt}))
+              setState(prevState => ({ ...prevState, desc: txt }))
             }
           />
 
@@ -378,17 +373,17 @@ const AddBusinessScreen = ({navigation, route}) => {
             placeholder="Write here"
             value={state.website}
             onChangeText={txt =>
-              setState(prevState => ({...prevState, website: txt}))
+              setState(prevState => ({ ...prevState, website: txt }))
             }
           />
 
-        <BusinessUserInputs
+          <BusinessUserInputs
             theme="light"
             label="Add your e-commerce website link (Optional)"
             placeholder="Write here"
             value={state.e_commerce}
             onChangeText={txt =>
-              setState(prevState => ({...prevState, e_commerce: txt}))
+              setState(prevState => ({ ...prevState, e_commerce: txt }))
             }
           />
 
@@ -400,17 +395,17 @@ const AddBusinessScreen = ({navigation, route}) => {
             placeholder="Write here"
             value={state.tiktok}
             onChangeText={txt =>
-              setState(prevState => ({...prevState, tiktok: txt}))
+              setState(prevState => ({ ...prevState, tiktok: txt }))
             }
           />
 
-         <BusinessUserInputs
+          <BusinessUserInputs
             theme="light"
             label="Add Instagram Link (Optional)"
             placeholder="Write here"
             value={state.instagram}
             onChangeText={txt =>
-              setState(prevState => ({...prevState, instagram: txt}))
+              setState(prevState => ({ ...prevState, instagram: txt }))
             }
           />
           <BusinessUserInputs
@@ -419,7 +414,7 @@ const AddBusinessScreen = ({navigation, route}) => {
             placeholder="Write here"
             value={state.youtube}
             onChangeText={txt =>
-              setState(prevState => ({...prevState, youtube: txt}))
+              setState(prevState => ({ ...prevState, youtube: txt }))
             }
           />
           <BusinessUserInputs
@@ -428,7 +423,7 @@ const AddBusinessScreen = ({navigation, route}) => {
             placeholder="Write here"
             value={state.facebook}
             onChangeText={txt =>
-              setState(prevState => ({...prevState, facebook: txt}))
+              setState(prevState => ({ ...prevState, facebook: txt }))
             }
           />
           <BusinessUserInputs
@@ -437,10 +432,10 @@ const AddBusinessScreen = ({navigation, route}) => {
             placeholder="Write here"
             value={state.twitter}
             onChangeText={txt =>
-              setState(prevState => ({...prevState, twitter: txt}))
+              setState(prevState => ({ ...prevState, twitter: txt }))
             }
           />
-         {/* ----------------------- */}
+          {/* ----------------------- */}
 
 
           <BusinessImagePicker
@@ -459,68 +454,68 @@ const AddBusinessScreen = ({navigation, route}) => {
             getImageFile={res => setBannerImage(res)}
           />
 
-<Text style={st.labelStyle}>Business Hours (Optional)</Text>
+          <Text style={st.labelStyle}>Business Hours (Optional)</Text>
 
-     <View style={st.businessTimeCon}>
-      <View style={st.wdh48}>
-      <Text style={st.labelStyle}>From:</Text>
-      <TouchableOpacity style={st.inputStyle} 
-      onPress={() => {
-          setTempFromTime(new Date()); // reset to current time
-          setOpenFrom(true);
-        }}>
-        <View style={st.businessTimeCon}>
-       <Text>{fromTime ? formatTime(fromTime) : 'Select Time'}</Text>
-       <Image source={ImageConstants.clock} style={[st.minimgsty,{marginTop:5}]} />
-       </View>
-      </TouchableOpacity>
-      </View>
+          <View style={st.businessTimeCon}>
+            <View style={st.wdh48}>
+              <Text style={st.labelStyle}>From:</Text>
+              <TouchableOpacity style={st.inputStyle}
+                onPress={() => {
+                  setTempFromTime(new Date()); // reset to current time
+                  setOpenFrom(true);
+                }}>
+                <View style={st.businessTimeCon}>
+                  <Text>{fromTime ? formatTime(fromTime) : 'Select Time'}</Text>
+                  <Image source={ImageConstants.clock} style={[st.minimgsty, { marginTop: 5 }]} />
+                </View>
+              </TouchableOpacity>
+            </View>
 
-        <View style={st.wdh48}>
-      <Text style={st.labelStyle}>To:</Text>
-      <TouchableOpacity style={st.inputStyle} onPress={() => {
-          setTempToTime(new Date()); // reset to current time
-          setOpenTo(true);
-        }}>
-      <View style={st.businessTimeCon}>
-       <Text>{toTime ? formatTime(toTime) : 'Select Time'}</Text>
-       <Image source={ImageConstants.clock} style={[st.minimgsty,{marginTop:5}]} />
-       </View>
-      </TouchableOpacity>
-      {/* <Button title={formatTime(toTime)} onPress={() => setOpenTo(true)} /> */}
-      </View>
-       {/* From Time Picker */}
-       <DatePicker
-        modal
-        open={openFrom}
-        date={tempFromTime}
-        mode="time"
-        onConfirm={(date) => {
-          setOpenFrom(false);
-          setFromTime(date);
-        }}
-        onCancel={() => setOpenFrom(false)}
-      />
+            <View style={st.wdh48}>
+              <Text style={st.labelStyle}>To:</Text>
+              <TouchableOpacity style={st.inputStyle} onPress={() => {
+                setTempToTime(new Date()); // reset to current time
+                setOpenTo(true);
+              }}>
+                <View style={st.businessTimeCon}>
+                  <Text>{toTime ? formatTime(toTime) : 'Select Time'}</Text>
+                  <Image source={ImageConstants.clock} style={[st.minimgsty, { marginTop: 5 }]} />
+                </View>
+              </TouchableOpacity>
+              {/* <Button title={formatTime(toTime)} onPress={() => setOpenTo(true)} /> */}
+            </View>
+            {/* From Time Picker */}
+            <DatePicker
+              modal
+              open={openFrom}
+              date={tempFromTime}
+              mode="time"
+              onConfirm={(date) => {
+                setOpenFrom(false);
+                setFromTime(date);
+              }}
+              onCancel={() => setOpenFrom(false)}
+            />
 
-       {/* To Time Picker */}
-       <DatePicker
-        modal
-        open={openTo}
-        date={tempToTime}
-        mode="time"
-        onConfirm={(date) => {
-          setOpenTo(false);
-          setToTime(date);
-        }}
-        onCancel={() => setOpenTo(false)}
-      />
-    </View>
+            {/* To Time Picker */}
+            <DatePicker
+              modal
+              open={openTo}
+              date={tempToTime}
+              mode="time"
+              onConfirm={(date) => {
+                setOpenTo(false);
+                setToTime(date);
+              }}
+              onCancel={() => setOpenTo(false)}
+            />
+          </View>
 
 
         </KeyboardAvoidingScrollView>
       </View>
 
-      <View style={{marginBottom: 15}}>
+      <View style={{ marginBottom: 15 }}>
         <CustomButton
           isLoading={isLoading}
           disabled={isLoading}
