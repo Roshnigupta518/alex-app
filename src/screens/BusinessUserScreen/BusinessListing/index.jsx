@@ -30,7 +30,7 @@ const BusinessUserListingScreen = ({ navigation, route }) => {
   const deleteSheet = useRef();
   const userInfo = useSelector(state => state.UserInfoSlice.data);
   const [eventList, setEventList] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [deleteId, setDeleteId] = useState(null);
   const [eventSearchList, setEventSearchList] = useState([]);
   const [searchTxt, setSearchTxt] = useState('');

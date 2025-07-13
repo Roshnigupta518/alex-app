@@ -37,10 +37,13 @@ import FullscreenImageModal from '../../../components/InstagramProfileImageViewe
 import ReadMore from '@fawazahmed/react-native-read-more';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import Share from 'react-native-share';
-import { MakeFollowedBusinessRequest } from '../../../services/Utills';
+import { MakeFollowedBusinessRequest, unclaimedBusinessRequest } from '../../../services/Utills';
 
 const ClaimBusinessScreen = ({ navigation, route }) => {
   const { place_id, name } = route?.params || {};
+   const follow = route?.params
+  console.log({followdata: follow })
+
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState(null);
   const [isClaimed, setIsClaimed] = useState(false);
@@ -84,7 +87,14 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
       .then(res => {
         console.log('res=-=-', JSON.stringify(res));
         setData(res?.result || []);
-        setIsClaimed(res?.result?.isClaimed);
+        // setIsClaimed(res?.result?.isClaimed);
+        const objId = res?.result?._id
+        const isValidObjectId = (id) => /^[a-f\d]{24}$/i.test(id);
+        const disableClaimbtn = isValidObjectId(objId)
+        console.log({disableClaimbtn})
+        setIsClaimed(disableClaimbtn);
+
+
         let temp_data = [];
         res?.result?.postData?.forEach((item, index) => {
           temp_data.push({
@@ -124,8 +134,15 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
   const claimBusiness = async data => {
     await claimBusinessRequest(place_id, data)
       .then(res => {
-        setIsClaimed(true);
+        // setIsClaimed(true);
         Toast.success('Claim Business', res?.message);
+        setData(prev => {
+          const newIsClaimed = !prev.isClaimed;
+          return {
+            ...prev,
+            isClaimed: newIsClaimed,
+          };
+        });
       })
       .catch(err => {
         Toast.error('Claim Business', err?.message);
@@ -200,6 +217,27 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
       });
   };
 
+  const unclaimedBusinessHandle = async() => {
+    await unclaimedBusinessRequest(place_id)
+    .then(res => {
+      setClaimLoading(true);
+      Toast.success('Unclaim Business', res?.message);
+      setData(prev => {
+        const newIsClaimed = !prev.isClaimed;
+        return {
+          ...prev,
+          isClaimed: newIsClaimed,
+        };
+      });
+    })
+    .catch(err => {
+      Toast.error('Unclaim Business', err?.message);
+    })
+    .finally(() =>{
+       setClaimLoading(false)
+      });
+  }
+
   const renderTabContent = () => {
     let filteredData = [];
 
@@ -240,10 +278,6 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
     );
   };
 
-  // useEffect(() => {
-  //   getAllData();
-  // }, []);
-
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       getAllData();
@@ -256,29 +290,17 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
   const isLogoAvailable = !!data?.certificate;
 
   const openWebsite = async (businessUrl) => {
+    console.log({businessUrl})
     const supported = await Linking.canOpenURL(businessUrl);
     await Linking.openURL(businessUrl);
-    // if (supported) {
-    //   await Linking.openURL(businessUrl);
-    // } else {
-    //   console.warn(`Don't know how to open this URL: ${businessUrl}`);
-    // }
   }
 
   const handleCallPress = async (phoneNumber) => {
+    if(phoneNumber){
     const dialUrl = `tel:${phoneNumber}`;
   
     try {
       const supported = await Linking.canOpenURL(dialUrl);
-      await Linking.openURL(dialUrl);
-      // if (!supported) {
-      //   Alert.alert(
-      //     'Call not supported',
-      //     'Your device does not support this feature.'
-      //   );
-      //   return;
-      // }
-  
       await Linking.openURL(dialUrl);
     } catch (error) {
       console.log('Dialer error:', error);
@@ -287,6 +309,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
         'Unable to open the phone dialer. Please try manually.'
       );
     }
+  }
   };
 
   const handleShare = async () => {
@@ -332,7 +355,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
 
   const makeFollowBusiness = () => {
     setIsFollowLoading(true);
-    MakeFollowedBusinessRequest({ business_id: data?._id })
+    MakeFollowedBusinessRequest({ business_id: place_id })
       .then(res => {
         console.log({res})
         Toast.success('Request', res?.message);
@@ -355,15 +378,10 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
       .finally(() => setIsFollowLoading(false));
   };
 
-  // const formatTime = (date) =>{
-  //  return  date?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit',  hour12: true,  });
-  // }
-
   const formatTime = (timeString) => {
     if (!timeString) return '';
   
     const date = new Date(timeString);
-  
     // Check if date is valid
     if (isNaN(date.getTime())) return '';
   
@@ -373,7 +391,6 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
       hour12: true,
     });
   };
-  
 
   return (
     <>
@@ -415,11 +432,12 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
                     <Image source={ImageConstants.web} style={st.imgsty} />
                   </TouchableOpacity>
                   }
+                  {data?.phone_no&&
                   <TouchableOpacity style={st.circle}
                     onPress={() => handleCallPress(data?.phone_no)}
                   >
                     <Image source={ImageConstants.call} style={st.imgsty} />
-                  </TouchableOpacity>
+                  </TouchableOpacity>}
                 </View>
               </ImageBackground>
             </TouchableWithoutFeedback>
@@ -465,7 +483,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
 
                   <View style={{ flexDirection: 'row' }}>
                     <View style={{ width: '50%' }}>
-                      <TouchableOpacity onPress={()=>navigation.navigate('FollowBusiness',{id: data?._id})} >
+                      <TouchableOpacity onPress={()=>navigation.navigate('FollowBusiness',{id: place_id})} >
                       <Text style={styles.btntxt}>{formatCount(data?.businessFollowerCount)}</Text>
                       <Text style={styles.txtstyle}>Followers</Text>
                       </TouchableOpacity>
@@ -488,14 +506,14 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
 
               <View>
                 <View style={{ padding: 15 }}>
-
+                 {data?.details&&
                   <ReadMore
                     numberOfLines={2}
                     style={styles.descriptionTxtStyle}
                     seeMoreStyle={{ color: colors.primaryColor }}
                     seeLessStyle={{ color: colors.primaryColor }}>
                     {data?.details}
-                  </ReadMore>
+                  </ReadMore>}
                    
                    {data?.address&&
                   <View style={styles.content}>
@@ -542,20 +560,26 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
                  
 
                   <TouchableOpacity
-                    onPress={() => getLocationFromGoogle(true)}
-                    disabled={claimLoading || data?.isClaimed}
-                    style={[styles.button, { opacity: data?.isClaimed ? 0.6 : 1 }]}>
+                    onPress={() => {
+                      if(data?.isClaimed){
+                          unclaimedBusinessHandle()
+                      }else{
+                         getLocationFromGoogle(true)
+                        }
+                    }}
+                    disabled={(claimLoading || isClaimed)}
+                    style={[styles.button, { opacity: isClaimed ? 0.6 : 1 }]}>
                     {claimLoading ? (
                       <ActivityIndicator size={'small'} color={colors.white} />
                     ) : (
                       <Text
                         style={styles.btntxt}>
-                        {!isClaimed ? 'Claim' : 'Claimed'}
+                        {!data?.isClaimed ? 'Claim' : 'Claimed'}
                       </Text>
                     )}
                   </TouchableOpacity>
 
-                  {data?.ecommerce_website!=''&&
+                  {data?.ecommerce_website&&
                   <TouchableOpacity style={styles.button}
                     onPress={() => openWebsite(data?.ecommerce_website)} >
                     <Text style={styles.btntxt}>Order now</Text>

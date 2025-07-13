@@ -22,6 +22,8 @@ import ImageConstants from '../../../constants/ImageConstants';
 import NotFoundAnime from '../../../components/NotFoundAnime';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../../components/NoInternetModal';
+import { useSelector } from 'react-redux';
+
 const FollowUsers = ({navigation, route}) => {
   const [searchTxt, setSearchTxt] = useState('');
   const [users, setUsers] = useState([]);
@@ -30,7 +32,8 @@ const FollowUsers = ({navigation, route}) => {
   const [isLoading, setIsLoading] = useState(false)
 
   const id = route?.params?.id
-   
+  const userInfo = useSelector(state => state.UserInfoSlice.data);
+
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       if (state.isConnected !== null && state.isConnected === false) {
@@ -171,17 +174,25 @@ const FollowUsers = ({navigation, route}) => {
           <TouchableOpacity 
           onPress={()=> {
             if(route?.params?.type == 'following'){
+              if(userInfo.id === item?.follow_user_id?._id ){
+                navigation.navigate('ProfileDetail')
+            }else{
               navigation.navigate('UserProfileDetail', {
                 userId: item?.follow_user_id?._id ,
               })
             }
+            }
             if(route?.params?.type != 'following'){
+              if(userInfo.id === item?.user_id?._id ){
+                navigation.navigate('ProfileDetail')
+            }else{
             navigation.navigate('UserProfileDetail', {
             userId: item?.user_id?._id ,
-          }
-        )
+          })
+        }}
+
       }
-      }}>
+      }>
           <View
             style={{
               flexDirection: 'row',
@@ -262,7 +273,8 @@ const FollowUsers = ({navigation, route}) => {
                 </Text>
               </View>
             </View>
-
+             {userInfo.id !== item?.user_id?._id &&
+            <View style={{justifyContent:'center'}}>
             {item?.isFollowed == false ? (
               <View
                 style={{
@@ -313,6 +325,7 @@ const FollowUsers = ({navigation, route}) => {
                 </Text>
               </TouchableOpacity>
             )}
+          </View>}
           </View>
           </TouchableOpacity>
         );
@@ -350,11 +363,13 @@ const FollowUsers = ({navigation, route}) => {
                   alignItems: 'center',
                   padding: 6,
                 }}>
-                {item?.business_id?.certificate && (
+                {/* {item?.business_id?.certificate && ( */}
                   <Image
-                    source={{
+                    source={
+                     item?.business_id?.certificate ? { 
                       uri: item?.business_id?.certificate,
-                    }}
+                    } : ImageConstants.business_logo
+                  }
                     style={{
                       height: wp(50),
                       width: wp(50),
@@ -362,7 +377,7 @@ const FollowUsers = ({navigation, route}) => {
                       marginHorizontal: 10,
                     }}
                   />
-                )}
+                {/* )} */}
                 
 
                 <Text

@@ -151,7 +151,7 @@ const BusinessChildScreen = ({navigation, route}) => {
             numColumns={3}
           />
         </View>
-        <View style={{height: wp(80)}} />
+        {/* <View style={{height: wp(80)}} /> */}
       </SafeAreaView>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>

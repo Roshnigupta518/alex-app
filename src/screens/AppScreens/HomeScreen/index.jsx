@@ -332,12 +332,6 @@ const HomeScreen = ({ navigation, route }) => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   if (reelIndex == 0 && postArray?.length > 0) {
-  //     flashListRef.current.scrollToOffset({ animated: true, offset: 0 });
-  //   }
-  // }, [reelIndex]);
-
   useEffect(() => {
     if (reelIndex === 0 && postArray?.length > 0) {
       const timer = setTimeout(() => {

@@ -199,7 +199,7 @@ const AddBusinessScreen = ({ navigation, route }) => {
       data.append("latitude", state.lat);
       data.append("time_from", String(fromTime));
       data.append("time_to", String(toTime));
-      data.append("business_website", state.businessName);
+      data.append("business_website", state.website);
       data.append("instagram", state.instagram);
       data.append("twitter", state.twitter);
       data.append("tiktok", state.tiktok);

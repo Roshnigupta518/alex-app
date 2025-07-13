@@ -60,6 +60,7 @@ export const api = {
   notificationRead: '/api/v1/user/notifications/',
   getSavedPost: '/api/v1/user/get-saved-post',
   claimBusiness: '/api/v1/user/business-clame/',
+  unclaimBusiness : '/api/v1/user/business-unclame/',
   childBusiness: '/api/v1/user/get-sub-child-category-by-sub-category/',
   getChildBusinesses: '/api/v1/user/business-list-by-child/',
   getAllPlaces : '/api/v1/user/get_places_by_user/',

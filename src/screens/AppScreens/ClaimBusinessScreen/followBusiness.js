@@ -7,12 +7,15 @@ import BackHeader from "../../../components/BackHeader";
 import { getAllBusinessFollowerRequest } from "../../../services/Utills";
 import ImageConstants from "../../../constants/ImageConstants";
 import Toast from "../../../constants/Toast";
+import { useSelector } from "react-redux";
 
 const FollowBusiness = ({ navigation, route }) => {
     const [searchedUser, setSearchedUser] = useState([])
     const [users, setUsers] = useState([])
     const [searchTxt, setSearchTxt] = useState()
     const [isLoading, setIsLoading] = useState(false)
+
+    const userInfo = useSelector(state => state.UserInfoSlice.data);
 
     const id = route?.params?.id
 
@@ -54,9 +57,16 @@ const FollowBusiness = ({ navigation, route }) => {
     const _renderUserList = ({ item, index }) => {
         return (
             <TouchableOpacity style={st.card} 
-            onPress={()=> navigation.navigate('UserProfileDetail', {
-                userId: item?.user_id?._id ,
-              })} >
+            onPress={()=> {
+                if(userInfo.id === item?.user_id?._id ){
+                    navigation.navigate('ProfileDetail')
+                }else{
+                    navigation.navigate('UserProfileDetail', {
+                        userId: item?.user_id?._id,
+                    })
+                }
+               }
+              } >
                 <View style={st.cardContent}>
                     <View style={st.cardBar} />
                     <View style={st.internalCard}>

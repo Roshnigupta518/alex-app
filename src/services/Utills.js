@@ -254,6 +254,23 @@ export const claimBusinessRequest = async (id, data, token) => {
   });
 };
 
+export const unclaimedBusinessRequest = async (id, data, token) => {
+  return await new Promise((resolve, reject) => {
+    try {
+      HttpRequests.deleteAPI(api.unclaimBusiness + id)
+        .then(res => {
+          if (res?.data) resolve(res?.data);
+          else reject(res?.data);
+        })
+        .catch(err => {
+          reject(err?.response?.data);
+        });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 export const LikeDisLikeRequest = async (data, token) => {
   return await new Promise((resolve, reject) => {
     try {
