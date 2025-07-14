@@ -124,12 +124,11 @@ const BusinessUserListingScreen = ({ navigation, route }) => {
   };
 
   const _renderEventList = ({ item, index }) => {
-    console.log('item?.certificate', item?.certificate);
-
     return (
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate('BusinessDetailScreen', { data: item })
+          // navigation.navigate('BusinessDetailScreen', { data: item })
+          navigation.navigate('ClaimBusinessScreen', item)
         }
         activeOpacity={1}
         style={{

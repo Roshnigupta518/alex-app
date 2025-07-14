@@ -40,9 +40,15 @@ import Share from 'react-native-share';
 import { MakeFollowedBusinessRequest, unclaimedBusinessRequest } from '../../../services/Utills';
 
 const ClaimBusinessScreen = ({ navigation, route }) => {
-  const { place_id, name } = route?.params || {};
-   const follow = route?.params
-  console.log({followdata: follow })
+  // const { place_id, name } = route?.params || {};
+  //  const follow = route?.params
+  // console.log({followdata: follow })
+
+  const follow = route?.params || {};
+  const place_id = follow.place_id || follow._id;
+  // const place_id = follow.place_id
+  const name = follow.name || '';
+
 
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState(null);
@@ -472,14 +478,23 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
                   </TouchableOpacity>
                 </View>
                 <View style={{ width: '65%' }}>
+                  <View style={[st.row]}>
                   <Text numberOfLines={2} adjustsFontSizeToFit
                     style={{
                       fontFamily: fonts.bold,
                       fontSize: wp(16),
                       color: colors.black,
                     }}>
-                    {name}
+                    {data?.name}
                   </Text>
+                  {/* <TouchableOpacity 
+                   style={st.editSty}
+                   onPress={()=>
+                    navigation.navigate('')
+                   } >
+                  <Image source={ImageConstants.edit} style={st.imgsty} />
+                  </TouchableOpacity> */}
+                  </View>
 
                   <View style={{ flexDirection: 'row' }}>
                     <View style={{ width: '50%' }}>
@@ -518,7 +533,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
                    {data?.address&&
                   <View style={styles.content}>
                     <Image source={ImageConstants.maps} style={st.minimgsty} />
-                    <Text style={[styles.txtstyle, { color: colors.primaryColor }]}
+                    <Text style={[styles.txtstyle, { color: colors.primaryColor, marginRight:10 }]}
                       onPress={() => redirectOnMap(data?.latitude, data?.longitude, data?.address)}
                     >{data?.address}</Text>
                   </View>}

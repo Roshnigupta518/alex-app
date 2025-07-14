@@ -39,15 +39,11 @@ export const RegexType = {
   },
 
   fullname: {
-    // regex: /^[A-Za-z\s]{3,150}$/,
-    // emptyError: 'Please enter your name',
-    // typeError: 'Please enter valid name',
-
-    regex: /^[A-Za-z]+(?: [A-Za-z]+)*$/,
+    regex: /^[\p{L}&+.,'©®™\-:() ]{3,50}$/u,
     emptyError: 'Please enter your name',
-    typeError: 'Name must only contain letters and a single space between words',
+    typeError: 'Name can include letters and common business symbols, but not numbers',
   },
-
+  
   anonymous_name: {
     // regex: /^[A-Za-z\s]{3,150}$/,
     // emptyError: 'Please enter screen name',

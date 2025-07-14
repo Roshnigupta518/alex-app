@@ -333,7 +333,7 @@ const FollowUsers = ({navigation, route}) => {
         return(
           <TouchableOpacity onPress={()=> {
             navigation.navigate('ClaimBusinessScreen', 
-              {place_id:item?.business_id?._id, name:item?.business_id?.tem?.business_id?._id});
+              {place_id:item?.business_id?._id, name: item?.business_id?.name});
             }}>
              <View
             style={{

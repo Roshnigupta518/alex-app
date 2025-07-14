@@ -95,7 +95,7 @@ const AddBusinessScreen = ({ navigation, route }) => {
   useEffect(() => {
     if (route?.params?.isEdit) {
       let { data } = route?.params;
-
+       console.log('isEdit', data?.socialLinks)
       setState(prevState => ({
         ...prevState,
         businessName: data?.name,
@@ -107,56 +107,81 @@ const AddBusinessScreen = ({ navigation, route }) => {
         city: data?.city,
         state: data?.state,
         country: data?.country,
+        website: data?.business_website,
+        e_commerce: data?.ecommerce_website,
+
+        facebook: data?.socialLinks?.facebook || '',
+  twitter: data?.socialLinks?.twitter || '',
+  instagram: data?.socialLinks?.instagram || '',
+  tiktok: data?.socialLinks?.tiktok || '',
+  youtube: data?.socialLinks?.youtube || '',
       }));
+      if (data?.time_from) setFromTime(new Date(data?.time_from));
+      if (data?.time_to) setToTime(new Date(data?.time_to));
+    
     }
   }, []);
 
   const UpdateBusiness = () => {
+    console.log({state})
     if (
       !BusinessValidation(
-        state.businessName,
+        state.businessName?.trim(),
         state.address,
         state.lat,
         state.lng,
         state.phn,
-        state.desc,
-        // 'skip-image',
+        state.desc?.trim(),
+        // businessImage,
         'skip-image',
         'skip-image',
+        state.twitter,
+        state.instagram,
+        state.facebook,
+        state.tiktok,
+        state.youtube,
+        state.e_commerce,
+        state.website,
+        fromTime,
+        toTime,
       )
     ) {
       return;
     } else {
       setIsLoading(true);
       let data = new FormData();
-      data.append('name', state.businessName);
       data.append('phone_no', '+' + state.phn?.replace('+', ''));
       data.append('details', state.desc);
-      data.append('address', state.address);
       data.append('category_id', route.params?.data?.category_id);
       data.append('sub_category_id', route?.params?.data?.sub_category_id);
       data.append('longitude', state.lng);
       data.append('latitude', state.lat);
-      data.append('city', 'xx');
-      data.append('state', 'xx');
-      data.append('country', 'xx');
-      // data.append('country', state.country);
-      // data.append('state', state.state);
-      // data.append('city', state.city);
-
+      data.append("time_from", fromTime ? String(fromTime): null);
+      data.append("time_to", toTime ? String(toTime) : null);
+      data.append("business_website", state.website);
+      data.append("instagram", state.instagram);
+      data.append("twitter", state.twitter);
+      data.append("tiktok", state.tiktok);
+      data.append("facebook", state.facebook);
+      data.append("youtube", state.youtube);
+      data.append("ecommerce_website", state.e_commerce);
+      data.append("name", state.businessName);
+      data.append("address", state.address);
+     
       if (bannerImage != null) {
         data.append('banner', bannerImage);
       }
-      if (businessImage != null) {
-        data.append('image', businessImage);
-      }
+      // if (businessImage != null) {
+      //   data.append('image', businessImage);
+      // }
       if (certificateImage != null) {
         data.append('certificate', certificateImage);
       }
 
       UpdateBusinessRequest(route?.params?.data?._id, data)
         .then(res => {
-          navigation.goBack();
+          // navigation.goBack();
+          navigation.navigate('BusinessUserListingScreen',{ refresh: true });
           Toast.success('Business', res?.message);
         })
         .catch(err => {
@@ -197,8 +222,8 @@ const AddBusinessScreen = ({ navigation, route }) => {
 
       data.append("longitude", state.lng);
       data.append("latitude", state.lat);
-      data.append("time_from", String(fromTime));
-      data.append("time_to", String(toTime));
+      data.append("time_from", fromTime ? String(fromTime): null);
+      data.append("time_to", toTime ? String(toTime) : null);
       data.append("business_website", state.website);
       data.append("instagram", state.instagram);
       data.append("twitter", state.twitter);

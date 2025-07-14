@@ -12,6 +12,13 @@ content:{
 alignC:{
 alignItems:'center'
 },
+ml_10:{
+  marginLeft:10
+},
+editSty:{
+ marginLeft:5,
+ marginTop:5
+},
 card:{
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -67,6 +74,9 @@ card:{
   row:{
     flexDirection:'row'
   },
+  justify_c:{
+   justifyContent:'center'
+  }, 
   wdh50:{
     width:'50%'
   },

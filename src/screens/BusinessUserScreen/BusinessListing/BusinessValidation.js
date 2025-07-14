@@ -72,8 +72,10 @@ const BusinessValidation = (
 
   if (businessName?.length == 0) {
     Toast.error('Business', 'Please enter Business name');
+    return false;
   } else if (businessNameErr?.length > 0) {
     Toast.error('Business', businessNameErr);
+    return false;
   } else if (address?.length == 0) {
     Toast.error('Business', 'Please enter your Business location');
     return false;
@@ -98,14 +100,20 @@ const BusinessValidation = (
     Toast.error('Business', 'Please Upload Buisness Logo.');
     return false;
   } 
+  
   for (let key in optionalFields) {
-    const value = optionalFields[key];
+    const raw = optionalFields[key];
+    const value = typeof raw === 'string' ? raw.trim() : '';
     const validator = optionalFieldsValidation[key];
+  
+    console.log({ key, value, validator }); // ✅ Debug per field
+  
     if (value && validator && !validator.regex.test(value)) {
       Toast.error('Business', validator.typeError);
       return false;
     }
   }
+  
 
  // ✅ Only validate if at least one value is entered
 if (fromTime || toTime) {
