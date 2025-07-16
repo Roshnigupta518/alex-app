@@ -16,7 +16,7 @@ import ImageConstants from '../../../constants/ImageConstants';
 import {getAllUsersRequest} from '../../../services/Utills';
 import Toast from '../../../constants/Toast';
 import NotFoundAnime from '../../../components/NotFoundAnime';
-
+import st from '../../../global/styles';
 const SearchScreen = ({navigation}) => {
   const userInfo = useSelector(state => state.UserInfoSlice.data);
   const [searchTxt, setSearchTxt] = useState('');
@@ -29,7 +29,7 @@ const SearchScreen = ({navigation}) => {
     getAllUsersRequest()
       .then(res => {
         setUsers(res?.result);
-        setSearchedUser(res?.result);
+        // setSearchedUser(res?.result);
       })
       .catch(err => {
         Toast.error('Users', err?.message);
@@ -37,14 +37,54 @@ const SearchScreen = ({navigation}) => {
       .finally(() => setIsLoading(false));
   };
 
+  // const searchUser = txt => {
+  //   let users_res = users?.filter(item => item?.anonymous_name?.includes(txt));
+  //   setSearchedUser(txt?.length < 1 ? [...users] : [...users_res]);
+  // };
+
   const searchUser = txt => {
-    let users_res = users?.filter(item => item?.anonymous_name?.includes(txt));
-    setSearchedUser(txt?.length < 1 ? [...users] : [...users_res]);
+    if (txt.length < 3) {
+      setSearchedUser([]); // show nothing until 3 chars
+      return;
+    }
+  
+    const filteredUsers = users?.filter(item =>
+      item?.anonymous_name?.toLowerCase()?.includes(txt.toLowerCase()),
+    );
+  
+    setSearchedUser(filteredUsers);
   };
+  
 
   useEffect(() => {
     getAllUsers();
   }, []);
+
+  const ListEmptyComponent = () => {
+    if (isLoading) {
+      return <NotFoundAnime isLoading={isLoading} />;
+    }
+    if (searchTxt.length >= 3 && searchedUser.length === 0) {
+    return(
+      <NotFoundAnime isLoading={isLoading} />
+    )
+  }
+
+  if (searchTxt.length > 0 && searchTxt.length < 3) {
+    return (
+      <Text
+        style={{
+          color: colors.gray,
+          fontFamily: fonts.regular,
+          fontSize: wp(12),
+          textAlign: 'center',
+          marginTop: wp(40),
+        }}>
+        Please type at least 3 characters to search
+      </Text>
+    );
+  }
+}
 
   return (
     <SafeAreaView
@@ -73,7 +113,8 @@ const SearchScreen = ({navigation}) => {
           }}>
           <FlatList
             data={searchedUser}
-            ListEmptyComponent={<NotFoundAnime isLoading={isLoading} />}
+            // ListEmptyComponent={<NotFoundAnime isLoading={isLoading} />}
+            ListEmptyComponent={ListEmptyComponent}
             renderItem={({item, index}) => {
               return (
                 <TouchableOpacity

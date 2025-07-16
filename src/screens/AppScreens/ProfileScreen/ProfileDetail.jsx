@@ -37,7 +37,7 @@ const ProfileDetail = ({ navigation, route }) => {
   const [postData, setPostData] = useState([]);
   const [isInternetConnected, setIsInternetConnected] = useState(true);
  
-  const [activeTab, setActiveTab] = useState('photo');
+  const [activeTab, setActiveTab] = useState('video');
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {

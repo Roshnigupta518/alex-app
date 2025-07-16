@@ -62,7 +62,7 @@ const DeleteBusinessSheet = forwardRef(
                 color: colors.black,
                 textAlign: 'center',
               }}>
-              Are you sure you want to delete this business??
+              Are you sure you want to delete this business?
             </Text>
           </View>
 

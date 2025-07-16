@@ -39,7 +39,7 @@ const UserProfileDetail = ({ navigation, route }) => {
   const [isFollowLoading, setIsFollowLoading] = useState(true);
   const [isFollow, setIsFollow] = useState(false);
   const [postData, setPostData] = useState([]);
-  const [activeTab, setActiveTab] = useState('photo');
+  const [activeTab, setActiveTab] = useState('video');
   const [isLoading, setIsLoading] = useState(false)
 
   const userId = route?.params?.userId

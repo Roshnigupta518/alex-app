@@ -116,8 +116,15 @@ const AddBusinessScreen = ({ navigation, route }) => {
   tiktok: data?.socialLinks?.tiktok || '',
   youtube: data?.socialLinks?.youtube || '',
       }));
-      if (data?.time_from) setFromTime(new Date(data?.time_from));
-      if (data?.time_to) setToTime(new Date(data?.time_to));
+      // if (data?.time_from) setFromTime(new Date(data?.time_from));
+      // if (data?.time_to) setToTime(new Date(data?.time_to));
+
+      if (data?.time_from && !isNaN(new Date(data.time_from).getTime())) {
+        setFromTime(new Date(data.time_from));
+      }
+      if (data?.time_to && !isNaN(new Date(data.time_to).getTime())) {
+        setToTime(new Date(data.time_to));
+      }
     
     }
   }, []);
@@ -158,6 +165,8 @@ const AddBusinessScreen = ({ navigation, route }) => {
       data.append('latitude', state.lat);
       data.append("time_from", fromTime ? String(fromTime): null);
       data.append("time_to", toTime ? String(toTime) : null);
+      // data.append("time_from", fromTime);
+      // data.append("time_to", toTime);
       data.append("business_website", state.website);
       data.append("instagram", state.instagram);
       data.append("twitter", state.twitter);

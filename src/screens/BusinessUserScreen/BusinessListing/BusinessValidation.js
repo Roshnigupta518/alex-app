@@ -57,7 +57,7 @@ const BusinessValidation = (
   fromTime= '',
   toTime= '',
 ) => {
-  var businessNameErr = checkValidation('fullname', businessName);
+  var businessNameErr = checkValidation('businessName', businessName);
   var phoneErr = checkValidation('mobileno', phone);
 
   const optionalFields = {
@@ -104,11 +104,13 @@ const BusinessValidation = (
   for (let key in optionalFields) {
     const raw = optionalFields[key];
     const value = typeof raw === 'string' ? raw.trim() : '';
+  
     const validator = optionalFieldsValidation[key];
   
-    console.log({ key, value, validator }); // ✅ Debug per field
+    console.log({ key, value, validator });
   
-    if (value && validator && !validator.regex.test(value)) {
+    // ✅ Only validate if value is non-empty
+    if (value.length > 0 && validator && !validator.regex.test(value)) {
       Toast.error('Business', validator.typeError);
       return false;
     }

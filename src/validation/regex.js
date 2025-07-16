@@ -39,9 +39,15 @@ export const RegexType = {
   },
 
   fullname: {
-    regex: /^[\p{L}&+.,'©®™\-:() ]{3,50}$/u,
+    regex: /^[A-Za-z]+(?: [A-Za-z]+)*$/,
     emptyError: 'Please enter your name',
-    typeError: 'Name can include letters and common business symbols, but not numbers',
+    typeError: 'Name must only contain letters and a single space between words',
+  },
+
+  businessName: {
+    regex: /^.{3,150}$/,  // Match any character, length between 3 and 150
+    emptyError: 'Please enter your business name',
+    typeError: 'Business name must be between 3 and 150 characters',
   },
   
   anonymous_name: {

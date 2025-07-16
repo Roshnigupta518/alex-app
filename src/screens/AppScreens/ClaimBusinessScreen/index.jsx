@@ -48,7 +48,8 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
   const place_id = follow.place_id || follow._id;
   // const place_id = follow.place_id
   const name = follow.name || '';
-
+   
+  console.log({follow})
 
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState(null);
@@ -56,7 +57,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
   const [claimLoading, setClaimLoading] = useState(false);
   const [mediaData, setMediaData] = useState([]);
   const [isInternetConnected, setIsInternetConnected] = useState(true);
-  const [activeTab, setActiveTab] = useState('photo');
+  const [activeTab, setActiveTab] = useState('video');
   const [visible, setVisible] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
   const [isFollowLoading, setIsFollowLoading] = useState(false);
@@ -291,7 +292,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
 
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
-  }, [navigation]);
+  }, [navigation, follow]);
 
   const isLogoAvailable = !!data?.certificate;
 
@@ -485,7 +486,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
                       fontSize: wp(16),
                       color: colors.black,
                     }}>
-                    {data?.name}
+                    {data?.name || name} 
                   </Text>
                   {/* <TouchableOpacity 
                    style={st.editSty}
