@@ -399,6 +399,10 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
     });
   };
 
+  const isValidTime = (val) =>
+    val && val !== 'null' && !isNaN(new Date(val).getTime());
+  
+
   return (
     <>
       <View
@@ -539,7 +543,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
                     >{data?.address}</Text>
                   </View>}
                   
-                  {(data?.time_from || data?.time_to) && (
+                  {isValidTime(data?.time_from) && isValidTime(data?.time_to) && (
                     <View style={styles.content}>
                       <Image source={ImageConstants.clock} style={st.minimgsty} />
                       <Text style={styles.txtstyle}>
