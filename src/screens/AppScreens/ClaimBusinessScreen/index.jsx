@@ -40,14 +40,10 @@ import Share from 'react-native-share';
 import { MakeFollowedBusinessRequest, unclaimedBusinessRequest } from '../../../services/Utills';
 
 const ClaimBusinessScreen = ({ navigation, route }) => {
-  // const { place_id, name } = route?.params || {};
-  //  const follow = route?.params
-  // console.log({followdata: follow })
-
   const follow = route?.params || {};
   const place_id = follow.place_id || follow._id;
-  // const place_id = follow.place_id
   const name = follow.name || '';
+  // const screen = route?.params?.screen
    
   console.log({follow})
 
@@ -411,7 +407,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
           backgroundColor: colors.white,
         }}>
       
-          <ScrollView
+          <ScrollView 
             contentContainerStyle={{ flexGrow: 1 }}>
               {(!isLoading && data) ? (
               <View>
@@ -566,7 +562,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
 
 
                 </View>
-
+                 {follow?.screen === 'Home' ?
                 <View style={styles.socialContent}>
                   <TouchableOpacity style={styles.button} onPress={()=>makeFollowBusiness()} >
                     {isFollowLoading ? (
@@ -605,6 +601,14 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
                     <Text style={styles.btntxt}>Order now</Text>
                   </TouchableOpacity>}
                 </View>
+                :(
+                  <View style={styles.socialContent}>
+                    <TouchableOpacity style={styles.button}
+                    onPress={() => alert('post add here')} >
+                    <Text style={styles.btntxt}>Add post</Text>
+                  </TouchableOpacity>
+                    </View>
+                )}
 
 
               </View>

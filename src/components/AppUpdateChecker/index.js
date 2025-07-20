@@ -1,32 +1,41 @@
-import React, { useEffect } from 'react';
-import { Alert, Linking } from 'react-native';
+import { useEffect } from 'react';
+import { Platform, Alert, Linking } from 'react-native';
+import InAppUpdates from 'react-native-in-app-updates';
 import VersionCheck from 'react-native-version-check';
 
 const AppUpdateChecker = () => {
   useEffect(() => {
-    const checkVersion = async () => {
-      try {
-        const updateNeeded = await VersionCheck.needUpdate();
-        console.log({updateNeeded})
-        if (updateNeeded?.isNeeded) {
+    const checkForUpdate = async () => {
+      if (Platform.OS === 'android') {
+        const inAppUpdates = new InAppUpdates(true); // true enables debug logs
+
+        const result = await inAppUpdates.checkNeedsUpdate();
+
+        if (result.shouldUpdate) {
+          inAppUpdates.startUpdate({
+            updateType: InAppUpdates.UPDATE_TYPE.IMMEDIATE, // or FLEXIBLE
+          });
+        }
+      } else if (Platform.OS === 'ios') {
+        const updateInfo = await VersionCheck.needUpdate();
+
+        if (updateInfo?.isNeeded) {
           Alert.alert(
             'Update Available',
             'A new version of the app is available. Please update to continue.',
             [
               {
-                text: 'Update Now',
-                onPress: () => Linking.openURL(updateNeeded.storeUrl),
+                text: 'Update',
+                onPress: () => Linking.openURL(updateInfo.storeUrl),
               },
             ],
             { cancelable: false },
           );
         }
-      } catch (error) {
-        console.log('Version check failed:', error);
       }
     };
 
-    checkVersion();
+    checkForUpdate();
   }, []);
 
   return null;

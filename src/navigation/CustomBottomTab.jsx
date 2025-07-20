@@ -175,7 +175,6 @@ const CustomBottomTab = ({state, descriptors, navigation}) => {
       setUserList([...self_data]);
     }
   };
-  console.log({Read, chatRead})
   return (
     <View style={styles.mainContainer}>
       {state.routes.map((route, index) => {

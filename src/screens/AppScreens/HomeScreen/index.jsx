@@ -53,7 +53,7 @@ const HomeScreen = ({ navigation, route }) => {
   // const screenHeight = (HEIGHT-tabBarHeight) 
   const screenHeight = Platform .OS == 'ios' ? HEIGHT : HEIGHT-tabBarHeight
 
-  console.log({tabBarHeight, screenHeight})
+  // console.log({tabBarHeight, screenHeight})
 
   const prevNearBy = useRef(nearByType);
   const flashListRef = useRef();
@@ -62,6 +62,7 @@ const HomeScreen = ({ navigation, route }) => {
   const actionsheetRef = useRef();
   const followingUserRef = useRef();
   const shareSheetRef = useRef();
+  const prevNearByTypeRef = useRef(nearByType);
   const menuSheetRef = useRef();
   const reportOptionSheet = useRef();
   const [isOnFocusItem, setIsOnFocusItem] = useState(true);
@@ -89,7 +90,7 @@ const HomeScreen = ({ navigation, route }) => {
   // const { city, location, error } = useLocation()
   const { location, city, error, permissionGranted, refreshLocation } = useLocation();
 
-  console.log({ location, city, error, permissionGranted })
+  // console.log({ location, city, error, permissionGranted })
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -136,7 +137,7 @@ const HomeScreen = ({ navigation, route }) => {
   }, [paramsValues, selectedCityData, city, refreshLocation]);
 
   const getAllPosts = () => {
-    console.log({ selectedCityData, paramsValues, currentCity: city });
+    // console.log({ selectedCityData, paramsValues, currentCity: city });
   
     if (selectedCityData?.locationType == 'current') {
       if (city == null && error == null) {
@@ -208,20 +209,21 @@ const HomeScreen = ({ navigation, route }) => {
   };
   
 
-  const _onViewableItemsChanged = ({ viewableItems }) => {
+  const _onViewableItemsChanged = useCallback(({ viewableItems }) => {
     if (viewableItems[0]) {
-      setCurrentItemIndex(viewableItems[0]?.index);
-      dispatch(ReelIndexAction(viewableItems[0]?.index));
-      if (
-        pagination.skip < pagination.totalRecords &&
-        postArray?.length - 2 <= viewableItems[0]?.index &&
-        !pagination.isLoading
-      ) {
+      const index = viewableItems[0]?.index;
+      setCurrentItemIndex(index);
+      dispatch(ReelIndexAction(index));
+      console.log({currentItemIndex})
+      // Load more if needed
+      if (pagination.skip < pagination.totalRecords && 
+          postArray?.length - 2 <= index && 
+          !pagination.isLoading) {
         pagination.skip += pagination.limit;
         getAllPosts();
       }
     }
-  };
+  }, [postArray.length, pagination]);
 
   const _viewabilityConfig = {
     itemVisiblePercentThreshold: 50,
@@ -237,24 +239,48 @@ const HomeScreen = ({ navigation, route }) => {
   }, [nearByType]);
 
   useEffect(() => {
-    // setIsLoading(true)
     if (!isFocused) {
       setIsOnFocusItem(false);
-    } else {
-      if ((error || !city) && selectedCityData?.locationType == 'current') {
-        console.log('Skipping location-based logic because of error or missing city.');
-        setIsLoading(false);
-        return;
-      }
-      if (route?.params?.shouldScrollTopReel || prevNearBy.current !== nearByType) {
-        setPostArray([]);
-        onRefresh();
-      } else if (postArray?.length === 0) {
-        getAllPosts();
-      }
-      setIsOnFocusItem(true);
+      return;
     }
+  
+    if ((error || !city) && selectedCityData?.locationType === 'current') {
+      setIsLoading(false);
+      return;
+    }
+  
+    // ✅ Only trigger refresh if:
+    // 1. shouldScrollTopReel is set
+    // 2. nearByType changed (compared to ref)
+    const nearByChanged =
+      JSON.stringify(prevNearByTypeRef.current) !== JSON.stringify(nearByType);
+  
+    if (route?.params?.shouldScrollTopReel || nearByChanged) {
+      setPostArray([]);
+      onRefresh();
+  
+      // ✅ Update prevNearByType only after refresh
+      prevNearByTypeRef.current = nearByType;
+  
+      // ✅ Clear shouldScrollTopReel param to avoid repeated refresh
+      if (route?.params?.shouldScrollTopReel) {
+        navigation.setParams({ shouldScrollTopReel: false });
+      }
+    } else if (postArray?.length === 0) {
+      getAllPosts();
+    } else {
+      // ✅ No refresh — scroll to saved index
+      setTimeout(() => {
+        flashListRef?.current?.scrollToIndex({
+          index: currentItemIndex,
+          animated: false,
+        });
+      }, 100);
+    }
+  
+    setIsOnFocusItem(true);
   }, [isFocused, city, selectedCityData, error]);
+  
 
   // useEffect(() => {
   //   setIsLoading(true);
@@ -428,7 +454,7 @@ const shouldShowEmptyMessage =
                 data={postArray}
                 renderItem={_renderReels}
                 showsVerticalScrollIndicator={false}
-                initialScrollIndex={0}
+                initialScrollIndex={currentItemIndex}
                 disableIntervalMomentum
                 onViewableItemsChanged={_onViewableItemsChanged}
                 viewabilityConfig={_viewabilityConfig}

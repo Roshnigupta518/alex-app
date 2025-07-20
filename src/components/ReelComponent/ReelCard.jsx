@@ -304,7 +304,10 @@ const ReelCard = ({
             return (
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('ClaimBusinessScreen', item);
+                  navigation.navigate('ClaimBusinessScreen', {
+                    ...item,
+                    screen: screen,
+                  });
                 }}>
                 <Text
                   style={{
