@@ -176,7 +176,10 @@ const ReelCard = ({
                   }
                 }}>
                 <Text numberOfLines={1} style={styles.nameTxtStyle}>
-                  {data?.postData?.user_id?.anonymous_name}
+                  {data.postData.added_from == '1' ? 
+                  data?.postData?.user_id?.anonymous_name : 
+                  data?.postData?.tagBussiness?.length>0 ? 
+                  data?.postData?.tagBussiness[0]?.name : ''}
                 </Text>
               </TouchableOpacity>
               <Text numberOfLines={1} style={styles.locationTxtStyle}>

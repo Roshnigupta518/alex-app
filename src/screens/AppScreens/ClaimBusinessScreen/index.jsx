@@ -604,7 +604,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
                 :(
                   <View style={styles.socialContent}>
                     <TouchableOpacity style={styles.button}
-                    onPress={() => alert('post add here')} >
+                    onPress={() => navigation.navigate('PostMediaScreen',{item:data})} >
                     <Text style={styles.btntxt}>Add post</Text>
                   </TouchableOpacity>
                     </View>

@@ -75,7 +75,7 @@ const BusinessListingScreen = ({navigation, route}) => {
         {route?.params?.shouldGoBack ? (
           <BackHeader />
         ) : (
-          <NotificationSearchHeader />
+          <NotificationSearchHeader isBusiness={true} />
         )}
 
         <View

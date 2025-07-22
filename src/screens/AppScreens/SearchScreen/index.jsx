@@ -13,16 +13,20 @@ import BackHeader from '../../../components/BackHeader';
 import SearchInput from '../../../components/SearchInput';
 import {colors, fonts, wp} from '../../../constants';
 import ImageConstants from '../../../constants/ImageConstants';
-import {getAllUsersRequest} from '../../../services/Utills';
+import {getAllUsersRequest, getAllBussinessRequest} from '../../../services/Utills';
 import Toast from '../../../constants/Toast';
 import NotFoundAnime from '../../../components/NotFoundAnime';
-import st from '../../../global/styles';
-const SearchScreen = ({navigation}) => {
+
+const SearchScreen = ({navigation, route}) => {
   const userInfo = useSelector(state => state.UserInfoSlice.data);
   const [searchTxt, setSearchTxt] = useState('');
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchedUser, setSearchedUser] = useState([]);
+
+  const isBusiness = route?.params?.isBusiness
+
+  console.log({isBusiness})
 
   const getAllUsers = () => {
     setIsLoading(true);
@@ -37,10 +41,19 @@ const SearchScreen = ({navigation}) => {
       .finally(() => setIsLoading(false));
   };
 
-  // const searchUser = txt => {
-  //   let users_res = users?.filter(item => item?.anonymous_name?.includes(txt));
-  //   setSearchedUser(txt?.length < 1 ? [...users] : [...users_res]);
-  // };
+  const getAllBusiness = (search) => {
+    setIsLoading(true);
+    getAllBussinessRequest(search)
+      .then(res => {
+        // setUsers(res?.result);
+        setSearchedUser(res?.result);
+        // setSearchedUser(res?.result);
+      })
+      .catch(err => {
+        Toast.error('Users', err?.message);
+      })
+      .finally(() => setIsLoading(false));
+  };
 
   const searchUser = txt => {
     if (txt.length < 3) {
@@ -51,13 +64,20 @@ const SearchScreen = ({navigation}) => {
     const filteredUsers = users?.filter(item =>
       item?.anonymous_name?.toLowerCase()?.includes(txt.toLowerCase()),
     );
-  
-    setSearchedUser(filteredUsers);
+     
+    if(isBusiness){
+      getAllBusiness(txt)
+     }else{
+     setSearchedUser(filteredUsers);
+      }
   };
   
-
   useEffect(() => {
+    if(!isBusiness){
     getAllUsers();
+  }else{
+    setIsLoading(false)
+  }
   }, []);
 
   const ListEmptyComponent = () => {
@@ -84,7 +104,7 @@ const SearchScreen = ({navigation}) => {
       </Text>
     );
   }
-}
+  }
 
   return (
     <SafeAreaView
@@ -139,7 +159,7 @@ const SearchScreen = ({navigation}) => {
                       fontSize: wp(16),
                       color: colors.white,
                     }}>
-                    {item?.anonymous_name}
+                    {isBusiness ? item.name : item?.anonymous_name}
                   </Text>
 
                   <Image

@@ -11,7 +11,7 @@ import {colors, wp} from '../constants';
 import ImageConstants from '../constants/ImageConstants';
 import {useNavigation} from '@react-navigation/native';
 
-const NotificationSearchHeader = ({}) => {
+const NotificationSearchHeader = ({isBusiness}) => {
   const navigation = useNavigation();
 
   return (
@@ -24,7 +24,7 @@ const NotificationSearchHeader = ({}) => {
         marginTop: Platform.OS == 'android' ? wp(20) : 0,
       }}>
       <TouchableOpacity
-        onPress={() => navigation.navigate('SearchScreen')}
+        onPress={() => navigation.navigate('SearchScreen',{isBusiness: isBusiness})}
         style={{
           backgroundColor: colors.black,
           padding: wp(10),

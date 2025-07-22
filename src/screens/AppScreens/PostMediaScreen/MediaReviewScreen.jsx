@@ -30,6 +30,8 @@ const MediaReviewScreen = ({navigation, route}) => {
   const tagPeopleList = useSelector(state => state.TagPeopleSlice?.data);
   const tagBusinessList = useSelector(state => state.TagBusinessSlice?.data);
   const AddAddressValues = useSelector(state => state.AddAddressSlice?.data);
+  
+  const businessItem = route?.params?.businessItem
 
   const video = useRef(null);
   const [apiCalledCount, setApiCalledCount] = useState({
@@ -49,6 +51,7 @@ const MediaReviewScreen = ({navigation, route}) => {
     place_id: '',
   });
   const [isInternetConnected, setIsInternetConnected] = useState(true);
+  
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       if (state.isConnected !== null && state.isConnected === false) {
@@ -103,6 +106,7 @@ const MediaReviewScreen = ({navigation, route}) => {
       let formData = new FormData();
       formData.append('type', route?.params?.media_type == 'photo' ? '1' : '2');
       formData.append('caption', caption);
+      formData.append('added_from', businessItem ? "2" : "1");
       formData.append('post', route?.params?.media);
       if (videoThumbnail != null) {
         formData.append('post_thumbnail', videoThumbnail);
@@ -199,18 +203,18 @@ const MediaReviewScreen = ({navigation, route}) => {
   }, [tagPeopleList]);
 
   useEffect(() => {
-    let id = tagBusinessList?._id || tagBusinessList?.place_id;
+    let id = tagBusinessList?._id || tagBusinessList?.place_id || businessItem?.place_id || businessItem?._id;
     let location =
-      tagBusinessList?.address || tagBusinessList?.formatted_address;
+      tagBusinessList?.address || tagBusinessList?.formatted_address || businessItem?.address;
     let lat =
-      tagBusinessList?.latitude || tagBusinessList?.geometry?.location?.lat;
+      tagBusinessList?.latitude || tagBusinessList?.geometry?.location?.lat || businessItem?.latitude;
     let lng =
-      tagBusinessList?.longitude || tagBusinessList?.geometry?.location?.lng;
+      tagBusinessList?.longitude || tagBusinessList?.geometry?.location?.lng || businessItem?.longitude;
 
     setLocationState(prevState => ({
       ...prevState,
       place_id: id,
-      name: tagBusinessList?.name,
+      name: tagBusinessList?.name || businessItem?.name,
     }));
 
     dispatch(
@@ -222,24 +226,28 @@ const MediaReviewScreen = ({navigation, route}) => {
         placeId: id,
       }),
     );
-  }, [tagBusinessList]);
+  }, [tagBusinessList, businessItem]);
 
   useEffect(() => {
-    if (tagBusinessList != null) {
+    if (tagBusinessList != null || businessItem || AddAddressValues) {
       setState(prevState => ({
         ...prevState,
-        address: tagBusinessList?.address,
-        lng: tagBusinessList?.longitude,
-        lat: tagBusinessList?.latitude,
+        address: tagBusinessList?.address  || AddAddressValues?.address || businessItem?.address,
+        lng: tagBusinessList?.longitude || AddAddressValues?.longitude || businessItem?.longitude,
+        lat: tagBusinessList?.latitude || AddAddressValues?.latitude || businessItem?.latitude,
       }));
     }
-  }, [tagBusinessList]);
+  }, [tagBusinessList, businessItem, AddAddressValues]);
 
   useEffect(() => {
     if (route?.params?.media_type != 'photo') {
       generateThumbnail();
     }
   }, []);
+
+  useEffect(()=>{
+  console.log({state, locationState, AddAddressValues})
+  },[state, locationState, AddAddressValues])
 
   return (
     <>
@@ -305,7 +313,8 @@ const MediaReviewScreen = ({navigation, route}) => {
             </TouchableOpacity>
 
             {/* Tag Business */}
-            <TouchableOpacity
+            <TouchableOpacity 
+              disabled={businessItem? true : false}
               onPress={() => navigation.navigate('TagBusinessScreen')}
               style={{marginTop: wp(20)}}>
               <Text style={styles.inputTitleStyle}>Add Business</Text>
@@ -318,7 +327,8 @@ const MediaReviewScreen = ({navigation, route}) => {
                       fontSize: wp(13),
                       color: colors.black,
                     }}>
-                    {tagBusinessList?.name}
+                    {/* {tagBusinessList?.name} */}
+                    {locationState?.name}
                   </Text>
                 </View>
                 <Image
@@ -393,7 +403,8 @@ const MediaReviewScreen = ({navigation, route}) => {
             </View> */}
               <Text style={styles.inputTitleStyle}>Add Location</Text>
 
-              <TouchableOpacity
+              <TouchableOpacity 
+              disabled={businessItem ? true : false}
                 onPress={() => navigation.navigate('GetAddress')}
                 style={styles.inputParentView}>
                 <View style={{flex: 1}}>
@@ -403,7 +414,8 @@ const MediaReviewScreen = ({navigation, route}) => {
                       fontSize: wp(13),
                       color: colors.black,
                     }}>
-                    {AddAddressValues?.address}
+                    {/* {AddAddressValues?.address} */}
+                    {state?.address}
                   </Text>
                 </View>
                 <Image

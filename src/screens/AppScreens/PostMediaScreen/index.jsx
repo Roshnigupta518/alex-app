@@ -17,11 +17,15 @@ import {useDispatch} from 'react-redux';
 import {tagPeopleAction} from '../../../redux/Slices/TagPeopleSlice';
 import {tagBusinessAction} from '../../../redux/Slices/TagBusinessSlice';
 
-const PostMediaScreen = ({navigation}) => {
+const PostMediaScreen = ({navigation, route}) => {
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const mediaRef = useRef();
   const [mediaPicker, setMediaPicker] = useState('photo');
+
+  const businessItem = route?.params?.item
+
+  // console.log({businessItem})
 
   const requestCameraPermission = async () => {
     try {
@@ -104,6 +108,7 @@ const PostMediaScreen = ({navigation}) => {
           navigation.navigate('MediaReviewScreen', {
             media: res,
             media_type: mediaPicker,
+            businessItem: businessItem
           })
         }
       />
