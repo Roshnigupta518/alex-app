@@ -562,7 +562,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
 
 
                 </View>
-                 {follow?.screen === 'Home' ?
+                 {follow?.fromListing != true ?
                 <View style={styles.socialContent}>
                   <TouchableOpacity style={styles.button} onPress={()=>makeFollowBusiness()} >
                     {isFollowLoading ? (

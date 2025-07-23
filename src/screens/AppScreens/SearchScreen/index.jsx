@@ -138,10 +138,15 @@ const SearchScreen = ({navigation, route}) => {
             renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
-                  onPress={() =>
+                  onPress={() =>{
+                    if(isBusiness){
+                      navigation.navigate('ClaimBusinessScreen', item)
+                    }else{
                     navigation.navigate('UserProfileDetail', {
                       userId: item?._id,
                     })
+                  }
+                  }
                   }
                   activeOpacity={0.8}
                   style={{

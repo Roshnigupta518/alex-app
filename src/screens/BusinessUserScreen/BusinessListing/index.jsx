@@ -128,7 +128,7 @@ const BusinessUserListingScreen = ({ navigation, route }) => {
       <TouchableOpacity
         onPress={() =>
           // navigation.navigate('BusinessDetailScreen', { data: item })
-          navigation.navigate('ClaimBusinessScreen', item)
+          navigation.navigate('ClaimBusinessScreen', {...item, fromListing : true})
         }
         activeOpacity={1}
         style={{
