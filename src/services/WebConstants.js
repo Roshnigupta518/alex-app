@@ -68,5 +68,6 @@ export const api = {
   getAllCities : '/api/v1/user/get_cities_by_user/',
   getAllBusinessFollowers : '/api/v1/user/get-business-follower-list/',
   makeFollowBusiness:'/api/v1/user/business-follow',
-  getAllBusinessSearch : '/api/v1/user/business-search?searchQ='
+  getAllBusinessSearch : '/api/v1/user/business-search?searchQ=',
+  getPostById : '/api/v1/user/post/'
 };

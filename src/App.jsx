@@ -201,41 +201,87 @@ const App = () => {
   }, []);
 
   
+  // const HandleDeepLink = () => {
+  //   const handleLink = async (link) => {
+  //     try {
+  //       const urlParts = link.url.split('/');
+  //       const placeId = urlParts[urlParts.length - 1];
+  //       console.log('Deep link place_id:', placeId);
+
+  //       if (placeId && navigationRef.isReady()) {
+  //         navigationRef.navigate('ClaimBusinessScreen', { place_id: placeId });
+  //       }else {
+  //         // Wait and try again until navigation is ready
+  //         const interval = setInterval(() => {
+  //           if (navigationRef.isReady()) {
+  //             navigationRef.navigate('ClaimBusinessScreen', { place_id: placeId });
+  //             clearInterval(interval);
+  //           }
+  //         }, 100);
+  //       }
+
+  //     } catch (error) {
+  //       console.log('Deep link parse error:', error);
+  //     }
+  //   };
+  
+  //   useEffect(() => {
+  //     // When app is in background or foreground
+  //     const unsubscribe = dynamicLinks().onLink(handleLink);
+  
+  //     // When app is launched from a killed state
+  //     dynamicLinks()
+  //       .getInitialLink()
+  //       .then(link => {
+  //         if (link?.url) handleLink(link);
+  //       });
+  
+  //     return () => unsubscribe();
+  //   }, []);
+  
+  //   return null;
+  // };
+
+
   const HandleDeepLink = () => {
     const handleLink = async (link) => {
       try {
-        const urlParts = link.url.split('/');
-        const placeId = urlParts[urlParts.length - 1];
-        console.log('Deep link place_id:', placeId);
+        const url = link?.url;
+        if (!url) return;
   
-        // if (placeId) {
-        //   navigationRef.current?.navigate('ClaimBusinessScreen', {
-        //     place_id: placeId,
-        //   });
-        // }
-
-        if (placeId && navigationRef.isReady()) {
-          navigationRef.navigate('ClaimBusinessScreen', { place_id: placeId });
-        }else {
-          // Wait and try again until navigation is ready
+        console.log('Received deep link:', url);
+  
+        const urlParts = url.split('/');
+        const type = urlParts[urlParts.length - 2]; // 'business' or 'post'
+        const id = urlParts[urlParts.length - 1];
+  
+        if (navigationRef.isReady()) {
+          if (type === 'business') {
+            navigationRef.navigate('ClaimBusinessScreen', { place_id: id });
+          } else if (type === 'post') {
+            navigationRef.navigate('PostDetailScreen', { post_id: id }); // Make sure this screen exists
+          }
+        } else {
+          // Wait for nav readiness
           const interval = setInterval(() => {
             if (navigationRef.isReady()) {
-              navigationRef.navigate('ClaimBusinessScreen', { place_id: placeId });
               clearInterval(interval);
+              if (type === 'business') {
+                navigationRef.navigate('ClaimBusinessScreen', { place_id: id });
+              } else if (type === 'post') {
+                navigationRef.navigate('PostDetailScreen', { post_id: id });
+              }
             }
           }, 100);
         }
-
+  
       } catch (error) {
-        console.log('Deep link parse error:', error);
+        console.log('Deep link handler error:', error);
       }
     };
   
     useEffect(() => {
-      // When app is in background or foreground
       const unsubscribe = dynamicLinks().onLink(handleLink);
-  
-      // When app is launched from a killed state
       dynamicLinks()
         .getInitialLink()
         .then(link => {
@@ -247,6 +293,7 @@ const App = () => {
   
     return null;
   };
+  
 
   return (
     <View style={{flex: 1}}>

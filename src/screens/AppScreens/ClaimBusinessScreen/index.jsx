@@ -38,6 +38,7 @@ import ReadMore from '@fawazahmed/react-native-read-more';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import Share from 'react-native-share';
 import { MakeFollowedBusinessRequest, unclaimedBusinessRequest } from '../../../services/Utills';
+import { handleShareFunction } from '../../../validation/helper';
 
 const ClaimBusinessScreen = ({ navigation, route }) => {
   const follow = route?.params || {};
@@ -316,44 +317,45 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
   };
 
   const handleShare = async () => {
-    try {
-      const dynamicLink = await dynamicLinks().buildShortLink({
-        link: `https://www.thealexapp.com/business/${place_id}`, // this should match Firebase config
-        domainUriPrefix: 'https://alexsocial.page.link',
-        android: {
-          packageName: 'com.alexsocial',
-        },
-        ios: {
-          bundleId: 'com.alexsocial',
-          appStoreId: '6470377502',
-        },
-        social: {
-          title: data?.name || 'Check out this business',
-          descriptionText: data?.details || 'Explore this amazing place!',
-          imageUrl:
-            data?.banner ||
-            data?.certificate ||
-            'https://alexsocial.com/default_image.jpg',
-        },
-      });
+    handleShareFunction(data, place_id)
+    // try {
+    //   const dynamicLink = await dynamicLinks().buildShortLink({
+    //     link: `https://www.thealexapp.com/business/${place_id}`, // this should match Firebase config
+    //     domainUriPrefix: 'https://alexsocial.page.link',
+    //     android: {
+    //       packageName: 'com.alexsocial',
+    //     },
+    //     ios: {
+    //       bundleId: 'com.alexsocial',
+    //       appStoreId: '6470377502',
+    //     },
+    //     social: {
+    //       title: data?.name || 'Check out this business',
+    //       descriptionText: data?.details || 'Explore this amazing place!',
+    //       imageUrl:
+    //         data?.banner ||
+    //         data?.certificate ||
+    //         'https://alexsocial.com/default_image.jpg',
+    //     },
+    //   });
 
-      console.log('Generated dynamic link:', dynamicLink);
+    //   console.log('Generated dynamic link:', dynamicLink);
 
-      Share.open({
-        message: `Explore ${data?.name || 'this business'} on our app!`,
-        url: dynamicLink,
-      })
-        .then(res => {
-          console.log('Share success:', res);
-        })
-        .catch(err => {
-          console.log('Share error:', JSON.stringify(err));
-          // alert('This may not work on emulator.');
-        });
-    } catch (err) {
-      console.log('Dynamic link error:', err);
-      alert('Failed to create dynamic link');
-    }
+    //   Share.open({
+    //     message: `Explore ${data?.name || 'this business'} on our app!`,
+    //     url: dynamicLink,
+    //   })
+    //     .then(res => {
+    //       console.log('Share success:', res);
+    //     })
+    //     .catch(err => {
+    //       console.log('Share error:', JSON.stringify(err));
+    //       // alert('This may not work on emulator.');
+    //     });
+    // } catch (err) {
+    //   console.log('Dynamic link error:', err);
+    //   alert('Failed to create dynamic link');
+    // }
   };
 
   const makeFollowBusiness = () => {

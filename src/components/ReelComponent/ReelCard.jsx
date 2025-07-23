@@ -11,6 +11,8 @@ import {useNavigation} from '@react-navigation/native';
 import {colors, fonts, wp} from '../../constants';
 import ReadMore from '@fawazahmed/react-native-read-more';
 import crashlytics from '@react-native-firebase/crashlytics';
+import { handleShareFunction, handleSharePostFunction } from '../../validation/helper';
+
 const ReelCard = ({
   data,
   idx = 0,
@@ -242,7 +244,8 @@ const ReelCard = ({
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress={onShareClick}
+              // onPress={onShareClick}
+              onPress={()=>handleSharePostFunction(data)}
               style={styles.sendContainer}>
               <Image
                 source={ImageConstants.send}

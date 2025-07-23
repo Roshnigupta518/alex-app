@@ -764,6 +764,23 @@ export const getAllBussinessRequest = async(search) => {
   });
 }
 
+export const getPostByIdRequest = async(postId) => {
+  return await new Promise((resolve, reject) => {
+    try {
+      HttpRequests.getAPI(api.getPostById+postId)
+        .then(res => {
+          if (res?.data) resolve(res?.data);
+          else reject(res?.data);
+        })
+        .catch(err => {
+          reject(err?.response?.data);
+        });
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
 export const getQuestionAnswerRequest = async () => {
   return await new Promise((resolve, reject) => {
     try {
