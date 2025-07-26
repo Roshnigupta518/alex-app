@@ -4,19 +4,25 @@ import ActionSheet from 'react-native-actions-sheet';
 import {colors, fonts, HEIGHT, WIDTH, wp} from '../../constants';
 import ImageConstants from '../../constants/ImageConstants';
 import CustomButton from '../CustomButton';
-import {MakeFollowedUserRequest} from '../../services/Utills';
+import {MakeFollowedBusinessRequest, MakeFollowedUserRequest} from '../../services/Utills';
 import Toast from '../../constants/Toast';
 
 const FollowUserSheet = forwardRef(
   (
     {
-      userDetail = {},
+      userDetail = null,
       isFollowing = false,
       onFollowed = () => {},
       onUnfollowed = () => {},
+
+      businessDetail = null,
+      isBusinessFollowing = false,
+      onBusinessFollowed = () => {},
+      onBusinessUnfollowed = () => {},
     },
     ref,
   ) => {
+    console.log({businessDetail})
     const actionSheetRef = useRef(null);
     const [isLoading, setIsLoading] = useState(false);
     // Expose actionSheetRef to parent component through forwarded ref
@@ -29,75 +35,135 @@ const FollowUserSheet = forwardRef(
       },
     }));
 
-    const onFollowAction = () => {
+    const handleFollow = () => {
       setIsLoading(true);
-      MakeFollowedUserRequest({follow_user_id: userDetail?._id})
-        .then(res => {
-          Toast.success('Request', res?.message);
-          if (isFollowing) {
-            onUnfollowed();
-          } else {
-            onFollowed();
-          }
-          actionSheetRef.current?.hide();
-        })
-        .catch(err => {
-          Toast.error('Request', err?.message);
-        })
-        .finally(() => setIsLoading(false));
+
+      if (userDetail) {
+        MakeFollowedUserRequest({ follow_user_id: userDetail?._id })
+          .then(res => {
+            Toast.success('Request', res?.message);
+            isFollowing ? onUnfollowed() : onFollowed();
+            actionSheetRef.current?.hide();
+          })
+          .catch(err => {
+            Toast.error('Request', err?.message);
+          })
+          .finally(() => setIsLoading(false));
+      } else if (businessDetail) {
+        MakeFollowedBusinessRequest({ business_id: businessDetail?.place_id })
+          .then(res => {
+            Toast.success('Request', res?.message);
+            isBusinessFollowing ? onBusinessUnfollowed() : onBusinessFollowed();
+            actionSheetRef.current?.hide();
+          })
+          .catch(err => {
+            Toast.error('Request', err?.message);
+          })
+          .finally(() => setIsLoading(false));
+      }
     };
+    const profileImage =
+    userDetail
+      ? userDetail?.profile_picture
+        ? { uri: userDetail.profile_picture }
+        : ImageConstants.user
+      : businessDetail?.profile_picture
+        ? { uri: businessDetail.profile_picture }
+        : ImageConstants.business_logo;
+    const displayName = userDetail?.anonymous_name || businessDetail?.name;
+    const isFollowed = userDetail ? isFollowing : isBusinessFollowing;
+    const followText = userDetail
+      ? isFollowed
+        ? 'Unfollow now'
+        : 'Send Request To Follow'
+      : isFollowed
+      ? 'Unfollow Business'
+      : 'Follow Business';
 
     return (
+      // <ActionSheet ref={actionSheetRef} containerStyle={styles.container}>
+      //   <View style={styles.subView}>
+      //     <View style={styles.drawerHandleStyle} />
+
+      //     <View style={styles.commentListContainer}>
+      //       <Text
+      //         style={{
+      //           fontFamily: fonts.medium,
+      //           fontSize: wp(25),
+      //           color: colors.primaryColor,
+      //           textAlign: 'center',
+      //         }}>
+      //         {isFollowing ? 'Unfollow now' : 'Send Request To Follow'}
+      //       </Text>
+
+      //       <Text
+      //         style={{
+      //           fontFamily: fonts.semiBold,
+      //           fontSize: wp(18),
+      //           color: colors.white,
+      //           marginVertical: 16,
+      //           textAlign: 'center',
+      //         }}>
+      //         {userDetail?.anonymous_name}
+      //       </Text>
+      //     </View>
+      //     <Image
+      //       source={
+      //         userDetail?.profile_picture
+      //           ? {
+      //               uri: userDetail?.profile_picture,
+      //             }
+      //           : ImageConstants.user
+      //       }
+      //       style={styles.imageStyle}
+      //     />
+
+      //     <View
+      //       style={{
+      //         marginVertical: wp(20),
+      //       }}>
+      //       <CustomButton
+      //         label={isFollowing ? 'Unfollow' : 'Follow'}
+      //         isLoading={isLoading}
+      //         onPress={onFollowAction}
+      //       />
+      //     </View>
+      //   </View>
+      // </ActionSheet>
+
       <ActionSheet ref={actionSheetRef} containerStyle={styles.container}>
         <View style={styles.subView}>
           <View style={styles.drawerHandleStyle} />
 
-          <View style={styles.commentCountView}>
-            {/* <Text style={styles.commentCountTxt}>Comments</Text> */}
-          </View>
-
-          <View style={styles.commentListContainer}>
-            <Text
-              style={{
+          <Text 
+                   style={{
                 fontFamily: fonts.medium,
                 fontSize: wp(25),
                 color: colors.primaryColor,
                 textAlign: 'center',
-              }}>
-              {isFollowing ? 'Unfollow now' : 'Send Request To Follow'}
-            </Text>
+              }}
+          >{followText}</Text>
 
-            <Text
-              style={{
+          <Text 
+                   style={{
                 fontFamily: fonts.semiBold,
                 fontSize: wp(18),
                 color: colors.white,
                 marginVertical: 16,
                 textAlign: 'center',
-              }}>
-              {userDetail?.anonymous_name}
-            </Text>
-          </View>
+              }}
+          >{displayName}</Text>
 
-          <Image
-            source={
-              userDetail?.profile_picture
-                ? {
-                    uri: userDetail?.profile_picture,
-                  }
-                : ImageConstants.user
-            }
-            style={styles.imageStyle}
-          />
+        <Image
+          source={profileImage}
+          style={styles.imageStyle}
+        />
 
-          <View
-            style={{
-              marginVertical: wp(20),
-            }}>
+          <View style={styles.buttonWrap}>
             <CustomButton
-              label={isFollowing ? 'Unfollow' : 'Follow'}
+              label={isFollowed ? 'Unfollow' : 'Follow'}
               isLoading={isLoading}
-              onPress={onFollowAction}
+              onPress={handleFollow}
             />
           </View>
         </View>

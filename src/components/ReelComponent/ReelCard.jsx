@@ -102,6 +102,26 @@ const ReelCard = ({
       return createdAt.toLocaleDateString("en-US", options);
     }
   }
+
+  const onPressHandle = (data) => {
+    const tagBusiness = data?.postData?.tagBussiness?.length>0 &&data?.postData?.tagBussiness[0]
+    if(data.postData.added_from == '1'){
+    if (userInfo?.id == data?.postData?.user_id?._id) {
+      navigation.navigate('ProfileDetail', {
+        userId: data?.postData?.user_id?._id,
+      });
+    } else {
+      navigation.navigate('UserProfileDetail', {
+        userId: data?.postData?.user_id?._id,
+      });
+    }
+  }else{
+    navigation.navigate('ClaimBusinessScreen', {
+      ...tagBusiness,
+      screen: screen,
+    });
+  }
+  }
  
   return (
     <View style={[styles.container,{height:screenHeight}]} key={idx}>
@@ -130,26 +150,20 @@ const ReelCard = ({
             <View style={styles.imageView}>
               <TouchableOpacity
                 onPress={() => {
-                  if (userInfo?.id == data?.postData?.user_id?._id) {
-                    navigation.navigate('ProfileDetail', {
-                      userId: data?.postData?.user_id?._id,
-                    });
-                  } else {
-                    navigation.navigate('UserProfileDetail', {
-                      userId: data?.postData?.user_id?._id,
-                    });
-                  }
+                  onPressHandle(data)
                 }}>
-                <Image
-                  source={
-                    data?.postData?.user_id?.profile_picture
-                      ? {
-                          uri: data?.postData?.user_id?.profile_picture,
-                        }
-                      : ImageConstants.user
-                  }
-                  style={styles.imageStyle}
-                />
+               <Image
+  source={
+    data.postData.added_from == '1'
+      ? data?.postData?.user_id?.profile_picture?.trim()
+        ? { uri: data?.postData?.user_id?.profile_picture }
+        : ImageConstants.user
+      : data?.postData?.tagBussiness?.[0]?.profile_picture?.trim()
+        ? { uri: data?.postData?.tagBussiness[0]?.profile_picture }
+        : ImageConstants.business_logo
+  }
+  style={styles.imageStyle}
+/>
               </TouchableOpacity>
               {data?.postData?.user_id?._id != userInfo?.id && (
                 <TouchableOpacity
@@ -167,15 +181,7 @@ const ReelCard = ({
             <View style={styles.usernameStyle}>
               <TouchableOpacity
                 onPress={() => {
-                  if (userInfo?.id == data?.postData?.user_id?._id) {
-                    navigation.navigate('ProfileDetail', {
-                      userId: data?.postData?.user_id?._id,
-                    });
-                  } else {
-                    navigation.navigate('UserProfileDetail', {
-                      userId: data?.postData?.user_id?._id,
-                    });
-                  }
+                  onPressHandle(data)
                 }}>
                 <Text numberOfLines={1} style={styles.nameTxtStyle}>
                   {data.postData.added_from == '1' ? 

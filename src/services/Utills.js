@@ -747,6 +747,23 @@ export const getAllUsersRequest = async () => {
   });
 };
 
+export const getAllGlobalSearchRequest = async (search) => {
+  return await new Promise((resolve, reject) => {
+    try {
+      HttpRequests.getAPI(api.getGlobalSearch + search)
+        .then(res => {
+          if (res?.data) resolve(res?.data);
+          else reject(res?.data);
+        })
+        .catch(err => {
+          reject(err?.response?.data);
+        });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 export const getAllBussinessRequest = async(search) => {
   return await new Promise((resolve, reject) => {
     try {

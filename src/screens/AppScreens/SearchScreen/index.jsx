@@ -13,7 +13,7 @@ import BackHeader from '../../../components/BackHeader';
 import SearchInput from '../../../components/SearchInput';
 import {colors, fonts, wp} from '../../../constants';
 import ImageConstants from '../../../constants/ImageConstants';
-import {getAllUsersRequest, getAllBussinessRequest} from '../../../services/Utills';
+import {getAllUsersRequest, getAllBussinessRequest, getAllGlobalSearchRequest} from '../../../services/Utills';
 import Toast from '../../../constants/Toast';
 import NotFoundAnime from '../../../components/NotFoundAnime';
 
@@ -21,19 +21,30 @@ const SearchScreen = ({navigation, route}) => {
   const userInfo = useSelector(state => state.UserInfoSlice.data);
   const [searchTxt, setSearchTxt] = useState('');
   const [users, setUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [searchedUser, setSearchedUser] = useState([]);
 
   const isBusiness = route?.params?.isBusiness
 
   console.log({isBusiness})
 
-  const getAllUsers = () => {
+  const getAllUsers = (search) => {
     setIsLoading(true);
-    getAllUsersRequest()
+    getAllGlobalSearchRequest(search)
       .then(res => {
-        setUsers(res?.result);
-        // setSearchedUser(res?.result);
+        const results = res.result.results;
+        const businesses = results.businesses.map(item => ({
+          ...item,
+          type: 'business',
+        }));
+        const users = results.users.map(item => ({
+          ...item,
+          type: 'user',
+        }));
+  
+        const mergedResults = [...users, ...businesses];
+  
+        setSearchedUser(mergedResults);
       })
       .catch(err => {
         Toast.error('Users', err?.message);
@@ -68,17 +79,18 @@ const SearchScreen = ({navigation, route}) => {
     if(isBusiness){
       getAllBusiness(txt)
      }else{
-     setSearchedUser(filteredUsers);
+    //  setSearchedUser(filteredUsers);
+    getAllUsers(txt)
       }
   };
   
-  useEffect(() => {
-    if(!isBusiness){
-    getAllUsers();
-  }else{
-    setIsLoading(false)
-  }
-  }, []);
+  // useEffect(() => {
+  //   if(!isBusiness){
+  //   getAllUsers();
+  // }else{
+  //   setIsLoading(false)
+  // }
+  // }, []);
 
   const ListEmptyComponent = () => {
     if (isLoading) {
@@ -142,12 +154,14 @@ const SearchScreen = ({navigation, route}) => {
                     if(isBusiness){
                       navigation.navigate('ClaimBusinessScreen', item)
                     }else{
+                      if(item.type === 'user'){
                     navigation.navigate('UserProfileDetail', {
                       userId: item?._id,
                     })
+                  }else if(item.type === 'business'){
+                    navigation.navigate('ClaimBusinessScreen', item)
                   }
-                  }
-                  }
+                  }}}
                   activeOpacity={0.8}
                   style={{
                     flexDirection: 'row',
@@ -164,7 +178,7 @@ const SearchScreen = ({navigation, route}) => {
                       fontSize: wp(16),
                       color: colors.white,
                     }}>
-                    {isBusiness ? item.name : item?.anonymous_name}
+                    {isBusiness ? item.name : item?.name}
                   </Text>
 
                   <Image

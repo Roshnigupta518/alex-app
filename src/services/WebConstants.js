@@ -69,5 +69,6 @@ export const api = {
   getAllBusinessFollowers : '/api/v1/user/get-business-follower-list/',
   makeFollowBusiness:'/api/v1/user/business-follow',
   getAllBusinessSearch : '/api/v1/user/business-search?searchQ=',
-  getPostById : '/api/v1/user/post/'
+  getPostById : '/api/v1/user/post/',
+  getGlobalSearch : '/api/v1/user/global-search?searchQ='
 };

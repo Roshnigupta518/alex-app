@@ -56,6 +56,8 @@ const HomeScreen = ({ navigation, route }) => {
   // console.log({tabBarHeight, screenHeight})
 
   const prevNearBy = useRef(nearByType);
+  const prevLocationTypeRef = useRef(selectedCityData?.locationType);
+
   const flashListRef = useRef();
   const deleteCommentRef = useRef();
   const isFocused = useIsFocused();
@@ -249,27 +251,24 @@ const HomeScreen = ({ navigation, route }) => {
       return;
     }
   
-    // ✅ Only trigger refresh if:
-    // 1. shouldScrollTopReel is set
-    // 2. nearByType changed (compared to ref)
-    const nearByChanged =
-      JSON.stringify(prevNearByTypeRef.current) !== JSON.stringify(nearByType);
+    const nearByChanged = JSON.stringify(prevNearByTypeRef.current) !== JSON.stringify(nearByType);
+    const locationTypeChanged = prevLocationTypeRef.current !== selectedCityData?.locationType;
   
-    if (route?.params?.shouldScrollTopReel || nearByChanged) {
+    console.log({ nearByChanged, locationTypeChanged, locationType: selectedCityData?.locationType });
+  
+    if (route?.params?.shouldScrollTopReel || nearByChanged || locationTypeChanged) {
       setPostArray([]);
       onRefresh();
   
-      // ✅ Update prevNearByType only after refresh
       prevNearByTypeRef.current = nearByType;
+      prevLocationTypeRef.current = selectedCityData?.locationType;
   
-      // ✅ Clear shouldScrollTopReel param to avoid repeated refresh
       if (route?.params?.shouldScrollTopReel) {
         navigation.setParams({ shouldScrollTopReel: false });
       }
     } else if (postArray?.length === 0) {
       getAllPosts();
     } else {
-      // ✅ No refresh — scroll to saved index
       setTimeout(() => {
         flashListRef?.current?.scrollToIndex({
           index: currentItemIndex,
@@ -280,6 +279,50 @@ const HomeScreen = ({ navigation, route }) => {
   
     setIsOnFocusItem(true);
   }, [isFocused, city, selectedCityData, error]);
+  
+
+  // useEffect(() => {
+  //   if (!isFocused) {
+  //     setIsOnFocusItem(false);
+  //     return;
+  //   }
+  
+  //   if ((error || !city) && selectedCityData?.locationType === 'current') {
+  //     setIsLoading(false);
+  //     return;
+  //   }
+  
+  //   // ✅ Only trigger refresh if:
+  //   // 1. shouldScrollTopReel is set
+  //   // 2. nearByType changed (compared to ref)
+  //   const nearByChanged =
+  //     JSON.stringify(prevNearByTypeRef.current) !== JSON.stringify(nearByType);
+  //      console.log({nearByChanged, nearByType})
+  //   if (route?.params?.shouldScrollTopReel || nearByChanged) {
+  //     setPostArray([]);
+  //     onRefresh();
+  
+  //     // ✅ Update prevNearByType only after refresh
+  //     prevNearByTypeRef.current = nearByType;
+  
+  //     // ✅ Clear shouldScrollTopReel param to avoid repeated refresh
+  //     if (route?.params?.shouldScrollTopReel) {
+  //       navigation.setParams({ shouldScrollTopReel: false });
+  //     }
+  //   } else if (postArray?.length === 0) {
+  //     getAllPosts();
+  //   } else {
+  //     // ✅ No refresh — scroll to saved index
+  //     setTimeout(() => {
+  //       flashListRef?.current?.scrollToIndex({
+  //         index: currentItemIndex,
+  //         animated: false,
+  //       });
+  //     }, 100);
+  //   }
+  
+  //   setIsOnFocusItem(true);
+  // }, [isFocused, city, selectedCityData, error]);
   
 
   // useEffect(() => {
@@ -406,6 +449,9 @@ const HomeScreen = ({ navigation, route }) => {
 const shouldShowEmptyMessage =
   hasTriedFetchingPosts && !isLoading && postArray.length === 0 && (city !== null || error !== null);
 
+  const shouldShowLocationError =
+  selectedCityData?.locationType === 'current' && !!error && postArray.length === 0;
+
 
   return (
     <>
@@ -473,7 +519,44 @@ const shouldShowEmptyMessage =
                 extraData={screenHeight}
               />
             </View>
-          ) : shouldShowEmptyMessage ? (
+          ) : 
+          shouldShowLocationError ? (
+
+            <View style={{
+              flex: 1,
+              backgroundColor: colors.black,
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingHorizontal: 20,
+            }}>
+              <Text
+                style={{
+                  fontFamily: fonts.bold,
+                  fontSize: wp(16),
+                  color: colors.white,
+                  textAlign: 'center',
+                  marginBottom: 10,
+                }}>
+                Failed to fetch location. Please enable location services.
+              </Text>
+          
+              <Text
+                onPress={() => {
+                  setIsLoading(true);
+                  refreshLocation(); // Retry location fetch
+                }}
+                style={{
+                  fontFamily: fonts.semiBold,
+                  fontSize: wp(14),
+                  color: colors.primary,
+                  textDecorationLine: 'underline',
+                }}>
+                Retry
+              </Text>
+            </View>
+          ) :
+          
+          shouldShowEmptyMessage ? (
             <View style={{
               flex: 1,
               backgroundColor: colors.black,
@@ -545,7 +628,77 @@ const shouldShowEmptyMessage =
           ref={reportOptionSheet}
           onActionDone={onRefresh}
         />
-        <FollowUserSheet
+
+<FollowUserSheet
+  ref={followingUserRef}
+  
+  // User props
+  userDetail={
+    postArray[currentItemIndex]?.postData?.added_from === '1'
+      ? postArray[currentItemIndex]?.postData?.user_id
+      : null
+  }
+  isFollowing={postArray[currentItemIndex]?.isFollowed}
+  onFollowed={() => {
+    let temp = [...postArray];
+    let userId = postArray[currentItemIndex]?.postData?.user_id?._id;
+    temp?.forEach(item => {
+      if (item?.postData?.user_id?._id === userId) {
+        item.isFollowed = true;
+      }
+    });
+    setPostArray(temp);
+  }}
+  onUnfollowed={() => {
+    let temp = [...postArray];
+    let userId = postArray[currentItemIndex]?.postData?.user_id?._id;
+    temp?.forEach(item => {
+      if (item?.postData?.user_id?._id === userId) {
+        item.isFollowed = false;
+      }
+    });
+    setPostArray(temp);
+  }}
+
+  // Business props
+  businessDetail={
+    postArray[currentItemIndex]?.postData?.added_from === '2' &&
+    postArray[currentItemIndex]?.postData?.tagBussiness?.[0]
+      ? postArray[currentItemIndex]?.postData?.tagBussiness?.[0]
+      : null
+  }
+  isBusinessFollowing={
+    postArray[currentItemIndex]?.postData?.tagBussiness?.[0]
+      ?.isFollowedBusiness
+  }
+  onBusinessFollowed={() => {
+    let temp = [...postArray];
+    let businessId = postArray[currentItemIndex]?.postData?.tagBussiness?.[0]?._id;
+    temp?.forEach(item => {
+      if (
+        item?.postData?.tagBussiness?.[0]?._id === businessId
+      ) {
+        item.postData.tagBussiness[0].isFollowedBusiness = true;
+      }
+    });
+    setPostArray(temp);
+  }}
+  onBusinessUnfollowed={() => {
+    let temp = [...postArray];
+    let businessId = postArray[currentItemIndex]?.postData?.tagBussiness?.[0]?._id;
+    temp?.forEach(item => {
+      if (
+        item?.postData?.tagBussiness?.[0]?._id === businessId
+      ) {
+        item.postData.tagBussiness[0].isFollowedBusiness = false;
+      }
+    });
+    setPostArray(temp);
+  }}
+/>
+
+
+        {/* <FollowUserSheet
           ref={followingUserRef}
           userDetail={postArray[currentItemIndex]?.postData?.user_id}
           isFollowing={postArray[currentItemIndex]?.isFollowed}
@@ -575,7 +728,7 @@ const shouldShowEmptyMessage =
             });
             setPostArray([...temp]);
           }}
-        />
+        /> */}
       </View>
       <NoInternetModal shouldShow={!isInternetConnected} />
     </>
