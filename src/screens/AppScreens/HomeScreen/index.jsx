@@ -7,8 +7,8 @@ import {
   ActivityIndicator,
   Alert,
   BackHandler,
-  Image,
-  Text, Platform, PermissionsAndroid, AppState, ScrollView, Linking
+  Image,TouchableOpacity,
+  Text, Platform, PermissionsAndroid, AppState, ScrollView, Linking, SafeAreaView
 } from 'react-native';
 import { colors, fonts, HEIGHT, wp } from '../../../constants';
 import ReelHeader from '../../../components/ReelComponent/ReelHeader';
@@ -34,7 +34,7 @@ import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import DeviceInfo from 'react-native-device-info';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useFocusEffect } from '@react-navigation/native';
-
+import InstagramStories from '@birdwingo/react-native-instagram-stories';
 const staticValues = {
   skip: 0,
   limit: 5,
@@ -48,13 +48,12 @@ const HomeScreen = ({ navigation, route }) => {
   const selectedCityData = useSelector(state => state.SelectedCitySlice?.data);
   const reelIndex = useSelector(state => state.ReelIndexSlice?.data);
   const userInfo = useSelector(state => state.UserInfoSlice.data);
-
+ 
   const tabBarHeight = useBottomTabBarHeight();
   // const screenHeight = (HEIGHT-tabBarHeight) 
-  const screenHeight = Platform .OS == 'ios' ? HEIGHT : HEIGHT-tabBarHeight
-
+  const screenHeight = Platform .OS == 'ios' ? HEIGHT : HEIGHT-tabBarHeight-115
   // console.log({tabBarHeight, screenHeight})
-
+  const storyref = useRef(null)
   const prevNearBy = useRef(nearByType);
   const prevLocationTypeRef = useRef(selectedCityData?.locationType);
 
@@ -280,91 +279,6 @@ const HomeScreen = ({ navigation, route }) => {
     setIsOnFocusItem(true);
   }, [isFocused, city, selectedCityData, error]);
   
-
-  // useEffect(() => {
-  //   if (!isFocused) {
-  //     setIsOnFocusItem(false);
-  //     return;
-  //   }
-  
-  //   if ((error || !city) && selectedCityData?.locationType === 'current') {
-  //     setIsLoading(false);
-  //     return;
-  //   }
-  
-  //   // ✅ Only trigger refresh if:
-  //   // 1. shouldScrollTopReel is set
-  //   // 2. nearByType changed (compared to ref)
-  //   const nearByChanged =
-  //     JSON.stringify(prevNearByTypeRef.current) !== JSON.stringify(nearByType);
-  //      console.log({nearByChanged, nearByType})
-  //   if (route?.params?.shouldScrollTopReel || nearByChanged) {
-  //     setPostArray([]);
-  //     onRefresh();
-  
-  //     // ✅ Update prevNearByType only after refresh
-  //     prevNearByTypeRef.current = nearByType;
-  
-  //     // ✅ Clear shouldScrollTopReel param to avoid repeated refresh
-  //     if (route?.params?.shouldScrollTopReel) {
-  //       navigation.setParams({ shouldScrollTopReel: false });
-  //     }
-  //   } else if (postArray?.length === 0) {
-  //     getAllPosts();
-  //   } else {
-  //     // ✅ No refresh — scroll to saved index
-  //     setTimeout(() => {
-  //       flashListRef?.current?.scrollToIndex({
-  //         index: currentItemIndex,
-  //         animated: false,
-  //       });
-  //     }, 100);
-  //   }
-  
-  //   setIsOnFocusItem(true);
-  // }, [isFocused, city, selectedCityData, error]);
-  
-
-  // useEffect(() => {
-  //   setIsLoading(true);
-  
-  //   if (!isFocused) {
-  //     setIsOnFocusItem(false);
-  //     return;
-  //   }
-  
-  //   // Handle locationType === 'current'
-  //   if (selectedCityData?.locationType === 'current') {
-  //     if (city == null && error == null) {
-  //       console.log('Waiting for location to resolve...');
-  //       return;
-  //     }
-  
-  //     if (error) {
-  //       console.log('Location error occurred.');
-  //       setIsLoading(false);
-  //       setHasTriedFetchingPosts(true);
-  //       return;
-  //     }
-  //   }else{
-  //     getAllPosts();
-  //   }
-  
-  //   // For other location types ('city', 'nearme', 'other') — continue with API
-  //   if (
-  //     route?.params?.shouldScrollTopReel ||
-  //     prevNearBy.current !== nearByType
-  //   ) {
-  //     setPostArray([]);
-  //     onRefresh();
-  //   } else if (postArray?.length === 0) {
-  //     getAllPosts();
-  //   }
-  
-  //   setIsOnFocusItem(true);
-  // }, [isFocused, city, selectedCityData, error]);
-  
-
   useFocusEffect(
     useCallback(() => {
     const backAction = () => {
@@ -416,7 +330,7 @@ const HomeScreen = ({ navigation, route }) => {
   const _renderReels = useCallback(
     ({ item, index }) => {
       return (
-        <View style={[styles.cardContainer, { height: screenHeight }]} key={index}>
+        <View style={[styles.cardContainer, { height:screenHeight}]} key={index}>
           <ReelCard
             idx={index}
             screen={'Home'}
@@ -451,11 +365,34 @@ const shouldShowEmptyMessage =
 
   const shouldShowLocationError =
   selectedCityData?.locationType === 'current' && !!error && postArray.length === 0;
-
-
+  
   return (
     <>
       <View style={styles.container}>
+      <SafeAreaView style={{marginTop:15, height:100,zIndex:3, overflow:'visible', marginLeft:10  }}>
+          <InstagramStories
+            ref={storyref}
+            stories={stories}
+            onStoryPress={(story) => {
+              storyref.current?.open(story.id);
+            }}
+            animationDuration={5000}
+            videoAnimationMaxDuration={30000}
+            saveProgress={false}
+            avatarSize={60}
+            storyContainerStyle={{ margin: 0, padding:0}}
+            progressContainerStyle={{margin:0,padding:0}}
+            containerStyle={{marginTop:Platform.OS === 'android' && "-20%", zIndex:3}}
+            closeIconColor='#fff'
+           progressColor={colors.gray}
+           progressActiveColor={colors.primaryColor}
+           showName={true}
+           nameTextStyle={{color:colors.white, textAlign:'center'}}
+           textStyle={{color:colors.white}}
+          />
+        </SafeAreaView>
+
+
         <ReelHeader
           onSearchClick={() => navigation.navigate('SearchScreen')}
           onNearByClick={() => navigation.navigate('NearByScreen')}
@@ -696,39 +633,6 @@ const shouldShowEmptyMessage =
     setPostArray(temp);
   }}
 />
-
-
-        {/* <FollowUserSheet
-          ref={followingUserRef}
-          userDetail={postArray[currentItemIndex]?.postData?.user_id}
-          isFollowing={postArray[currentItemIndex]?.isFollowed}
-          onFollowed={() => {
-            let temp = [...postArray] || [];
-            let userId = postArray[currentItemIndex]?.postData?.user_id?._id;
-
-            temp?.forEach(item => {
-              if (item?.postData?.user_id?._id == userId) {
-                Object.assign(item, {
-                  isFollowed: true,
-                });
-              }
-            });
-            setPostArray([...temp]);
-          }}
-          onUnfollowed={() => {
-            let temp = [...postArray] || [];
-            let userId = postArray[currentItemIndex]?.postData?.user_id?._id;
-
-            temp?.forEach(item => {
-              if (item?.postData?.user_id?._id == userId) {
-                Object.assign(item, {
-                  isFollowed: false,
-                });
-              }
-            });
-            setPostArray([...temp]);
-          }}
-        /> */}
       </View>
       <NoInternetModal shouldShow={!isInternetConnected} />
     </>
@@ -748,3 +652,86 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
+
+
+const stories = [
+  { 
+    id: 'user1',
+    name: 'Rakhi',
+    avatarSource: { uri: 'https://randomuser.me/api/portraits/women/1.jpg', },
+    stories: [
+      {
+        id: 'story1',
+        source: { uri: 'https://randomuser.me/api/portraits/women/1.jpg' },
+        mediaType: 'image', // 👈 Add this
+        duration: 5, // seconds
+      },
+      {
+        id: 'story2',
+        source: { uri: 'https://www.w3schools.com/html/mov_bbb.mp4' },
+        mediaType: 'video',
+        duration: 30, // seconds
+      },
+    ], 
+  },
+  { 
+    id: 'user2',
+    name: 'Rakhi2',
+    avatarSource: { uri: 'https://randomuser.me/api/portraits/women/1.jpg', },
+    stories: [
+      {
+        id: 'story1',
+        source: { uri: 'https://randomuser.me/api/portraits/women/1.jpg' },
+        mediaType: 'image', // 👈 Add this
+        duration: 5, // seconds
+      },
+      {
+        id: 'story2',
+        source: { uri: 'https://www.w3schools.com/html/mov_bbb.mp4' },
+        mediaType: 'video',
+        duration: 30, // seconds
+      },
+    ], 
+  },
+];
+
+const users = [
+  {
+    id: 'user1',
+    name: 'Rakhi',
+    avatar: 'https://randomuser.me/api/portraits/women/1.jpg',
+    stories: [
+      {
+        id: 'u1s1',
+        type: 'image',
+        url: 'https://randomuser.me/api/portraits/women/1.jpg',
+        duration: 5000,
+      },
+      {
+        id: 'u1s2',
+        type: 'video',
+        url: 'https://www.w3schools.com/html/mov_bbb.mp4',
+        duration: 30000,
+      },
+      {
+        id: 'u1s3',
+        type: 'image',
+        url: 'https://randomuser.me/api/portraits/women/1.jpg',
+        duration: 5000,
+      },
+    ],
+  },
+  {
+    id: 'user2',
+    name: 'Arya',
+    avatar: 'https://randomuser.me/api/portraits/women/2.jpg',
+    stories: [
+      {
+        id: 'u2s1',
+        type: 'image',
+        url: 'https://randomuser.me/api/portraits/women/2.jpg',
+        duration: 5000,
+      },
+    ],
+  },
+];

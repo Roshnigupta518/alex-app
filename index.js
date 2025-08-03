@@ -1,6 +1,7 @@
 /**
  * @format
  */
+import 'react-native-reanimated'; // ✅ MANDATORY - MUST be at top
 
 import {AppRegistry, LogBox} from 'react-native';
 import App from './src/App';

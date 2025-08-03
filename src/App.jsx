@@ -6,7 +6,7 @@ import {
   Image,
   StyleSheet,
   PermissionsAndroid,
-  Platform,
+  Platform, StatusBar
 } from 'react-native';
 import AppStack from './navigation/AppStack';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
@@ -200,49 +200,6 @@ const App = () => {
     }, 2000);
   }, []);
 
-  
-  // const HandleDeepLink = () => {
-  //   const handleLink = async (link) => {
-  //     try {
-  //       const urlParts = link.url.split('/');
-  //       const placeId = urlParts[urlParts.length - 1];
-  //       console.log('Deep link place_id:', placeId);
-
-  //       if (placeId && navigationRef.isReady()) {
-  //         navigationRef.navigate('ClaimBusinessScreen', { place_id: placeId });
-  //       }else {
-  //         // Wait and try again until navigation is ready
-  //         const interval = setInterval(() => {
-  //           if (navigationRef.isReady()) {
-  //             navigationRef.navigate('ClaimBusinessScreen', { place_id: placeId });
-  //             clearInterval(interval);
-  //           }
-  //         }, 100);
-  //       }
-
-  //     } catch (error) {
-  //       console.log('Deep link parse error:', error);
-  //     }
-  //   };
-  
-  //   useEffect(() => {
-  //     // When app is in background or foreground
-  //     const unsubscribe = dynamicLinks().onLink(handleLink);
-  
-  //     // When app is launched from a killed state
-  //     dynamicLinks()
-  //       .getInitialLink()
-  //       .then(link => {
-  //         if (link?.url) handleLink(link);
-  //       });
-  
-  //     return () => unsubscribe();
-  //   }, []);
-  
-  //   return null;
-  // };
-
-
   const HandleDeepLink = () => {
     const handleLink = async (link) => {
       try {
@@ -293,10 +250,11 @@ const App = () => {
   
     return null;
   };
-  
 
   return (
     <View style={{flex: 1}}>
+          {/* <StatusBar barStyle="light-content" backgroundColor="black" translucent /> */}
+
       {isLoading ? (
         <View style={styles.container}>
           <Image source={ImageConstants.appIcon} style={styles.iconStyles} />

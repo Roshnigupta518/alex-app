@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Platform} from 'react-native';
 import {colors, WIDTH, HEIGHT, fonts, wp} from '../../../constants';
 
 const styles = StyleSheet.create({
@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
     width: WIDTH - 20,
     alignSelf: 'center',
     zIndex: 2,
+    top:Platform.OS == 'android' ? '10%' : '15%'
   },
 
   nearMeView: {

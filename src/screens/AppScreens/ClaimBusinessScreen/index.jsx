@@ -564,6 +564,11 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
                     onPress={() => openWebsite(data?.ecommerce_website)} >
                     <Text style={styles.btntxt}>Order now</Text>
                   </TouchableOpacity>}
+
+                  <TouchableOpacity style={styles.button}
+                    onPress={() => navigation.navigate('AddStory') } >
+                    <Text style={styles.btntxt}>Add Story</Text>
+                  </TouchableOpacity>
                 </View>
                 :(
                   <View style={styles.socialContent}>
