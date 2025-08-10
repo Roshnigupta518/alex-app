@@ -70,5 +70,9 @@ export const api = {
   makeFollowBusiness:'/api/v1/user/business-follow',
   getAllBusinessSearch : '/api/v1/user/business-search?searchQ=',
   getPostById : '/api/v1/user/post/',
-  getGlobalSearch : '/api/v1/user/global-search?searchQ='
+  getGlobalSearch : '/api/v1/user/global-search?searchQ=',
+  getStory : '/api/v1/user/get-stories?',
+  addStory : '/api/v1/user/create-story',
+  viewStory : '/api/v1/user/view-story/',
+  likeStory : '/api/v1/user/like-story/'
 };

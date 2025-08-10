@@ -194,6 +194,42 @@ export const SocialLoginRequest = async data => {
   });
 };
 
+export const makeStorySeenRequest =  async (id, data, token) => {
+  return await new Promise((resolve, reject) => {
+    try {
+      HttpRequests.patchAPI(api.viewStory + id, data)
+        .then(res => {
+          if (res?.data) resolve(res?.data);
+          else reject(res?.data);
+        })
+        .catch(err => {
+          reject(err?.response?.data);
+        });
+    } catch (error) {
+      console.log({error})
+      reject(error);
+    }
+  });
+};
+
+export const likeStoryRequest =  async (id, data, token) => {
+  return await new Promise((resolve, reject) => {
+    try {
+      HttpRequests.patchAPI(api.likeStory + id, data)
+        .then(res => {
+          if (res?.data) resolve(res?.data);
+          else reject(res?.data);
+        })
+        .catch(err => {
+          reject(err?.response?.data);
+        });
+    } catch (error) {
+      console.log({error})
+      reject(error);
+    }
+  });
+};
+
 export const GetAllPostsRequest = async (data = null) => {
   return await new Promise((resolve, reject) => {
     try {
@@ -214,10 +250,53 @@ export const GetAllPostsRequest = async (data = null) => {
   });
 };
 
+export const GetAllStoryRequest = async (data = null) => {
+  return await new Promise((resolve, reject) => {
+    try {
+      HttpRequests.getAPI(api.getStory,data)
+        .then(res => {
+          if (res?.data) resolve(res?.data);
+          else reject(res?.data);
+        })
+        .catch(err => {
+          reject(err?.response?.data);
+          if (err.response.status == 401) {
+            logoutUserFromStack();
+          }
+        });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 export const UploadPostMediaRequest = async (data, token) => {
   return await new Promise((resolve, reject) => {
     try {
       HttpRequests.postMediaFile(api.addPost, data)
+        .then(res => {
+          resolve(res);
+        })
+        .catch(err => {
+          console.log('inner error: ', JSON.stringify(err), '\nError:', {
+            message: err?.response?.data?.message,
+            status: err?.response?.status,
+            header: err?.response?.headers,
+          });
+
+          reject(err?.response?.data);
+        });
+    } catch (error) {
+      console.log('err2', error);
+      reject(error);
+    }
+  });
+};
+
+export const UploadStoryRequest = async (data, token) => {
+  return await new Promise((resolve, reject) => {
+    try {
+      HttpRequests.postMediaFile(api.addStory, data)
         .then(res => {
           resolve(res);
         })

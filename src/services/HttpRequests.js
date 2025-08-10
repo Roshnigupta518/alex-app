@@ -39,6 +39,21 @@ const HttpRequests = {
     return axios.post(BASE_URL + url, data, headers);
   },
 
+  patchAPI: async (url, data = {}, token = '', header) => {
+    console.log({ url });
+    const temp_token = await Storage.get('userdata');
+    
+    const headers = {
+      Accept: 'application/json',
+      Authorization: 'Bearer ' + temp_token?.token,
+      'Content-Type': 'application/json',
+      ...header,
+    };
+  
+    return axios.patch(BASE_URL + url, data, { headers });
+  },
+  
+
   postMediaFile: async (url, data, token = '') => {
     const temp_token = await Storage.get('userdata');
 
@@ -101,6 +116,8 @@ const HttpRequests = {
     };
     return axios.delete(BASE_URL + url, headers);
   },
+
+  
 };
 
 export default HttpRequests;

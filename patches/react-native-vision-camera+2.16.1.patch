@@ -1,0 +1,924 @@
+diff --git a/node_modules/react-native-vision-camera/android/.cxx/Debug/4d1701e1/arm64-v8a/metadata_generation_command.txt b/node_modules/react-native-vision-camera/android/.cxx/Debug/4d1701e1/arm64-v8a/metadata_generation_command.txt
+new file mode 100644
+index 0000000..f6df726
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/.cxx/Debug/4d1701e1/arm64-v8a/metadata_generation_command.txt
+@@ -0,0 +1,25 @@
++                        -H/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android
++-DCMAKE_SYSTEM_NAME=Android
++-DCMAKE_EXPORT_COMPILE_COMMANDS=ON
++-DCMAKE_SYSTEM_VERSION=21
++-DANDROID_PLATFORM=android-21
++-DANDROID_ABI=arm64-v8a
++-DCMAKE_ANDROID_ARCH_ABI=arm64-v8a
++-DANDROID_NDK=/Users/Geeta/Library/Android/sdk/ndk/25.1.8937393
++-DCMAKE_ANDROID_NDK=/Users/Geeta/Library/Android/sdk/ndk/25.1.8937393
++-DCMAKE_TOOLCHAIN_FILE=/Users/Geeta/Library/Android/sdk/ndk/25.1.8937393/build/cmake/android.toolchain.cmake
++-DCMAKE_MAKE_PROGRAM=/Users/Geeta/Library/Android/sdk/cmake/3.22.1/bin/ninja
++-DCMAKE_CXX_FLAGS=-fexceptions -frtti -std=c++1y -DONANDROID
++-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/4d1701e1/obj/arm64-v8a
++-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/4d1701e1/obj/arm64-v8a
++-DCMAKE_BUILD_TYPE=Debug
++-DCMAKE_FIND_ROOT_PATH=/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/.cxx/Debug/4d1701e1/prefab/arm64-v8a/prefab
++-B/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/.cxx/Debug/4d1701e1/arm64-v8a
++-GNinja
++-DANDROID_STL=c++_shared
++-DREACT_NATIVE_VERSION=73
++-DNODE_MODULES_DIR=/Users/Geeta/Desktop/new/tourism_alex_social/node_modules
++-DFOR_HERMES=true
++-DJS_RUNTIME_DIR=/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native/sdks/hermes
++                        Build command args: []
++                        Version: 2
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/android/.cxx/Debug/4d1701e1/arm64-v8a/prefab_config.json b/node_modules/react-native-vision-camera/android/.cxx/Debug/4d1701e1/arm64-v8a/prefab_config.json
+new file mode 100644
+index 0000000..ad7f1c5
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/.cxx/Debug/4d1701e1/arm64-v8a/prefab_config.json
+@@ -0,0 +1,10 @@
++{
++  "enabled": true,
++  "prefabPath": "/Users/Geeta/.gradle/caches/modules-2/files-2.1/com.google.prefab/cli/2.0.0/f2702b5ca13df54e3ca92f29d6b403fb6285d8df/cli-2.0.0-all.jar",
++  "packages": [
++    "/Users/Geeta/.gradle/caches/transforms-3/3c53eb8aa81d0e79236267957413ec87/transformed/jetified-react-android-0.73.6-debug/prefab",
++    "/Users/Geeta/.gradle/caches/transforms-3/1b21ec30750d20e0a1077d46b7c3e8ec/transformed/jetified-fbjni-0.5.1/prefab",
++    "/Users/Geeta/.gradle/caches/transforms-3/3c7d7359b8f2979ff439312833513107/transformed/jetified-hermes-android-0.73.6-debug/prefab",
++    "/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-reanimated/android/build/intermediates/prefab_package/debug/prefab"
++  ]
++}
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/android/.cxx/Debug/4d1701e1/hash_key.txt b/node_modules/react-native-vision-camera/android/.cxx/Debug/4d1701e1/hash_key.txt
+new file mode 100644
+index 0000000..6a98ef7
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/.cxx/Debug/4d1701e1/hash_key.txt
+@@ -0,0 +1,32 @@
++# Values used to calculate the hash in this folder name.
++# Should not depend on the absolute path of the project itself.
++#   - AGP: 8.1.4.
++#   - $NDK is the path to NDK 25.1.8937393.
++#   - $PROJECT is the path to the parent folder of the root Gradle build file.
++#   - $ABI is the ABI to be built with. The specific value doesn't contribute to the value of the hash.
++#   - $HASH is the hash value computed from this text.
++#   - $CMAKE is the path to CMake 3.22.1.
++#   - $NINJA is the path to Ninja.
++-H/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android
++-DCMAKE_SYSTEM_NAME=Android
++-DCMAKE_EXPORT_COMPILE_COMMANDS=ON
++-DCMAKE_SYSTEM_VERSION=21
++-DANDROID_PLATFORM=android-21
++-DANDROID_ABI=$ABI
++-DCMAKE_ANDROID_ARCH_ABI=$ABI
++-DANDROID_NDK=$NDK
++-DCMAKE_ANDROID_NDK=$NDK
++-DCMAKE_TOOLCHAIN_FILE=$NDK/build/cmake/android.toolchain.cmake
++-DCMAKE_MAKE_PROGRAM=$NINJA
++-DCMAKE_CXX_FLAGS=-fexceptions -frtti -std=c++1y -DONANDROID
++-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/$HASH/obj/$ABI
++-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/$HASH/obj/$ABI
++-DCMAKE_BUILD_TYPE=Debug
++-DCMAKE_FIND_ROOT_PATH=/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/.cxx/Debug/$HASH/prefab/$ABI/prefab
++-B/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/.cxx/Debug/$HASH/$ABI
++-GNinja
++-DANDROID_STL=c++_shared
++-DREACT_NATIVE_VERSION=73
++-DNODE_MODULES_DIR=/Users/Geeta/Desktop/new/tourism_alex_social/node_modules
++-DFOR_HERMES=true
++-DJS_RUNTIME_DIR=/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native/sdks/hermes
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/android/build.gradle b/node_modules/react-native-vision-camera/android/build.gradle
+index d308e15..3b09c88 100644
+--- a/node_modules/react-native-vision-camera/android/build.gradle
++++ b/node_modules/react-native-vision-camera/android/build.gradle
+@@ -326,10 +326,18 @@ if (ENABLE_FRAME_PROCESSORS) {
+   def downloadsDir = customDownloadsDir ? new File(customDownloadsDir) : new File("$buildDir/downloads")
+   def thirdPartyNdkDir = new File("$buildDir/third-party-ndk")
+   def thirdPartyVersionsFile = new File("${nodeModules}/react-native/ReactAndroid/gradle.properties")
++  // def thirdPartyVersions = new Properties()
++  // thirdPartyVersions.load(new FileInputStream(thirdPartyVersionsFile))
++
++  // def BOOST_VERSION = thirdPartyVersions["BOOST_VERSION"]
++
+   def thirdPartyVersions = new Properties()
++if (thirdPartyVersionsFile.exists()) {
+   thirdPartyVersions.load(new FileInputStream(thirdPartyVersionsFile))
++}
++
++def BOOST_VERSION = thirdPartyVersions["BOOST_VERSION"] ?: "1_76_0"
+ 
+-  def BOOST_VERSION = thirdPartyVersions["BOOST_VERSION"]
+   def boost_file = new File(downloadsDir, "boost_${BOOST_VERSION}.tar.gz")
+   def DOUBLE_CONVERSION_VERSION = thirdPartyVersions["DOUBLE_CONVERSION_VERSION"]
+   def double_conversion_file = new File(downloadsDir, "double-conversion-${DOUBLE_CONVERSION_VERSION}.tar.gz")
+diff --git a/node_modules/react-native-vision-camera/android/build/generated/source/buildConfig/debug/com/mrousavy/camera/BuildConfig.java b/node_modules/react-native-vision-camera/android/build/generated/source/buildConfig/debug/com/mrousavy/camera/BuildConfig.java
+new file mode 100644
+index 0000000..86a4dbf
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/generated/source/buildConfig/debug/com/mrousavy/camera/BuildConfig.java
+@@ -0,0 +1,10 @@
++/**
++ * Automatically generated file. DO NOT MODIFY
++ */
++package com.mrousavy.camera;
++
++public final class BuildConfig {
++  public static final boolean DEBUG = Boolean.parseBoolean("true");
++  public static final String LIBRARY_PACKAGE_NAME = "com.mrousavy.camera";
++  public static final String BUILD_TYPE = "debug";
++}
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/AndroidManifest.xml b/node_modules/react-native-vision-camera/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/AndroidManifest.xml
+new file mode 100644
+index 0000000..090efb0
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/AndroidManifest.xml
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="com.mrousavy.camera" >
++
++    <uses-sdk android:minSdkVersion="21" />
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/output-metadata.json b/node_modules/react-native-vision-camera/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/output-metadata.json
+new file mode 100644
+index 0000000..72bb9f3
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/output-metadata.json
+@@ -0,0 +1,18 @@
++{
++  "version": 3,
++  "artifactType": {
++    "type": "AAPT_FRIENDLY_MERGED_MANIFESTS",
++    "kind": "Directory"
++  },
++  "applicationId": "com.mrousavy.camera",
++  "variantName": "debug",
++  "elements": [
++    {
++      "type": "SINGLE",
++      "filters": [],
++      "attributes": [],
++      "outputFile": "AndroidManifest.xml"
++    }
++  ],
++  "elementType": "File"
++}
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/aar_metadata/debug/aar-metadata.properties b/node_modules/react-native-vision-camera/android/build/intermediates/aar_metadata/debug/aar-metadata.properties
+new file mode 100644
+index 0000000..776557e
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/aar_metadata/debug/aar-metadata.properties
+@@ -0,0 +1,5 @@
++aarFormatVersion=1.0
++aarMetadataVersion=1.0
++minCompileSdk=1
++minCompileSdkExtension=0
++minAndroidGradlePluginVersion=1.0.0
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/annotation_processor_list/debug/annotationProcessors.json b/node_modules/react-native-vision-camera/android/build/intermediates/annotation_processor_list/debug/annotationProcessors.json
+new file mode 100644
+index 0000000..9e26dfe
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/annotation_processor_list/debug/annotationProcessors.json
+@@ -0,0 +1 @@
++{}
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/compile_r_class_jar/debug/R.jar b/node_modules/react-native-vision-camera/android/build/intermediates/compile_r_class_jar/debug/R.jar
+new file mode 100644
+index 0000000..d389895
+Binary files /dev/null and b/node_modules/react-native-vision-camera/android/build/intermediates/compile_r_class_jar/debug/R.jar differ
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/compile_symbol_list/debug/R.txt b/node_modules/react-native-vision-camera/android/build/intermediates/compile_symbol_list/debug/R.txt
+new file mode 100644
+index 0000000..e69de29
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/4d1701e1/logs/arm64-v8a/build_model.json b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/4d1701e1/logs/arm64-v8a/build_model.json
+new file mode 100644
+index 0000000..8dcbb2d
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/4d1701e1/logs/arm64-v8a/build_model.json
+@@ -0,0 +1,195 @@
++{
++  "abi": "ARM64_V8A",
++  "info": {
++    "abi": "ARM64_V8A",
++    "bitness": 64,
++    "deprecated": false,
++    "default": true
++  },
++  "cxxBuildFolder": "/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/.cxx/Debug/4d1701e1/arm64-v8a",
++  "soFolder": "/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/4d1701e1/obj/arm64-v8a",
++  "soRepublishFolder": "/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/build/intermediates/cmake/debug/obj/arm64-v8a",
++  "abiPlatformVersion": 21,
++  "cmake": {
++    "effectiveConfiguration": {
++      "inheritEnvironments": [],
++      "variables": []
++    }
++  },
++  "variant": {
++    "buildSystemArgumentList": [
++      "-DANDROID_STL\u003dc++_shared",
++      "-DREACT_NATIVE_VERSION\u003d73",
++      "-DNODE_MODULES_DIR\u003d/Users/Geeta/Desktop/new/tourism_alex_social/node_modules",
++      "-DFOR_HERMES\u003dtrue",
++      "-DJS_RUNTIME_DIR\u003d/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native/sdks/hermes"
++    ],
++    "cFlagsList": [],
++    "cppFlagsList": [
++      "-fexceptions",
++      "-frtti",
++      "-std\u003dc++1y",
++      "-DONANDROID"
++    ],
++    "variantName": "debug",
++    "isDebuggableEnabled": true,
++    "validAbiList": [
++      "ARMEABI_V7A",
++      "ARM64_V8A",
++      "X86",
++      "X86_64"
++    ],
++    "buildTargetSet": [],
++    "implicitBuildTargetSet": [],
++    "cmakeSettingsConfiguration": "android-gradle-plugin-predetermined-name",
++    "module": {
++      "cxxFolder": "/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/.cxx",
++      "intermediatesBaseFolder": "/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/build/intermediates",
++      "intermediatesFolder": "/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/build/intermediates/cxx",
++      "gradleModulePathName": ":react-native-vision-camera",
++      "moduleRootFolder": "/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android",
++      "moduleBuildFile": "/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/build.gradle",
++      "makeFile": "/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/CMakeLists.txt",
++      "buildSystem": "CMAKE",
++      "ndkFolder": "/Users/Geeta/Library/Android/sdk/ndk/25.1.8937393",
++      "ndkVersion": "25.1.8937393",
++      "ndkSupportedAbiList": [
++        "ARMEABI_V7A",
++        "ARM64_V8A",
++        "X86",
++        "X86_64"
++      ],
++      "ndkDefaultAbiList": [
++        "ARMEABI_V7A",
++        "ARM64_V8A",
++        "X86",
++        "X86_64"
++      ],
++      "ndkDefaultStl": "LIBCXX_STATIC",
++      "ndkMetaPlatforms": {
++        "min": 19,
++        "max": 33,
++        "aliases": {
++          "20": 19,
++          "25": 24,
++          "J": 16,
++          "J-MR1": 17,
++          "J-MR2": 18,
++          "K": 19,
++          "L": 21,
++          "L-MR1": 22,
++          "M": 23,
++          "N": 24,
++          "N-MR1": 24,
++          "O": 26,
++          "O-MR1": 27,
++          "P": 28,
++          "Q": 29,
++          "R": 30,
++          "S": 31,
++          "Sv2": 32,
++          "Tiramisu": 33
++        }
++      },
++      "ndkMetaAbiList": [
++        {
++          "abi": "ARMEABI_V7A",
++          "bitness": 32,
++          "deprecated": false,
++          "default": true
++        },
++        {
++          "abi": "ARM64_V8A",
++          "bitness": 64,
++          "deprecated": false,
++          "default": true
++        },
++        {
++          "abi": "X86",
++          "bitness": 32,
++          "deprecated": false,
++          "default": true
++        },
++        {
++          "abi": "X86_64",
++          "bitness": 64,
++          "deprecated": false,
++          "default": true
++        }
++      ],
++      "cmakeToolchainFile": "/Users/Geeta/Library/Android/sdk/ndk/25.1.8937393/build/cmake/android.toolchain.cmake",
++      "cmake": {
++        "cmakeExe": "/Users/Geeta/Library/Android/sdk/cmake/3.22.1/bin/cmake"
++      },
++      "stlSharedObjectMap": {
++        "LIBCXX_SHARED": {
++          "ARMEABI_V7A": "/Users/Geeta/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/arm-linux-androideabi/libc++_shared.so",
++          "ARM64_V8A": "/Users/Geeta/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/aarch64-linux-android/libc++_shared.so",
++          "X86": "/Users/Geeta/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/i686-linux-android/libc++_shared.so",
++          "X86_64": "/Users/Geeta/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/x86_64-linux-android/libc++_shared.so"
++        },
++        "LIBCXX_STATIC": {},
++        "NONE": {},
++        "SYSTEM": {}
++      },
++      "project": {
++        "rootBuildGradleFolder": "/Users/Geeta/Desktop/new/tourism_alex_social/android",
++        "sdkFolder": "/Users/Geeta/Library/Android/sdk",
++        "isBuildOnlyTargetAbiEnabled": true,
++        "isCmakeBuildCohabitationEnabled": false,
++        "isPrefabEnabled": true
++      },
++      "outputOptions": [],
++      "ninjaExe": "/Users/Geeta/Library/Android/sdk/cmake/3.22.1/bin/ninja",
++      "hasBuildTimeInformation": true
++    },
++    "prefabClassPaths": [
++      "/Users/Geeta/.gradle/caches/modules-2/files-2.1/com.google.prefab/cli/2.0.0/f2702b5ca13df54e3ca92f29d6b403fb6285d8df/cli-2.0.0-all.jar"
++    ],
++    "prefabPackages": [
++      "/Users/Geeta/.gradle/caches/transforms-3/3c53eb8aa81d0e79236267957413ec87/transformed/jetified-react-android-0.73.6-debug/prefab",
++      "/Users/Geeta/.gradle/caches/transforms-3/1b21ec30750d20e0a1077d46b7c3e8ec/transformed/jetified-fbjni-0.5.1/prefab",
++      "/Users/Geeta/.gradle/caches/transforms-3/3c7d7359b8f2979ff439312833513107/transformed/jetified-hermes-android-0.73.6-debug/prefab",
++      "/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-reanimated/android/build/intermediates/prefab_package/debug/prefab"
++    ],
++    "prefabPackageConfigurations": [
++      "/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-reanimated/android/build/intermediates/prefab_package_configuration/debug/prefab_publication.json"
++    ],
++    "stlType": "c++_shared",
++    "optimizationTag": "Debug"
++  },
++  "buildSettings": {
++    "environmentVariables": []
++  },
++  "prefabFolder": "/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/.cxx/Debug/4d1701e1/prefab/arm64-v8a",
++  "isActiveAbi": true,
++  "fullConfigurationHash": "4d1701e1y23d4v154k443b3d6063a5634673253252u1g5cb2e6u3l196248",
++  "fullConfigurationHashKey": "# Values used to calculate the hash in this folder name.\n# Should not depend on the absolute path of the project itself.\n#   - AGP: 8.1.4.\n#   - $NDK is the path to NDK 25.1.8937393.\n#   - $PROJECT is the path to the parent folder of the root Gradle build file.\n#   - $ABI is the ABI to be built with. The specific value doesn\u0027t contribute to the value of the hash.\n#   - $HASH is the hash value computed from this text.\n#   - $CMAKE is the path to CMake 3.22.1.\n#   - $NINJA is the path to Ninja.\n-H/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android\n-DCMAKE_SYSTEM_NAME\u003dAndroid\n-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON\n-DCMAKE_SYSTEM_VERSION\u003d21\n-DANDROID_PLATFORM\u003dandroid-21\n-DANDROID_ABI\u003d$ABI\n-DCMAKE_ANDROID_ARCH_ABI\u003d$ABI\n-DANDROID_NDK\u003d$NDK\n-DCMAKE_ANDROID_NDK\u003d$NDK\n-DCMAKE_TOOLCHAIN_FILE\u003d$NDK/build/cmake/android.toolchain.cmake\n-DCMAKE_MAKE_PROGRAM\u003d$NINJA\n-DCMAKE_CXX_FLAGS\u003d-fexceptions -frtti -std\u003dc++1y -DONANDROID\n-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003d/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/$HASH/obj/$ABI\n-DCMAKE_RUNTIME_OUTPUT_DIRECTORY\u003d/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/$HASH/obj/$ABI\n-DCMAKE_BUILD_TYPE\u003dDebug\n-DCMAKE_FIND_ROOT_PATH\u003d/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/.cxx/Debug/$HASH/prefab/$ABI/prefab\n-B/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/.cxx/Debug/$HASH/$ABI\n-GNinja\n-DANDROID_STL\u003dc++_shared\n-DREACT_NATIVE_VERSION\u003d73\n-DNODE_MODULES_DIR\u003d/Users/Geeta/Desktop/new/tourism_alex_social/node_modules\n-DFOR_HERMES\u003dtrue\n-DJS_RUNTIME_DIR\u003d/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native/sdks/hermes",
++  "configurationArguments": [
++    "-H/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android",
++    "-DCMAKE_SYSTEM_NAME\u003dAndroid",
++    "-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON",
++    "-DCMAKE_SYSTEM_VERSION\u003d21",
++    "-DANDROID_PLATFORM\u003dandroid-21",
++    "-DANDROID_ABI\u003darm64-v8a",
++    "-DCMAKE_ANDROID_ARCH_ABI\u003darm64-v8a",
++    "-DANDROID_NDK\u003d/Users/Geeta/Library/Android/sdk/ndk/25.1.8937393",
++    "-DCMAKE_ANDROID_NDK\u003d/Users/Geeta/Library/Android/sdk/ndk/25.1.8937393",
++    "-DCMAKE_TOOLCHAIN_FILE\u003d/Users/Geeta/Library/Android/sdk/ndk/25.1.8937393/build/cmake/android.toolchain.cmake",
++    "-DCMAKE_MAKE_PROGRAM\u003d/Users/Geeta/Library/Android/sdk/cmake/3.22.1/bin/ninja",
++    "-DCMAKE_CXX_FLAGS\u003d-fexceptions -frtti -std\u003dc++1y -DONANDROID",
++    "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003d/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/4d1701e1/obj/arm64-v8a",
++    "-DCMAKE_RUNTIME_OUTPUT_DIRECTORY\u003d/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/4d1701e1/obj/arm64-v8a",
++    "-DCMAKE_BUILD_TYPE\u003dDebug",
++    "-DCMAKE_FIND_ROOT_PATH\u003d/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/.cxx/Debug/4d1701e1/prefab/arm64-v8a/prefab",
++    "-B/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/.cxx/Debug/4d1701e1/arm64-v8a",
++    "-GNinja",
++    "-DANDROID_STL\u003dc++_shared",
++    "-DREACT_NATIVE_VERSION\u003d73",
++    "-DNODE_MODULES_DIR\u003d/Users/Geeta/Desktop/new/tourism_alex_social/node_modules",
++    "-DFOR_HERMES\u003dtrue",
++    "-DJS_RUNTIME_DIR\u003d/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native/sdks/hermes"
++  ],
++  "stlLibraryFile": "/Users/Geeta/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/aarch64-linux-android/libc++_shared.so",
++  "intermediatesParentFolder": "/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/4d1701e1"
++}
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/4d1701e1/logs/arm64-v8a/generate_cxx_metadata_639_timing.txt b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/4d1701e1/logs/arm64-v8a/generate_cxx_metadata_639_timing.txt
+new file mode 100644
+index 0000000..2e146d3
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/4d1701e1/logs/arm64-v8a/generate_cxx_metadata_639_timing.txt
+@@ -0,0 +1,9 @@
++# C/C++ build system timings
++generate_cxx_metadata
++  generate-prefab-packages
++    [gap of 15ms]
++    exec-prefab 574ms
++    [gap of 20ms]
++  generate-prefab-packages completed in 609ms
++generate_cxx_metadata completed in 618ms
++
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/4d1701e1/logs/arm64-v8a/metadata_generation_record.json b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/4d1701e1/logs/arm64-v8a/metadata_generation_record.json
+new file mode 100644
+index 0000000..3b19807
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/4d1701e1/logs/arm64-v8a/metadata_generation_record.json
+@@ -0,0 +1,67 @@
++[
++  {
++    "level_": 0,
++    "message_": "Start JSON generation. Platform version: 21 min SDK version: arm64-v8a",
++    "file_": "/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/CMakeLists.txt",
++    "tag_": "debug|arm64-v8a",
++    "diagnosticCode_": 0,
++    "memoizedIsInitialized": 1,
++    "unknownFields": {
++      "fields": {}
++    },
++    "memoizedSize": -1,
++    "memoizedHashCode": 0
++  },
++  {
++    "level_": 0,
++    "message_": "rebuilding JSON /Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/.cxx/Debug/4d1701e1/arm64-v8a/android_gradle_build.json due to:",
++    "file_": "/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/CMakeLists.txt",
++    "tag_": "debug|arm64-v8a",
++    "diagnosticCode_": 0,
++    "memoizedIsInitialized": 1,
++    "unknownFields": {
++      "fields": {}
++    },
++    "memoizedSize": -1,
++    "memoizedHashCode": 0
++  },
++  {
++    "level_": 0,
++    "message_": "- no fingerprint file, will remove stale configuration folder",
++    "file_": "/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/CMakeLists.txt",
++    "tag_": "debug|arm64-v8a",
++    "diagnosticCode_": 0,
++    "memoizedIsInitialized": 1,
++    "unknownFields": {
++      "fields": {}
++    },
++    "memoizedSize": -1,
++    "memoizedHashCode": 0
++  },
++  {
++    "level_": 0,
++    "message_": "/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home/bin/java \\\n  --class-path \\\n  /Users/Geeta/.gradle/caches/modules-2/files-2.1/com.google.prefab/cli/2.0.0/f2702b5ca13df54e3ca92f29d6b403fb6285d8df/cli-2.0.0-all.jar \\\n  com.google.prefab.cli.AppKt \\\n  --build-system \\\n  cmake \\\n  --platform \\\n  android \\\n  --abi \\\n  arm64-v8a \\\n  --os-version \\\n  21 \\\n  --stl \\\n  c++_shared \\\n  --ndk-version \\\n  25 \\\n  --output \\\n  /var/folders/_3/9q78x4x91h72bx73y_ss50bw0000gp/T/agp-prefab-staging3564723086817305092/staged-cli-output \\\n  /Users/Geeta/.gradle/caches/transforms-3/3c53eb8aa81d0e79236267957413ec87/transformed/jetified-react-android-0.73.6-debug/prefab \\\n  /Users/Geeta/.gradle/caches/transforms-3/1b21ec30750d20e0a1077d46b7c3e8ec/transformed/jetified-fbjni-0.5.1/prefab \\\n  /Users/Geeta/.gradle/caches/transforms-3/3c7d7359b8f2979ff439312833513107/transformed/jetified-hermes-android-0.73.6-debug/prefab \\\n  /Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/build/intermediates/cxx/refs/react-native-reanimated/3r476w3a\n",
++    "file_": "/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/CMakeLists.txt",
++    "tag_": "debug|arm64-v8a",
++    "diagnosticCode_": 0,
++    "memoizedIsInitialized": 1,
++    "unknownFields": {
++      "fields": {}
++    },
++    "memoizedSize": -1,
++    "memoizedHashCode": 0
++  },
++  {
++    "level_": 1,
++    "message_": "com.google.prefab.api.NoMatchingLibraryException: No compatible library found for //react-native-reanimated/reanimated. Rejected the following libraries:",
++    "file_": "/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/CMakeLists.txt",
++    "tag_": "debug|arm64-v8a",
++    "diagnosticCode_": 0,
++    "memoizedIsInitialized": 1,
++    "unknownFields": {
++      "fields": {}
++    },
++    "memoizedSize": -1,
++    "memoizedHashCode": 0
++  }
++]
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/4d1701e1/logs/arm64-v8a/prefab_command b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/4d1701e1/logs/arm64-v8a/prefab_command
+new file mode 100755
+index 0000000..bcb5148
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/4d1701e1/logs/arm64-v8a/prefab_command
+@@ -0,0 +1,22 @@
++/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home/bin/java \
++  --class-path \
++  /Users/Geeta/.gradle/caches/modules-2/files-2.1/com.google.prefab/cli/2.0.0/f2702b5ca13df54e3ca92f29d6b403fb6285d8df/cli-2.0.0-all.jar \
++  com.google.prefab.cli.AppKt \
++  --build-system \
++  cmake \
++  --platform \
++  android \
++  --abi \
++  arm64-v8a \
++  --os-version \
++  21 \
++  --stl \
++  c++_shared \
++  --ndk-version \
++  25 \
++  --output \
++  /var/folders/_3/9q78x4x91h72bx73y_ss50bw0000gp/T/agp-prefab-staging3564723086817305092/staged-cli-output \
++  /Users/Geeta/.gradle/caches/transforms-3/3c53eb8aa81d0e79236267957413ec87/transformed/jetified-react-android-0.73.6-debug/prefab \
++  /Users/Geeta/.gradle/caches/transforms-3/1b21ec30750d20e0a1077d46b7c3e8ec/transformed/jetified-fbjni-0.5.1/prefab \
++  /Users/Geeta/.gradle/caches/transforms-3/3c7d7359b8f2979ff439312833513107/transformed/jetified-hermes-android-0.73.6-debug/prefab \
++  /Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/build/intermediates/cxx/refs/react-native-reanimated/3r476w3a
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/4d1701e1/logs/arm64-v8a/prefab_stderr.txt b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/4d1701e1/logs/arm64-v8a/prefab_stderr.txt
+new file mode 100644
+index 0000000..285ab7c
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/4d1701e1/logs/arm64-v8a/prefab_stderr.txt
+@@ -0,0 +1,2 @@
++com.google.prefab.api.NoMatchingLibraryException: No compatible library found for //react-native-reanimated/reanimated. Rejected the following libraries:
++android.arm64-v8a: User has minSdkVersion 21 but library was built for 26
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/4d1701e1/logs/arm64-v8a/prefab_stdout.txt b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/Debug/4d1701e1/logs/arm64-v8a/prefab_stdout.txt
+new file mode 100644
+index 0000000..e69de29
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/cxx/abi_configuration_2d5w4u3k.json b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/abi_configuration_2d5w4u3k.json
+new file mode 100644
+index 0000000..e542dae
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/abi_configuration_2d5w4u3k.json
+@@ -0,0 +1,14 @@
++{
++  "allAbis": [
++    "armeabi-v7a",
++    "arm64-v8a",
++    "x86",
++    "x86_64"
++  ],
++  "validAbis": [
++    "ARMEABI_V7A",
++    "ARM64_V8A",
++    "X86",
++    "X86_64"
++  ]
++}
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/cxx/abi_configuration_2d5w4u3k.log b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/abi_configuration_2d5w4u3k.log
+new file mode 100644
+index 0000000..0637a08
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/abi_configuration_2d5w4u3k.log
+@@ -0,0 +1 @@
++[]
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/cxx/abi_configuration_2d5w4u3k_key.json b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/abi_configuration_2d5w4u3k_key.json
+new file mode 100644
+index 0000000..a444d81
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/abi_configuration_2d5w4u3k_key.json
+@@ -0,0 +1,23 @@
++{
++  "ndkHandlerSupportedAbis": [
++    "ARMEABI_V7A",
++    "ARM64_V8A",
++    "X86",
++    "X86_64"
++  ],
++  "ndkHandlerDefaultAbis": [
++    "ARMEABI_V7A",
++    "ARM64_V8A",
++    "X86",
++    "X86_64"
++  ],
++  "externalNativeBuildAbiFilters": [
++    "x86_64",
++    "x86",
++    "armeabi-v7a",
++    "arm64-v8a"
++  ],
++  "ndkConfigAbiFilters": [],
++  "splitsFilterAbis": [],
++  "ideBuildOnlyTargetAbi": true
++}
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/cxx/create_cxx_tasks_602_timing.txt b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/create_cxx_tasks_602_timing.txt
+new file mode 100644
+index 0000000..b0181ff
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/create_cxx_tasks_602_timing.txt
+@@ -0,0 +1,5 @@
++# C/C++ build system timings
++create_cxx_tasks
++  create-initial-cxx-model 12ms
++create_cxx_tasks completed in 15ms
++
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/cxx/ndk_locator_record_4c1l2u2f.json b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/ndk_locator_record_4c1l2u2f.json
+new file mode 100644
+index 0000000..9e08498
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/ndk_locator_record_4c1l2u2f.json
+@@ -0,0 +1,11 @@
++{
++  "ndk": "/Users/Geeta/Library/Android/sdk/ndk/25.1.8937393",
++  "revision": {
++    "mMajor": 25,
++    "mMinor": 1,
++    "mMicro": 8937393,
++    "mPreview": 0,
++    "mPrecision": "MICRO",
++    "mPreviewSeparator": " "
++  }
++}
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/cxx/ndk_locator_record_4c1l2u2f.log b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/ndk_locator_record_4c1l2u2f.log
+new file mode 100644
+index 0000000..47f8dde
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/ndk_locator_record_4c1l2u2f.log
+@@ -0,0 +1,67 @@
++[
++  {
++    "level_": 0,
++    "message_": "android.ndkVersion from module build.gradle is [25.1.8937393]",
++    "file_": "",
++    "tag_": "",
++    "diagnosticCode_": 0,
++    "memoizedIsInitialized": 1,
++    "unknownFields": {
++      "fields": {}
++    },
++    "memoizedSize": -1,
++    "memoizedHashCode": 0
++  },
++  {
++    "level_": 0,
++    "message_": "android.ndkPath from module build.gradle is not set",
++    "file_": "",
++    "tag_": "",
++    "diagnosticCode_": 0,
++    "memoizedIsInitialized": 1,
++    "unknownFields": {
++      "fields": {}
++    },
++    "memoizedSize": -1,
++    "memoizedHashCode": 0
++  },
++  {
++    "level_": 0,
++    "message_": "ndk.dir in local.properties is not set",
++    "file_": "",
++    "tag_": "",
++    "diagnosticCode_": 0,
++    "memoizedIsInitialized": 1,
++    "unknownFields": {
++      "fields": {}
++    },
++    "memoizedSize": -1,
++    "memoizedHashCode": 0
++  },
++  {
++    "level_": 0,
++    "message_": "Not considering ANDROID_NDK_HOME because support was removed after deprecation period.",
++    "file_": "",
++    "tag_": "",
++    "diagnosticCode_": 0,
++    "memoizedIsInitialized": 1,
++    "unknownFields": {
++      "fields": {}
++    },
++    "memoizedSize": -1,
++    "memoizedHashCode": 0
++  },
++  {
++    "level_": 0,
++    "message_": "sdkFolder is /Users/Geeta/Library/Android/sdk",
++    "file_": "",
++    "tag_": "",
++    "diagnosticCode_": 0,
++    "memoizedIsInitialized": 1,
++    "unknownFields": {
++      "fields": {}
++    },
++    "memoizedSize": -1,
++    "memoizedHashCode": 0
++  }
++]
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/cxx/ndk_locator_record_4c1l2u2f_key.json b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/ndk_locator_record_4c1l2u2f_key.json
+new file mode 100644
+index 0000000..3866166
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/ndk_locator_record_4c1l2u2f_key.json
+@@ -0,0 +1,10 @@
++{
++  "ndkVersionFromDsl": "25.1.8937393",
++  "sdkFolder": "/Users/Geeta/Library/Android/sdk",
++  "sideBySideNdkFolderNames": [
++    "27.1.12297006",
++    "28.0.12674087",
++    "25.1.8937393",
++    "26.1.10909125"
++  ]
++}
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/cxx/refs/react-native-reanimated/3r476w3a/modules/reanimated/include/placeholder.txt b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/refs/react-native-reanimated/3r476w3a/modules/reanimated/include/placeholder.txt
+new file mode 100644
+index 0000000..e69de29
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/cxx/refs/react-native-reanimated/3r476w3a/modules/reanimated/libs/android.arm64-v8a/abi.json b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/refs/react-native-reanimated/3r476w3a/modules/reanimated/libs/android.arm64-v8a/abi.json
+new file mode 100644
+index 0000000..74509be
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/refs/react-native-reanimated/3r476w3a/modules/reanimated/libs/android.arm64-v8a/abi.json
+@@ -0,0 +1,7 @@
++{
++  "abi": "arm64-v8a",
++  "api": 26,
++  "ndk": 25,
++  "stl": "c++_shared",
++  "static": false
++}
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/cxx/refs/react-native-reanimated/3r476w3a/modules/reanimated/module.json b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/refs/react-native-reanimated/3r476w3a/modules/reanimated/module.json
+new file mode 100644
+index 0000000..b6a8fc6
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/refs/react-native-reanimated/3r476w3a/modules/reanimated/module.json
+@@ -0,0 +1,4 @@
++{
++  "export_libraries": [],
++  "android": {}
++}
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/cxx/refs/react-native-reanimated/3r476w3a/prefab.json b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/refs/react-native-reanimated/3r476w3a/prefab.json
+new file mode 100644
+index 0000000..449d405
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/refs/react-native-reanimated/3r476w3a/prefab.json
+@@ -0,0 +1,5 @@
++{
++  "name": "react-native-reanimated",
++  "schema_version": 2,
++  "dependencies": []
++}
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/cxx/refs/react-native-reanimated/3r476w3a/prefab_publication.json b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/refs/react-native-reanimated/3r476w3a/prefab_publication.json
+new file mode 100644
+index 0000000..c7b255a
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/cxx/refs/react-native-reanimated/3r476w3a/prefab_publication.json
+@@ -0,0 +1,26 @@
++{
++  "installationFolder": "/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-reanimated/android/build/intermediates/prefab_package/debug/prefab",
++  "gradlePath": ":react-native-reanimated",
++  "packageInfo": {
++    "packageName": "react-native-reanimated",
++    "packageSchemaVersion": 2,
++    "packageDependencies": [],
++    "modules": [
++      {
++        "moduleName": "reanimated",
++        "moduleHeaders": "/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-reanimated/android/build/prefab-headers/reanimated",
++        "moduleExportLibraries": [],
++        "abis": [
++          {
++            "abiName": "arm64-v8a",
++            "abiApi": 26,
++            "abiNdkMajor": 25,
++            "abiStl": "c++_shared",
++            "abiLibrary": "/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-reanimated/android/build/intermediates/cxx/Debug/1o2s416j/obj/arm64-v8a/libreanimated.so",
++            "abiAndroidGradleBuildJsonFile": "/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-reanimated/android/.cxx/Debug/1o2s416j/arm64-v8a/android_gradle_build.json"
++          }
++        ]
++      }
++    ]
++  }
++}
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties b/node_modules/react-native-vision-camera/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties
+new file mode 100644
+index 0000000..0648da4
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties
+@@ -0,0 +1 @@
++#Mon Aug 04 22:45:35 IST 2025
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml b/node_modules/react-native-vision-camera/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml
+new file mode 100644
+index 0000000..37c1057
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main" generated-set="main$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/debug/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug" generated-set="debug$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/debug/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/build/generated/res/resValues/debug"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated" generated-set="generated$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/build/generated/res/resValues/debug"/></dataSet><mergedItems/></merger>
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/incremental/mergeDebugShaders/merger.xml b/node_modules/react-native-vision-camera/android/build/intermediates/incremental/mergeDebugShaders/merger.xml
+new file mode 100644
+index 0000000..8fe4992
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/incremental/mergeDebugShaders/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/shaders"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/debug/shaders"/></dataSet></merger>
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/incremental/packageDebugAssets/merger.xml b/node_modules/react-native-vision-camera/android/build/intermediates/incremental/packageDebugAssets/merger.xml
+new file mode 100644
+index 0000000..d8248b8
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/incremental/packageDebugAssets/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/assets"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/debug/assets"/></dataSet><dataSet config="generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/build/intermediates/shader_assets/debug/out"/></dataSet></merger>
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/local_only_symbol_list/debug/R-def.txt b/node_modules/react-native-vision-camera/android/build/intermediates/local_only_symbol_list/debug/R-def.txt
+new file mode 100644
+index 0000000..78ac5b8
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/local_only_symbol_list/debug/R-def.txt
+@@ -0,0 +1,2 @@
++R_DEF: Internal format may change without notice
++local
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt b/node_modules/react-native-vision-camera/android/build/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt
+new file mode 100644
+index 0000000..6d32fd8
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt
+@@ -0,0 +1,7 @@
++1<?xml version="1.0" encoding="utf-8"?>
++2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++3    package="com.mrousavy.camera" >
++4
++5    <uses-sdk android:minSdkVersion="21" />
++6
++7</manifest>
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml b/node_modules/react-native-vision-camera/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml
+new file mode 100644
+index 0000000..090efb0
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="com.mrousavy.camera" >
++
++    <uses-sdk android:minSdkVersion="21" />
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/navigation_json/debug/navigation.json b/node_modules/react-native-vision-camera/android/build/intermediates/navigation_json/debug/navigation.json
+new file mode 100644
+index 0000000..0637a08
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/navigation_json/debug/navigation.json
+@@ -0,0 +1 @@
++[]
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/android/build/intermediates/symbol_list_with_package_name/debug/package-aware-r.txt b/node_modules/react-native-vision-camera/android/build/intermediates/symbol_list_with_package_name/debug/package-aware-r.txt
+new file mode 100644
+index 0000000..4f75aa2
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/intermediates/symbol_list_with_package_name/debug/package-aware-r.txt
+@@ -0,0 +1 @@
++com.mrousavy.camera
+diff --git a/node_modules/react-native-vision-camera/android/build/kotlin/compileDebugKotlin/cacheable/dirty-sources.txt b/node_modules/react-native-vision-camera/android/build/kotlin/compileDebugKotlin/cacheable/dirty-sources.txt
+new file mode 100644
+index 0000000..4d576f4
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/kotlin/compileDebugKotlin/cacheable/dirty-sources.txt
+@@ -0,0 +1,31 @@
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/utils/Size+rotated.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/parsers/LenseFacing+String.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/CameraView+Events.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/utils/WritableArray+Nullables.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/utils/Context+displayRotation.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/CameraView+RecordVideo.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/CameraView.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/utils/WritableMap+Nullables.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/utils/AspectRatio.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/utils/ExifInterface+buildMetadataMap.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/CameraView+TakePhoto.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/CameraView+TakeSnapshot.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/utils/List+containsAny.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/utils/ViewGroup+installHierarchyFitter.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/utils/ImageCapture+suspendables.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/utils/withPromise.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/CameraViewManager.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/CameraViewModule.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/CameraPackage.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/utils/CallbackPromise.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/parsers/ImageFormat+String.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/utils/ImageProxy+isRaw.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/utils/ImageProxy+save.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/CameraView+Focus.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/parsers/Size+easy.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/Errors.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/utils/DeviceFormat.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/utils/CameraSelector+byID.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/frameprocessor/FrameProcessorRuntimeManager.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/utils/CameraCharacteristicsUtils.kt
++/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/java/com/mrousavy/camera/frameprocessor/FrameProcessorPerformanceDataCollector.kt
+\ No newline at end of file
+diff --git a/node_modules/react-native-vision-camera/android/build/kotlin/compileDebugKotlin/local-state/build-history.bin b/node_modules/react-native-vision-camera/android/build/kotlin/compileDebugKotlin/local-state/build-history.bin
+new file mode 100644
+index 0000000..fa06c1b
+Binary files /dev/null and b/node_modules/react-native-vision-camera/android/build/kotlin/compileDebugKotlin/local-state/build-history.bin differ
+diff --git a/node_modules/react-native-vision-camera/android/build/outputs/logs/manifest-merger-debug-report.txt b/node_modules/react-native-vision-camera/android/build/outputs/logs/manifest-merger-debug-report.txt
+new file mode 100644
+index 0000000..cad73dc
+--- /dev/null
++++ b/node_modules/react-native-vision-camera/android/build/outputs/logs/manifest-merger-debug-report.txt
+@@ -0,0 +1,17 @@
++-- Merging decision tree log ---
++manifest
++ADDED from /Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/AndroidManifest.xml:1:1-4:12
++INJECTED from /Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/AndroidManifest.xml:1:1-4:12
++	package
++		ADDED from /Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/AndroidManifest.xml:2:11-40
++		INJECTED from /Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/AndroidManifest.xml
++	xmlns:android
++		ADDED from /Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/AndroidManifest.xml:1:11-69
++uses-sdk
++INJECTED from /Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
++INJECTED from /Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/AndroidManifest.xml
++INJECTED from /Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/AndroidManifest.xml
++	android:targetSdkVersion
++		INJECTED from /Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/AndroidManifest.xml
++	android:minSdkVersion
++		INJECTED from /Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-vision-camera/android/src/main/AndroidManifest.xml

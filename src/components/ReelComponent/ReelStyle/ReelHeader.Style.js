@@ -8,8 +8,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: WIDTH - 20,
     alignSelf: 'center',
-    zIndex: 2,
-    top:Platform.OS == 'android' ? '10%' : '15%'
+    zIndex: 1,
+    // top:Platform.OS == 'android' ? '12%' : '15%'
   },
 
   nearMeView: {

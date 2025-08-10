@@ -1,0 +1,511 @@
+diff --git a/node_modules/react-native-video-processing/android/build.gradle b/node_modules/react-native-video-processing/android/build.gradle
+index cefdf52..5ba1301 100644
+--- a/node_modules/react-native-video-processing/android/build.gradle
++++ b/node_modules/react-native-video-processing/android/build.gradle
+@@ -29,7 +29,8 @@ configurations.all {
+ 
+ dependencies {
+   implementation 'com.facebook.react:react-native:+'
+-  implementation 'com.yqritc:android-scalablevideoview:1.0.4'
++  // implementation 'com.yqritc:android-scalablevideoview:1.0.4'
++  implementation 'com.github.thang2162:Android-ScalableVideoView:v1.1.1'
+   implementation 'com.googlecode.mp4parser:isoparser:1.1.20'
+   implementation 'com.github.wseemann:FFmpegMediaMetadataRetriever:1.0.14'
+   // implementation "com.google.android.gms:play-services-gcm:12.+"
+diff --git a/node_modules/react-native-video-processing/android/build/.transforms/5ad9366e407de0a0d2574a82bf1e864e/results.bin b/node_modules/react-native-video-processing/android/build/.transforms/5ad9366e407de0a0d2574a82bf1e864e/results.bin
+new file mode 100644
+index 0000000..4c288ce
+--- /dev/null
++++ b/node_modules/react-native-video-processing/android/build/.transforms/5ad9366e407de0a0d2574a82bf1e864e/results.bin
+@@ -0,0 +1 @@
++i/debug_dex
+diff --git a/node_modules/react-native-video-processing/android/build/.transforms/6fefe3f57eb57c6cad3d9fbf88e091f8/results.bin b/node_modules/react-native-video-processing/android/build/.transforms/6fefe3f57eb57c6cad3d9fbf88e091f8/results.bin
+new file mode 100644
+index 0000000..0d259dd
+--- /dev/null
++++ b/node_modules/react-native-video-processing/android/build/.transforms/6fefe3f57eb57c6cad3d9fbf88e091f8/results.bin
+@@ -0,0 +1 @@
++o/classes
+diff --git a/node_modules/react-native-video-processing/android/build/.transforms/6fefe3f57eb57c6cad3d9fbf88e091f8/transformed/classes/classes_dex/classes.dex b/node_modules/react-native-video-processing/android/build/.transforms/6fefe3f57eb57c6cad3d9fbf88e091f8/transformed/classes/classes_dex/classes.dex
+new file mode 100644
+index 0000000..8513670
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/.transforms/6fefe3f57eb57c6cad3d9fbf88e091f8/transformed/classes/classes_dex/classes.dex differ
+diff --git a/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/results.bin b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/results.bin
+new file mode 100644
+index 0000000..5ff383e
+--- /dev/null
++++ b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/results.bin
+@@ -0,0 +1 @@
++o/debug
+diff --git a/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/BuildConfig.dex b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/BuildConfig.dex
+new file mode 100644
+index 0000000..3414646
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/BuildConfig.dex differ
+diff --git a/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/Events/Events.dex b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/Events/Events.dex
+new file mode 100644
+index 0000000..0a2edf9
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/Events/Events.dex differ
+diff --git a/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/Events/EventsEnum.dex b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/Events/EventsEnum.dex
+new file mode 100644
+index 0000000..a2b9378
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/Events/EventsEnum.dex differ
+diff --git a/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/RNVideoProcessingPackage.dex b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/RNVideoProcessingPackage.dex
+new file mode 100644
+index 0000000..ec6a8bf
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/RNVideoProcessingPackage.dex differ
+diff --git a/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/Trimmer/Trimmer$FfmpegCmdAsyncTask.dex b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/Trimmer/Trimmer$FfmpegCmdAsyncTask.dex
+new file mode 100644
+index 0000000..b66eb51
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/Trimmer/Trimmer$FfmpegCmdAsyncTask.dex differ
+diff --git a/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/Trimmer/Trimmer$FfmpegCmdAsyncTaskParams.dex b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/Trimmer/Trimmer$FfmpegCmdAsyncTaskParams.dex
+new file mode 100644
+index 0000000..2a24aae
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/Trimmer/Trimmer$FfmpegCmdAsyncTaskParams.dex differ
+diff --git a/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/Trimmer/Trimmer.dex b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/Trimmer/Trimmer.dex
+new file mode 100644
+index 0000000..8db6bd8
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/Trimmer/Trimmer.dex differ
+diff --git a/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/Trimmer/TrimmerManager.dex b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/Trimmer/TrimmerManager.dex
+new file mode 100644
+index 0000000..57eb886
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/Trimmer/TrimmerManager.dex differ
+diff --git a/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/VideoPlayer/VideoPlayerView$1.dex b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/VideoPlayer/VideoPlayerView$1.dex
+new file mode 100644
+index 0000000..36758dd
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/VideoPlayer/VideoPlayerView$1.dex differ
+diff --git a/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/VideoPlayer/VideoPlayerView$2.dex b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/VideoPlayer/VideoPlayerView$2.dex
+new file mode 100644
+index 0000000..76c0abf
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/VideoPlayer/VideoPlayerView$2.dex differ
+diff --git a/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/VideoPlayer/VideoPlayerView$3.dex b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/VideoPlayer/VideoPlayerView$3.dex
+new file mode 100644
+index 0000000..22c3438
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/VideoPlayer/VideoPlayerView$3.dex differ
+diff --git a/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/VideoPlayer/VideoPlayerView.dex b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/VideoPlayer/VideoPlayerView.dex
+new file mode 100644
+index 0000000..24ff665
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/VideoPlayer/VideoPlayerView.dex differ
+diff --git a/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/VideoPlayer/VideoPlayerViewManager.dex b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/VideoPlayer/VideoPlayerViewManager.dex
+new file mode 100644
+index 0000000..79cc911
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/VideoPlayer/VideoPlayerViewManager.dex differ
+diff --git a/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/interfaces/OnCompressVideoListener.dex b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/interfaces/OnCompressVideoListener.dex
+new file mode 100644
+index 0000000..1bf79fc
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/interfaces/OnCompressVideoListener.dex differ
+diff --git a/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/interfaces/OnTrimVideoListener.dex b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/interfaces/OnTrimVideoListener.dex
+new file mode 100644
+index 0000000..2766e4d
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/interfaces/OnTrimVideoListener.dex differ
+diff --git a/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/utils/VideoEdit.dex b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/utils/VideoEdit.dex
+new file mode 100644
+index 0000000..68ec564
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/utils/VideoEdit.dex differ
+diff --git a/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/desugar_graph.bin b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/desugar_graph.bin
+new file mode 100644
+index 0000000..6a074fa
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/desugar_graph.bin differ
+diff --git a/node_modules/react-native-video-processing/android/build/.transforms/a9f54743fddf30ba4ed8fbc43b3d5908/results.bin b/node_modules/react-native-video-processing/android/build/.transforms/a9f54743fddf30ba4ed8fbc43b3d5908/results.bin
+new file mode 100644
+index 0000000..1ed65e0
+--- /dev/null
++++ b/node_modules/react-native-video-processing/android/build/.transforms/a9f54743fddf30ba4ed8fbc43b3d5908/results.bin
+@@ -0,0 +1 @@
++i/
+diff --git a/node_modules/react-native-video-processing/android/build/.transforms/fa5dae0cc93c92556d441681dd3a17f7/results.bin b/node_modules/react-native-video-processing/android/build/.transforms/fa5dae0cc93c92556d441681dd3a17f7/results.bin
+new file mode 100644
+index 0000000..e3f0ff0
+--- /dev/null
++++ b/node_modules/react-native-video-processing/android/build/.transforms/fa5dae0cc93c92556d441681dd3a17f7/results.bin
+@@ -0,0 +1 @@
++i/classes_global-synthetics
+diff --git a/node_modules/react-native-video-processing/android/build/.transforms/ffabfea6bd67eefd44b1eaad26d29f05/results.bin b/node_modules/react-native-video-processing/android/build/.transforms/ffabfea6bd67eefd44b1eaad26d29f05/results.bin
+new file mode 100644
+index 0000000..1ed65e0
+--- /dev/null
++++ b/node_modules/react-native-video-processing/android/build/.transforms/ffabfea6bd67eefd44b1eaad26d29f05/results.bin
+@@ -0,0 +1 @@
++i/
+diff --git a/node_modules/react-native-video-processing/android/build/generated/source/buildConfig/debug/com/shahenlibrary/BuildConfig.java b/node_modules/react-native-video-processing/android/build/generated/source/buildConfig/debug/com/shahenlibrary/BuildConfig.java
+new file mode 100644
+index 0000000..fe41f3e
+--- /dev/null
++++ b/node_modules/react-native-video-processing/android/build/generated/source/buildConfig/debug/com/shahenlibrary/BuildConfig.java
+@@ -0,0 +1,10 @@
++/**
++ * Automatically generated file. DO NOT MODIFY
++ */
++package com.shahenlibrary;
++
++public final class BuildConfig {
++  public static final boolean DEBUG = Boolean.parseBoolean("true");
++  public static final String LIBRARY_PACKAGE_NAME = "com.shahenlibrary";
++  public static final String BUILD_TYPE = "debug";
++}
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/AndroidManifest.xml b/node_modules/react-native-video-processing/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/AndroidManifest.xml
+new file mode 100644
+index 0000000..70092b6
+--- /dev/null
++++ b/node_modules/react-native-video-processing/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/AndroidManifest.xml
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="com.shahenlibrary" >
++
++    <uses-sdk android:minSdkVersion="26" />
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/output-metadata.json b/node_modules/react-native-video-processing/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/output-metadata.json
+new file mode 100644
+index 0000000..ed62b31
+--- /dev/null
++++ b/node_modules/react-native-video-processing/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/output-metadata.json
+@@ -0,0 +1,18 @@
++{
++  "version": 3,
++  "artifactType": {
++    "type": "AAPT_FRIENDLY_MERGED_MANIFESTS",
++    "kind": "Directory"
++  },
++  "applicationId": "com.shahenlibrary",
++  "variantName": "debug",
++  "elements": [
++    {
++      "type": "SINGLE",
++      "filters": [],
++      "attributes": [],
++      "outputFile": "AndroidManifest.xml"
++    }
++  ],
++  "elementType": "File"
++}
+\ No newline at end of file
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/aar_metadata/debug/aar-metadata.properties b/node_modules/react-native-video-processing/android/build/intermediates/aar_metadata/debug/aar-metadata.properties
+new file mode 100644
+index 0000000..776557e
+--- /dev/null
++++ b/node_modules/react-native-video-processing/android/build/intermediates/aar_metadata/debug/aar-metadata.properties
+@@ -0,0 +1,5 @@
++aarFormatVersion=1.0
++aarMetadataVersion=1.0
++minCompileSdk=1
++minCompileSdkExtension=0
++minAndroidGradlePluginVersion=1.0.0
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/annotation_processor_list/debug/annotationProcessors.json b/node_modules/react-native-video-processing/android/build/intermediates/annotation_processor_list/debug/annotationProcessors.json
+new file mode 100644
+index 0000000..9e26dfe
+--- /dev/null
++++ b/node_modules/react-native-video-processing/android/build/intermediates/annotation_processor_list/debug/annotationProcessors.json
+@@ -0,0 +1 @@
++{}
+\ No newline at end of file
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/compile_library_classes_jar/debug/classes.jar b/node_modules/react-native-video-processing/android/build/intermediates/compile_library_classes_jar/debug/classes.jar
+new file mode 100644
+index 0000000..db5163e
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/compile_library_classes_jar/debug/classes.jar differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/compile_r_class_jar/debug/R.jar b/node_modules/react-native-video-processing/android/build/intermediates/compile_r_class_jar/debug/R.jar
+new file mode 100644
+index 0000000..66764e2
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/compile_r_class_jar/debug/R.jar differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/compile_symbol_list/debug/R.txt b/node_modules/react-native-video-processing/android/build/intermediates/compile_symbol_list/debug/R.txt
+new file mode 100644
+index 0000000..e69de29
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties b/node_modules/react-native-video-processing/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties
+new file mode 100644
+index 0000000..d4fb07f
+--- /dev/null
++++ b/node_modules/react-native-video-processing/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties
+@@ -0,0 +1 @@
++#Sun Aug 03 22:54:15 IST 2025
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml b/node_modules/react-native-video-processing/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml
+new file mode 100644
+index 0000000..c780be1
+--- /dev/null
++++ b/node_modules/react-native-video-processing/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/src/main/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main" generated-set="main$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/src/main/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/src/debug/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug" generated-set="debug$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/src/debug/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/build/generated/res/resValues/debug"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated" generated-set="generated$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/build/generated/res/resValues/debug"/></dataSet><mergedItems/></merger>
+\ No newline at end of file
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/incremental/mergeDebugJniLibFolders/merger.xml b/node_modules/react-native-video-processing/android/build/intermediates/incremental/mergeDebugJniLibFolders/merger.xml
+new file mode 100644
+index 0000000..8c1a62c
+--- /dev/null
++++ b/node_modules/react-native-video-processing/android/build/intermediates/incremental/mergeDebugJniLibFolders/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/src/main/jniLibs"><file name="armeabi-v7a/libffmpeg.so" path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/src/main/jniLibs/armeabi-v7a/libffmpeg.so"/><file name="x86/libffmpeg.so" path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/src/main/jniLibs/x86/libffmpeg.so"/><file name="arm64-v8a/libffmpeg.so" path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/src/main/jniLibs/arm64-v8a/libffmpeg.so"/><file name="x86_64/libffmpeg.so" path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/src/main/jniLibs/x86_64/libffmpeg.so"/></source></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/src/debug/jniLibs"/></dataSet></merger>
+\ No newline at end of file
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/incremental/mergeDebugShaders/merger.xml b/node_modules/react-native-video-processing/android/build/intermediates/incremental/mergeDebugShaders/merger.xml
+new file mode 100644
+index 0000000..339dabf
+--- /dev/null
++++ b/node_modules/react-native-video-processing/android/build/intermediates/incremental/mergeDebugShaders/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/src/main/shaders"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/src/debug/shaders"/></dataSet></merger>
+\ No newline at end of file
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/incremental/packageDebugAssets/merger.xml b/node_modules/react-native-video-processing/android/build/intermediates/incremental/packageDebugAssets/merger.xml
+new file mode 100644
+index 0000000..8328bc0
+--- /dev/null
++++ b/node_modules/react-native-video-processing/android/build/intermediates/incremental/packageDebugAssets/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/src/main/assets"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/src/debug/assets"/></dataSet><dataSet config="generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/build/intermediates/shader_assets/debug/out"/></dataSet></merger>
+\ No newline at end of file
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/BuildConfig.class b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/BuildConfig.class
+new file mode 100644
+index 0000000..c94b527
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/BuildConfig.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/Events/Events.class b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/Events/Events.class
+new file mode 100644
+index 0000000..f26cda7
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/Events/Events.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/Events/EventsEnum.class b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/Events/EventsEnum.class
+new file mode 100644
+index 0000000..14dedf5
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/Events/EventsEnum.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/RNVideoProcessingPackage.class b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/RNVideoProcessingPackage.class
+new file mode 100644
+index 0000000..18bae52
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/RNVideoProcessingPackage.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/Trimmer/Trimmer$FfmpegCmdAsyncTask.class b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/Trimmer/Trimmer$FfmpegCmdAsyncTask.class
+new file mode 100644
+index 0000000..d2bc6c7
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/Trimmer/Trimmer$FfmpegCmdAsyncTask.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/Trimmer/Trimmer$FfmpegCmdAsyncTaskParams.class b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/Trimmer/Trimmer$FfmpegCmdAsyncTaskParams.class
+new file mode 100644
+index 0000000..b327dcc
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/Trimmer/Trimmer$FfmpegCmdAsyncTaskParams.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/Trimmer/Trimmer.class b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/Trimmer/Trimmer.class
+new file mode 100644
+index 0000000..a05f6b4
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/Trimmer/Trimmer.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/Trimmer/TrimmerManager.class b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/Trimmer/TrimmerManager.class
+new file mode 100644
+index 0000000..6d81835
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/Trimmer/TrimmerManager.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/VideoPlayer/VideoPlayerView$1.class b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/VideoPlayer/VideoPlayerView$1.class
+new file mode 100644
+index 0000000..5f48a4f
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/VideoPlayer/VideoPlayerView$1.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/VideoPlayer/VideoPlayerView$2.class b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/VideoPlayer/VideoPlayerView$2.class
+new file mode 100644
+index 0000000..e8cd9e9
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/VideoPlayer/VideoPlayerView$2.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/VideoPlayer/VideoPlayerView$3.class b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/VideoPlayer/VideoPlayerView$3.class
+new file mode 100644
+index 0000000..08a6db6
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/VideoPlayer/VideoPlayerView$3.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/VideoPlayer/VideoPlayerView.class b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/VideoPlayer/VideoPlayerView.class
+new file mode 100644
+index 0000000..465b47f
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/VideoPlayer/VideoPlayerView.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/VideoPlayer/VideoPlayerViewManager.class b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/VideoPlayer/VideoPlayerViewManager.class
+new file mode 100644
+index 0000000..e6f4f90
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/VideoPlayer/VideoPlayerViewManager.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/interfaces/OnCompressVideoListener.class b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/interfaces/OnCompressVideoListener.class
+new file mode 100644
+index 0000000..6ec7baa
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/interfaces/OnCompressVideoListener.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/interfaces/OnTrimVideoListener.class b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/interfaces/OnTrimVideoListener.class
+new file mode 100644
+index 0000000..2205aec
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/interfaces/OnTrimVideoListener.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/utils/VideoEdit.class b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/utils/VideoEdit.class
+new file mode 100644
+index 0000000..2ef91c4
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/utils/VideoEdit.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/library_jni/debug/jni/arm64-v8a/libffmpeg.so b/node_modules/react-native-video-processing/android/build/intermediates/library_jni/debug/jni/arm64-v8a/libffmpeg.so
+new file mode 100644
+index 0000000..b26864d
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/library_jni/debug/jni/arm64-v8a/libffmpeg.so differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/library_jni/debug/jni/armeabi-v7a/libffmpeg.so b/node_modules/react-native-video-processing/android/build/intermediates/library_jni/debug/jni/armeabi-v7a/libffmpeg.so
+new file mode 100644
+index 0000000..7e64a71
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/library_jni/debug/jni/armeabi-v7a/libffmpeg.so differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/library_jni/debug/jni/x86/libffmpeg.so b/node_modules/react-native-video-processing/android/build/intermediates/library_jni/debug/jni/x86/libffmpeg.so
+new file mode 100644
+index 0000000..691fa13
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/library_jni/debug/jni/x86/libffmpeg.so differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/library_jni/debug/jni/x86_64/libffmpeg.so b/node_modules/react-native-video-processing/android/build/intermediates/library_jni/debug/jni/x86_64/libffmpeg.so
+new file mode 100644
+index 0000000..1a28efd
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/library_jni/debug/jni/x86_64/libffmpeg.so differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/local_only_symbol_list/debug/R-def.txt b/node_modules/react-native-video-processing/android/build/intermediates/local_only_symbol_list/debug/R-def.txt
+new file mode 100644
+index 0000000..78ac5b8
+--- /dev/null
++++ b/node_modules/react-native-video-processing/android/build/intermediates/local_only_symbol_list/debug/R-def.txt
+@@ -0,0 +1,2 @@
++R_DEF: Internal format may change without notice
++local
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt b/node_modules/react-native-video-processing/android/build/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt
+new file mode 100644
+index 0000000..42ca06b
+--- /dev/null
++++ b/node_modules/react-native-video-processing/android/build/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt
+@@ -0,0 +1,7 @@
++1<?xml version="1.0" encoding="utf-8"?>
++2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++3    package="com.shahenlibrary" >
++4
++5    <uses-sdk android:minSdkVersion="26" />
++6
++7</manifest>
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/merged_jni_libs/debug/out/arm64-v8a/libffmpeg.so b/node_modules/react-native-video-processing/android/build/intermediates/merged_jni_libs/debug/out/arm64-v8a/libffmpeg.so
+new file mode 100755
+index 0000000..b26864d
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/merged_jni_libs/debug/out/arm64-v8a/libffmpeg.so differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/merged_jni_libs/debug/out/armeabi-v7a/libffmpeg.so b/node_modules/react-native-video-processing/android/build/intermediates/merged_jni_libs/debug/out/armeabi-v7a/libffmpeg.so
+new file mode 100755
+index 0000000..7e64a71
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/merged_jni_libs/debug/out/armeabi-v7a/libffmpeg.so differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/merged_jni_libs/debug/out/x86/libffmpeg.so b/node_modules/react-native-video-processing/android/build/intermediates/merged_jni_libs/debug/out/x86/libffmpeg.so
+new file mode 100755
+index 0000000..691fa13
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/merged_jni_libs/debug/out/x86/libffmpeg.so differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/merged_jni_libs/debug/out/x86_64/libffmpeg.so b/node_modules/react-native-video-processing/android/build/intermediates/merged_jni_libs/debug/out/x86_64/libffmpeg.so
+new file mode 100755
+index 0000000..1a28efd
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/merged_jni_libs/debug/out/x86_64/libffmpeg.so differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml b/node_modules/react-native-video-processing/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml
+new file mode 100644
+index 0000000..70092b6
+--- /dev/null
++++ b/node_modules/react-native-video-processing/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="com.shahenlibrary" >
++
++    <uses-sdk android:minSdkVersion="26" />
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/merged_native_libs/debug/out/lib/arm64-v8a/libffmpeg.so b/node_modules/react-native-video-processing/android/build/intermediates/merged_native_libs/debug/out/lib/arm64-v8a/libffmpeg.so
+new file mode 100644
+index 0000000..b26864d
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/merged_native_libs/debug/out/lib/arm64-v8a/libffmpeg.so differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/merged_native_libs/debug/out/lib/armeabi-v7a/libffmpeg.so b/node_modules/react-native-video-processing/android/build/intermediates/merged_native_libs/debug/out/lib/armeabi-v7a/libffmpeg.so
+new file mode 100644
+index 0000000..7e64a71
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/merged_native_libs/debug/out/lib/armeabi-v7a/libffmpeg.so differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/merged_native_libs/debug/out/lib/x86/libffmpeg.so b/node_modules/react-native-video-processing/android/build/intermediates/merged_native_libs/debug/out/lib/x86/libffmpeg.so
+new file mode 100644
+index 0000000..691fa13
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/merged_native_libs/debug/out/lib/x86/libffmpeg.so differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/merged_native_libs/debug/out/lib/x86_64/libffmpeg.so b/node_modules/react-native-video-processing/android/build/intermediates/merged_native_libs/debug/out/lib/x86_64/libffmpeg.so
+new file mode 100644
+index 0000000..1a28efd
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/merged_native_libs/debug/out/lib/x86_64/libffmpeg.so differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/navigation_json/debug/navigation.json b/node_modules/react-native-video-processing/android/build/intermediates/navigation_json/debug/navigation.json
+new file mode 100644
+index 0000000..0637a08
+--- /dev/null
++++ b/node_modules/react-native-video-processing/android/build/intermediates/navigation_json/debug/navigation.json
+@@ -0,0 +1 @@
++[]
+\ No newline at end of file
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/BuildConfig.class b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/BuildConfig.class
+new file mode 100644
+index 0000000..c94b527
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/BuildConfig.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/Events/Events.class b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/Events/Events.class
+new file mode 100644
+index 0000000..f26cda7
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/Events/Events.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/Events/EventsEnum.class b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/Events/EventsEnum.class
+new file mode 100644
+index 0000000..14dedf5
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/Events/EventsEnum.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/RNVideoProcessingPackage.class b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/RNVideoProcessingPackage.class
+new file mode 100644
+index 0000000..18bae52
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/RNVideoProcessingPackage.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/Trimmer/Trimmer$FfmpegCmdAsyncTask.class b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/Trimmer/Trimmer$FfmpegCmdAsyncTask.class
+new file mode 100644
+index 0000000..d2bc6c7
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/Trimmer/Trimmer$FfmpegCmdAsyncTask.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/Trimmer/Trimmer$FfmpegCmdAsyncTaskParams.class b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/Trimmer/Trimmer$FfmpegCmdAsyncTaskParams.class
+new file mode 100644
+index 0000000..b327dcc
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/Trimmer/Trimmer$FfmpegCmdAsyncTaskParams.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/Trimmer/Trimmer.class b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/Trimmer/Trimmer.class
+new file mode 100644
+index 0000000..a05f6b4
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/Trimmer/Trimmer.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/Trimmer/TrimmerManager.class b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/Trimmer/TrimmerManager.class
+new file mode 100644
+index 0000000..6d81835
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/Trimmer/TrimmerManager.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/VideoPlayer/VideoPlayerView$1.class b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/VideoPlayer/VideoPlayerView$1.class
+new file mode 100644
+index 0000000..5f48a4f
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/VideoPlayer/VideoPlayerView$1.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/VideoPlayer/VideoPlayerView$2.class b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/VideoPlayer/VideoPlayerView$2.class
+new file mode 100644
+index 0000000..e8cd9e9
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/VideoPlayer/VideoPlayerView$2.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/VideoPlayer/VideoPlayerView$3.class b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/VideoPlayer/VideoPlayerView$3.class
+new file mode 100644
+index 0000000..08a6db6
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/VideoPlayer/VideoPlayerView$3.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/VideoPlayer/VideoPlayerView.class b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/VideoPlayer/VideoPlayerView.class
+new file mode 100644
+index 0000000..465b47f
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/VideoPlayer/VideoPlayerView.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/VideoPlayer/VideoPlayerViewManager.class b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/VideoPlayer/VideoPlayerViewManager.class
+new file mode 100644
+index 0000000..e6f4f90
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/VideoPlayer/VideoPlayerViewManager.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/interfaces/OnCompressVideoListener.class b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/interfaces/OnCompressVideoListener.class
+new file mode 100644
+index 0000000..6ec7baa
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/interfaces/OnCompressVideoListener.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/interfaces/OnTrimVideoListener.class b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/interfaces/OnTrimVideoListener.class
+new file mode 100644
+index 0000000..2205aec
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/interfaces/OnTrimVideoListener.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/utils/VideoEdit.class b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/utils/VideoEdit.class
+new file mode 100644
+index 0000000..2ef91c4
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/utils/VideoEdit.class differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_jar/debug/classes.jar b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_jar/debug/classes.jar
+new file mode 100644
+index 0000000..3728f0f
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_jar/debug/classes.jar differ
+diff --git a/node_modules/react-native-video-processing/android/build/intermediates/symbol_list_with_package_name/debug/package-aware-r.txt b/node_modules/react-native-video-processing/android/build/intermediates/symbol_list_with_package_name/debug/package-aware-r.txt
+new file mode 100644
+index 0000000..5affcea
+--- /dev/null
++++ b/node_modules/react-native-video-processing/android/build/intermediates/symbol_list_with_package_name/debug/package-aware-r.txt
+@@ -0,0 +1 @@
++com.shahenlibrary
+diff --git a/node_modules/react-native-video-processing/android/build/outputs/logs/manifest-merger-debug-report.txt b/node_modules/react-native-video-processing/android/build/outputs/logs/manifest-merger-debug-report.txt
+new file mode 100644
+index 0000000..257c8f6
+--- /dev/null
++++ b/node_modules/react-native-video-processing/android/build/outputs/logs/manifest-merger-debug-report.txt
+@@ -0,0 +1,15 @@
++-- Merging decision tree log ---
++manifest
++ADDED from /Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/src/main/AndroidManifest.xml:1:1-3:12
++INJECTED from /Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/src/main/AndroidManifest.xml:1:1-3:12
++	package
++		ADDED from /Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/src/main/AndroidManifest.xml:2:5-32
++		INJECTED from /Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/src/main/AndroidManifest.xml
++uses-sdk
++INJECTED from /Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
++INJECTED from /Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/src/main/AndroidManifest.xml
++INJECTED from /Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/src/main/AndroidManifest.xml
++	android:targetSdkVersion
++		INJECTED from /Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/src/main/AndroidManifest.xml
++	android:minSdkVersion
++		INJECTED from /Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/src/main/AndroidManifest.xml
+diff --git a/node_modules/react-native-video-processing/android/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin b/node_modules/react-native-video-processing/android/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin
+new file mode 100644
+index 0000000..a62ec80
+Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin differ

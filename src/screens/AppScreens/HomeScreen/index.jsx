@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   Alert,
   BackHandler,
-  Image,TouchableOpacity,
+  Image, TouchableOpacity,
   Text, Platform, PermissionsAndroid, AppState, ScrollView, Linking, SafeAreaView
 } from 'react-native';
 import { colors, fonts, HEIGHT, wp } from '../../../constants';
@@ -15,7 +15,7 @@ import ReelHeader from '../../../components/ReelComponent/ReelHeader';
 import ReelCard from '../../../components/ReelComponent/ReelCard';
 import { useIsFocused } from '@react-navigation/native';
 import CommentListSheet from '../../../components/ActionSheetComponent/CommentListSheet';
-import { GetAllPostsRequest } from '../../../services/Utills';
+import { GetAllPostsRequest, GetAllStoryRequest, likeStoryRequest, makeStorySeenRequest } from '../../../services/Utills';
 import Toast from '../../../constants/Toast';
 import { useDispatch, useSelector } from 'react-redux';
 import ShareSheet from '../../../components/ActionSheetComponent/ShareSheet';
@@ -35,6 +35,8 @@ import DeviceInfo from 'react-native-device-info';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useFocusEffect } from '@react-navigation/native';
 import InstagramStories from '@birdwingo/react-native-instagram-stories';
+import ImageConstants from '../../../constants/ImageConstants';
+
 const staticValues = {
   skip: 0,
   limit: 5,
@@ -48,10 +50,10 @@ const HomeScreen = ({ navigation, route }) => {
   const selectedCityData = useSelector(state => state.SelectedCitySlice?.data);
   const reelIndex = useSelector(state => state.ReelIndexSlice?.data);
   const userInfo = useSelector(state => state.UserInfoSlice.data);
- 
+
   const tabBarHeight = useBottomTabBarHeight();
   // const screenHeight = (HEIGHT-tabBarHeight) 
-  const screenHeight = Platform .OS == 'ios' ? HEIGHT : HEIGHT-tabBarHeight-115
+  const screenHeight = Platform.OS == 'ios' ? HEIGHT : HEIGHT - tabBarHeight
   // console.log({tabBarHeight, screenHeight})
   const storyref = useRef(null)
   const prevNearBy = useRef(nearByType);
@@ -87,11 +89,16 @@ const HomeScreen = ({ navigation, route }) => {
   const [refreshing, setRefreshing] = React.useState(false);
   const [isInternetConnected, setIsInternetConnected] = useState(true);
   const [hasTriedFetchingPosts, setHasTriedFetchingPosts] = useState(false);
+  const [stories, setStories] = useState([])
+  const [skip, setSkip] = useState(0);
+  const [limit] = useState(5); // fix limit as per API
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true); 
+  const [currentStory, setCurrentStory] = useState({ userId: null, storyId: null });
+  const [likedStories, setLikedStories] = useState([]); // store liked storyIds
+  const [isLiked, setIsLiked] = useState(false);
 
-  // const { city, location, error } = useLocation()
   const { location, city, error, permissionGranted, refreshLocation } = useLocation();
-
-  // console.log({ location, city, error, permissionGranted })
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -117,7 +124,8 @@ const HomeScreen = ({ navigation, route }) => {
     // Unsubscribe
     return () => unsubscribe();
   }, []);
-  const onRefresh = React.useCallback(async() => {
+  const onRefresh = React.useCallback(async () => {
+    getStoryHandle()
     // setRefreshing(true);
     setIsLoading(true)
     console.log('call this refresh***************')
@@ -139,7 +147,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   const getAllPosts = () => {
     // console.log({ selectedCityData, paramsValues, currentCity: city });
-  
+
     if (selectedCityData?.locationType == 'current') {
       if (city == null && error == null) {
         // Still resolving location – do nothing
@@ -152,16 +160,16 @@ const HomeScreen = ({ navigation, route }) => {
         return;
       }
     }
-  
+
     pagination.isLoading = true;
-  
+
     // Only set isLoading when postArray is empty (for UX reasons)
     if (postArray?.length === 0) {
       setIsLoading(true);
     }
-  
+
     let url = { skip: pagination.skip, limit: pagination.limit };
-  
+
     if (selectedCityData?.locationType == 'current') {
       Object.assign(url, { city: city });
     } else if (paramsValues?.location_type == 'city') {
@@ -173,7 +181,7 @@ const HomeScreen = ({ navigation, route }) => {
         distance: paramsValues?.location_distance,
       });
     }
-  
+
     GetAllPostsRequest(url)
       .then(res => {
         // setPostArray(prevPosts => [...prevPosts, ...res?.result]);
@@ -184,15 +192,15 @@ const HomeScreen = ({ navigation, route }) => {
           );
           return uniquePosts;
         });
-        
-  
+
+
         // Prefetch images
         res?.result?.forEach(item => {
           if (item?.postData?.post?.mimetype == 'image/jpeg') {
             Image.prefetch(item?.postData?.post?.data);
           }
         });
-  
+
         pagination.totalRecords = res?.totalrecord;
         setHasTriedFetchingPosts(true);
       })
@@ -208,18 +216,121 @@ const HomeScreen = ({ navigation, route }) => {
         setRefreshing(false);
       });
   };
-  
 
+  const transformApiToDummy = (apiData) => {
+    return apiData.map(user => ({
+      id: user.added_from === "2" 
+      ? user.business_id : user.user_id,
+      name: user.user_name,
+      avatarSource: user.user_image 
+      ? { uri: user.user_image }
+      : user.added_from === "2" ? ImageConstants.business_logo : ImageConstants.user,
+      stories: user.stories.map(story => ({
+        id: story.id,
+        mediaType: story.media_type === 'video/mp4' ? 'video' : 'image',
+        duration: story.duration,
+        source: { uri: story.media },
+        is_seen : story.is_seen,
+        is_liked : story.is_liked,
+      }))
+    }));
+  };
+
+
+  const getStoryHandle = () => {
+    if (loading || !hasMore) return;
+
+    let url = { skip: skip, limit: limit };
+    GetAllStoryRequest(Object.assign(url))
+      .then(res => {
+        const dummyFormat = transformApiToDummy(res.result);
+        console.log({ res: dummyFormat.length })
+
+        if (dummyFormat?.length > 0) {
+          setStories(prev => [...prev, ...dummyFormat]);
+          setSkip(prev => prev + limit);
+          if (dummyFormat.length < limit) {
+            setHasMore(false);
+          }
+        } else {
+          setHasMore(false);
+        }
+      }
+      )
+      .catch(err => {
+        if (err?.message) {
+          Toast.error('stories', err.message);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }
+
+  // Story khatam hone par seen true karna
+  const handleStorySeen = (userId, storyId) => {
+    setStories((prev) =>
+      prev.map((user) =>
+        user.id === userId
+          ? {
+              ...user,
+              stories: user.stories.map((s) =>
+                s.id === storyId ? { ...s, is_seen: true } : s
+              ),
+            }
+          : user
+      )
+    );
+  };
+
+  useEffect(() => {
+    getStoryHandle()
+  }, [])
+
+  useEffect(() => {
+    if (isFocused && route?.params?.shouldScrollTopReel) {
+      getStoryHandle(); // latest stories fetch
+    }
+  }, [isFocused, route?.params?.shouldScrollTopReel]);
+
+  const markStoryAsSeen = async (storyId) => {
+    try {
+      const res = await makeStorySeenRequest(storyId);
+      console.log('story seen ho gyi', storyId, res);
+    } catch (err) {
+      console.log({err})
+      if (err?.message) {
+        Toast.error('view stories', err.message);
+      }
+    }
+  };
+
+  const likeStoryHandle = async (storyId) => {
+    console.log({storyId})
+    try {
+      const res = await likeStoryRequest(storyId);
+      console.log('story like ho gyi', storyId, res);
+
+      setIsLiked(prev => !prev);
+     
+    } catch (err) {
+      console.log({err})
+      if (err?.message) {
+        Toast.error('Like stories', err.message);
+      }
+    }
+  };
+  
   const _onViewableItemsChanged = useCallback(({ viewableItems }) => {
     if (viewableItems[0]) {
       const index = viewableItems[0]?.index;
       setCurrentItemIndex(index);
       dispatch(ReelIndexAction(index));
-      console.log({currentItemIndex})
+      console.log({ currentItemIndex })
       // Load more if needed
-      if (pagination.skip < pagination.totalRecords && 
-          postArray?.length - 2 <= index && 
-          !pagination.isLoading) {
+      if (pagination.skip < pagination.totalRecords &&
+        postArray?.length - 2 <= index &&
+        !pagination.isLoading) {
         pagination.skip += pagination.limit;
         getAllPosts();
       }
@@ -244,24 +355,24 @@ const HomeScreen = ({ navigation, route }) => {
       setIsOnFocusItem(false);
       return;
     }
-  
+
     if ((error || !city) && selectedCityData?.locationType === 'current') {
       setIsLoading(false);
       return;
     }
-  
+
     const nearByChanged = JSON.stringify(prevNearByTypeRef.current) !== JSON.stringify(nearByType);
     const locationTypeChanged = prevLocationTypeRef.current !== selectedCityData?.locationType;
-  
+
     console.log({ nearByChanged, locationTypeChanged, locationType: selectedCityData?.locationType });
-  
+
     if (route?.params?.shouldScrollTopReel || nearByChanged || locationTypeChanged) {
       setPostArray([]);
       onRefresh();
-  
+      getStoryHandle()
       prevNearByTypeRef.current = nearByType;
       prevLocationTypeRef.current = selectedCityData?.locationType;
-  
+
       if (route?.params?.shouldScrollTopReel) {
         navigation.setParams({ shouldScrollTopReel: false });
       }
@@ -275,36 +386,36 @@ const HomeScreen = ({ navigation, route }) => {
         });
       }, 100);
     }
-  
+
     setIsOnFocusItem(true);
   }, [isFocused, city, selectedCityData, error]);
-  
+
   useFocusEffect(
     useCallback(() => {
-    const backAction = () => {
-      Alert.alert(
-        'Exit From Alex',
-        'Are you sure you want to close this application?',
-        [
-          {
-            text: 'Cancel',
-            onPress: () => null,
-            style: 'cancel',
-          },
-          { text: 'YES', onPress: () => BackHandler.exitApp() },
-        ],
+      const backAction = () => {
+        Alert.alert(
+          'Exit From Alex',
+          'Are you sure you want to close this application?',
+          [
+            {
+              text: 'Cancel',
+              onPress: () => null,
+              style: 'cancel',
+            },
+            { text: 'YES', onPress: () => BackHandler.exitApp() },
+          ],
+        );
+        return true;
+      };
+
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction,
       );
-      return true;
-    };
 
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
-    );
-
-    return () => backHandler.remove();
-  }, [navigation]) 
-);
+      return () => backHandler.remove();
+    }, [navigation])
+  );
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => { });
@@ -325,12 +436,12 @@ const HomeScreen = ({ navigation, route }) => {
       return () => clearTimeout(timer);
     }
   }, [reelIndex]);
-  
+
 
   const _renderReels = useCallback(
     ({ item, index }) => {
       return (
-        <View style={[styles.cardContainer, { height:screenHeight}]} key={index}>
+        <View style={[styles.cardContainer, { height: screenHeight }]} key={index}>
           <ReelCard
             idx={index}
             screen={'Home'}
@@ -358,41 +469,17 @@ const HomeScreen = ({ navigation, route }) => {
   });
 
   const shouldShowLoader =
-  !hasTriedFetchingPosts || isLoading || (selectedCityData?.locationType === 'current' && city == null && error == null);
+    !hasTriedFetchingPosts || isLoading || (selectedCityData?.locationType === 'current' && city == null && error == null);
 
-const shouldShowEmptyMessage =
-  hasTriedFetchingPosts && !isLoading && postArray.length === 0 && (city !== null || error !== null);
+  const shouldShowEmptyMessage =
+    hasTriedFetchingPosts && !isLoading && postArray.length === 0 && (city !== null || error !== null);
 
   const shouldShowLocationError =
-  selectedCityData?.locationType === 'current' && !!error && postArray.length === 0;
-  
+    selectedCityData?.locationType === 'current' && !!error && postArray.length === 0;
+
   return (
     <>
       <View style={styles.container}>
-      <SafeAreaView style={{marginTop:15, height:100,zIndex:3, overflow:'visible', marginLeft:10  }}>
-          <InstagramStories
-            ref={storyref}
-            stories={stories}
-            onStoryPress={(story) => {
-              storyref.current?.open(story.id);
-            }}
-            animationDuration={5000}
-            videoAnimationMaxDuration={30000}
-            saveProgress={false}
-            avatarSize={60}
-            storyContainerStyle={{ margin: 0, padding:0}}
-            progressContainerStyle={{margin:0,padding:0}}
-            containerStyle={{marginTop:Platform.OS === 'android' && "-20%", zIndex:3}}
-            closeIconColor='#fff'
-           progressColor={colors.gray}
-           progressActiveColor={colors.primaryColor}
-           showName={true}
-           nameTextStyle={{color:colors.white, textAlign:'center'}}
-           textStyle={{color:colors.white}}
-          />
-        </SafeAreaView>
-
-
         <ReelHeader
           onSearchClick={() => navigation.navigate('SearchScreen')}
           onNearByClick={() => navigation.navigate('NearByScreen')}
@@ -405,11 +492,75 @@ const shouldShowEmptyMessage =
           currentCity={city}
         />
 
+        {stories.length > 0 &&
+          <SafeAreaView style={{ zIndex: 3, marginLeft: 10, position: 'absolute', top: '10%' }}>
+            <InstagramStories
+              ref={storyref}
+              stories={stories}
+              onStoryPress={(story) => {
+                storyref.current?.open(story.id);
+              }}
+              animationDuration={5000}
+              videoAnimationMaxDuration={30000}
+              // saveProgress={false}
+              avatarSize={60}
+              storyContainerStyle={{ margin: 0, padding: 0 }}
+              progressContainerStyle={{ margin: 0, padding: 0 }}
+              containerStyle={{ marginTop: Platform.OS === 'android' && "-20%", zIndex: 3, }}
+              closeIconColor='#fff'
+              progressColor={colors.gray}
+              progressActiveColor={colors.primaryColor}
+              showName={true}
+              nameTextStyle={{ color: colors.white, textAlign: 'center' }}
+              textStyle={{ color: colors.white }}
+              footerComponent={() => {
+                return(
+                <View style={{
+                  width: '100%',
+                  paddingVertical: 12,
+                  paddingHorizontal: 20,
+                  backgroundColor: 'rgba(0,0,0,0.3)',
+                  flexDirection: 'row',
+                  justifyContent: 'flex-end',
+                  alignItems: 'center',
+                }}>
+                  <TouchableOpacity disabled={isLiked}
+                  style={{ marginRight: 20 }}
+                   onPress={()=>likeStoryHandle(currentStory?.storyId)} >
+                    <Image 
+                    source={isLiked ? ImageConstants.filled_like : ImageConstants.unlike} 
+                    tintColor={isLiked ? colors.primaryColor : colors.white} 
+                  />
+                  </TouchableOpacity >
+                  <TouchableOpacity onPress={()=>alert('share it')}>
+                    <Image source={ImageConstants.share}  />
+                  </TouchableOpacity>
+                </View>
+              )}}
+              onStoryStart={(userId, storyId) => {
+                console.log({userId, storyId});
+                setCurrentStory({ userId, storyId });
+                markStoryAsSeen(storyId);
+                handleStorySeen(userId, storyId)
+                const parentUser = stories.find(user => user.id === userId);
+                const storyObj = parentUser?.stories.find(s => s.id === storyId);
+                console.log({storyObj})
+                if (storyObj) {
+                  setIsLiked(storyObj.is_liked); 
+                }
+              }}
+            avatarBorderColors={[colors.primaryColor]}
+            avatarSeenBorderColors={[colors.gray]}
+            saveProgress={true}
+            />
+          </SafeAreaView>
+        
+        }
 
         <ScrollView contentContainerStyle={{ flex: 1 }} nestedScrollEnabled={true} refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
-         {shouldShowLoader ? (
+          {shouldShowLoader ? (
             // Show loader
             <View style={{
               alignItems: 'center',
@@ -456,67 +607,67 @@ const shouldShowEmptyMessage =
                 extraData={screenHeight}
               />
             </View>
-          ) : 
-          shouldShowLocationError ? (
-
-            <View style={{
-              flex: 1,
-              backgroundColor: colors.black,
-              justifyContent: 'center',
-              alignItems: 'center',
-              paddingHorizontal: 20,
-            }}>
-              <Text
-                style={{
-                  fontFamily: fonts.bold,
-                  fontSize: wp(16),
-                  color: colors.white,
-                  textAlign: 'center',
-                  marginBottom: 10,
-                }}>
-                Failed to fetch location. Please enable location services.
-              </Text>
-          
-              <Text
-                onPress={() => {
-                  setIsLoading(true);
-                  refreshLocation(); // Retry location fetch
-                }}
-                style={{
-                  fontFamily: fonts.semiBold,
-                  fontSize: wp(14),
-                  color: colors.primary,
-                  textDecorationLine: 'underline',
-                }}>
-                Retry
-              </Text>
-            </View>
           ) :
-          
-          shouldShowEmptyMessage ? (
-            <View style={{
-              flex: 1,
-              backgroundColor: colors.black,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-              <Text
-                onPress={() => {
-                  if (selectedCityData?.locationType === 'current') {
-                    navigation.navigate('PostMediaScreen');
-                  }
-                }}
-                style={{
-                  fontFamily: fonts.bold,
-                  fontSize: wp(16),
-                  color: colors.white,
+            shouldShowLocationError ? (
+
+              <View style={{
+                flex: 1,
+                backgroundColor: colors.black,
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingHorizontal: 20,
+              }}>
+                <Text
+                  style={{
+                    fontFamily: fonts.bold,
+                    fontSize: wp(16),
+                    color: colors.white,
+                    textAlign: 'center',
+                    marginBottom: 10,
+                  }}>
+                  Failed to fetch location. Please enable location services.
+                </Text>
+
+                <Text
+                  onPress={() => {
+                    setIsLoading(true);
+                    refreshLocation(); // Retry location fetch
+                  }}
+                  style={{
+                    fontFamily: fonts.semiBold,
+                    fontSize: wp(14),
+                    color: colors.primary,
+                    textDecorationLine: 'underline',
+                  }}>
+                  Retry
+                </Text>
+              </View>
+            ) :
+
+              shouldShowEmptyMessage ? (
+                <View style={{
+                  flex: 1,
+                  backgroundColor: colors.black,
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}>
-                {selectedCityData?.locationType === 'current'
-                  ? 'Be the first one to post in this city'
-                  : 'No post found!'}
-              </Text>
-            </View>
-          ) : null}
+                  <Text
+                    onPress={() => {
+                      if (selectedCityData?.locationType === 'current') {
+                        navigation.navigate('PostMediaScreen');
+                      }
+                    }}
+                    style={{
+                      fontFamily: fonts.bold,
+                      fontSize: wp(16),
+                      color: colors.white,
+                    }}>
+                    {selectedCityData?.locationType === 'current'
+                      ? 'Be the first one to post in this city'
+                      : 'No post found!'}
+                  </Text>
+                </View>
+              ) : null}
         </ScrollView>
 
         {/* Comment List Screen */}
@@ -566,73 +717,73 @@ const shouldShowEmptyMessage =
           onActionDone={onRefresh}
         />
 
-<FollowUserSheet
-  ref={followingUserRef}
-  
-  // User props
-  userDetail={
-    postArray[currentItemIndex]?.postData?.added_from === '1'
-      ? postArray[currentItemIndex]?.postData?.user_id
-      : null
-  }
-  isFollowing={postArray[currentItemIndex]?.isFollowed}
-  onFollowed={() => {
-    let temp = [...postArray];
-    let userId = postArray[currentItemIndex]?.postData?.user_id?._id;
-    temp?.forEach(item => {
-      if (item?.postData?.user_id?._id === userId) {
-        item.isFollowed = true;
-      }
-    });
-    setPostArray(temp);
-  }}
-  onUnfollowed={() => {
-    let temp = [...postArray];
-    let userId = postArray[currentItemIndex]?.postData?.user_id?._id;
-    temp?.forEach(item => {
-      if (item?.postData?.user_id?._id === userId) {
-        item.isFollowed = false;
-      }
-    });
-    setPostArray(temp);
-  }}
+        <FollowUserSheet
+          ref={followingUserRef}
 
-  // Business props
-  businessDetail={
-    postArray[currentItemIndex]?.postData?.added_from === '2' &&
-    postArray[currentItemIndex]?.postData?.tagBussiness?.[0]
-      ? postArray[currentItemIndex]?.postData?.tagBussiness?.[0]
-      : null
-  }
-  isBusinessFollowing={
-    postArray[currentItemIndex]?.postData?.tagBussiness?.[0]
-      ?.isFollowedBusiness
-  }
-  onBusinessFollowed={() => {
-    let temp = [...postArray];
-    let businessId = postArray[currentItemIndex]?.postData?.tagBussiness?.[0]?._id;
-    temp?.forEach(item => {
-      if (
-        item?.postData?.tagBussiness?.[0]?._id === businessId
-      ) {
-        item.postData.tagBussiness[0].isFollowedBusiness = true;
-      }
-    });
-    setPostArray(temp);
-  }}
-  onBusinessUnfollowed={() => {
-    let temp = [...postArray];
-    let businessId = postArray[currentItemIndex]?.postData?.tagBussiness?.[0]?._id;
-    temp?.forEach(item => {
-      if (
-        item?.postData?.tagBussiness?.[0]?._id === businessId
-      ) {
-        item.postData.tagBussiness[0].isFollowedBusiness = false;
-      }
-    });
-    setPostArray(temp);
-  }}
-/>
+          // User props
+          userDetail={
+            postArray[currentItemIndex]?.postData?.added_from === '1'
+              ? postArray[currentItemIndex]?.postData?.user_id
+              : null
+          }
+          isFollowing={postArray[currentItemIndex]?.isFollowed}
+          onFollowed={() => {
+            let temp = [...postArray];
+            let userId = postArray[currentItemIndex]?.postData?.user_id?._id;
+            temp?.forEach(item => {
+              if (item?.postData?.user_id?._id === userId) {
+                item.isFollowed = true;
+              }
+            });
+            setPostArray(temp);
+          }}
+          onUnfollowed={() => {
+            let temp = [...postArray];
+            let userId = postArray[currentItemIndex]?.postData?.user_id?._id;
+            temp?.forEach(item => {
+              if (item?.postData?.user_id?._id === userId) {
+                item.isFollowed = false;
+              }
+            });
+            setPostArray(temp);
+          }}
+
+          // Business props
+          businessDetail={
+            postArray[currentItemIndex]?.postData?.added_from === '2' &&
+              postArray[currentItemIndex]?.postData?.tagBussiness?.[0]
+              ? postArray[currentItemIndex]?.postData?.tagBussiness?.[0]
+              : null
+          }
+          isBusinessFollowing={
+            postArray[currentItemIndex]?.postData?.tagBussiness?.[0]
+              ?.isFollowedBusiness
+          }
+          onBusinessFollowed={() => {
+            let temp = [...postArray];
+            let businessId = postArray[currentItemIndex]?.postData?.tagBussiness?.[0]?._id;
+            temp?.forEach(item => {
+              if (
+                item?.postData?.tagBussiness?.[0]?._id === businessId
+              ) {
+                item.postData.tagBussiness[0].isFollowedBusiness = true;
+              }
+            });
+            setPostArray(temp);
+          }}
+          onBusinessUnfollowed={() => {
+            let temp = [...postArray];
+            let businessId = postArray[currentItemIndex]?.postData?.tagBussiness?.[0]?._id;
+            temp?.forEach(item => {
+              if (
+                item?.postData?.tagBussiness?.[0]?._id === businessId
+              ) {
+                item.postData.tagBussiness[0].isFollowedBusiness = false;
+              }
+            });
+            setPostArray(temp);
+          }}
+        />
       </View>
       <NoInternetModal shouldShow={!isInternetConnected} />
     </>
@@ -649,89 +800,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.black,
   },
+  iconsty: {
+    width: wp(20),
+    height: wp(20)
+  }
 });
 
 export default HomeScreen;
 
-
-const stories = [
-  { 
-    id: 'user1',
-    name: 'Rakhi',
-    avatarSource: { uri: 'https://randomuser.me/api/portraits/women/1.jpg', },
-    stories: [
-      {
-        id: 'story1',
-        source: { uri: 'https://randomuser.me/api/portraits/women/1.jpg' },
-        mediaType: 'image', // 👈 Add this
-        duration: 5, // seconds
-      },
-      {
-        id: 'story2',
-        source: { uri: 'https://www.w3schools.com/html/mov_bbb.mp4' },
-        mediaType: 'video',
-        duration: 30, // seconds
-      },
-    ], 
-  },
-  { 
-    id: 'user2',
-    name: 'Rakhi2',
-    avatarSource: { uri: 'https://randomuser.me/api/portraits/women/1.jpg', },
-    stories: [
-      {
-        id: 'story1',
-        source: { uri: 'https://randomuser.me/api/portraits/women/1.jpg' },
-        mediaType: 'image', // 👈 Add this
-        duration: 5, // seconds
-      },
-      {
-        id: 'story2',
-        source: { uri: 'https://www.w3schools.com/html/mov_bbb.mp4' },
-        mediaType: 'video',
-        duration: 30, // seconds
-      },
-    ], 
-  },
-];
-
-const users = [
-  {
-    id: 'user1',
-    name: 'Rakhi',
-    avatar: 'https://randomuser.me/api/portraits/women/1.jpg',
-    stories: [
-      {
-        id: 'u1s1',
-        type: 'image',
-        url: 'https://randomuser.me/api/portraits/women/1.jpg',
-        duration: 5000,
-      },
-      {
-        id: 'u1s2',
-        type: 'video',
-        url: 'https://www.w3schools.com/html/mov_bbb.mp4',
-        duration: 30000,
-      },
-      {
-        id: 'u1s3',
-        type: 'image',
-        url: 'https://randomuser.me/api/portraits/women/1.jpg',
-        duration: 5000,
-      },
-    ],
-  },
-  {
-    id: 'user2',
-    name: 'Arya',
-    avatar: 'https://randomuser.me/api/portraits/women/2.jpg',
-    stories: [
-      {
-        id: 'u2s1',
-        type: 'image',
-        url: 'https://randomuser.me/api/portraits/women/2.jpg',
-        duration: 5000,
-      },
-    ],
-  },
-];
