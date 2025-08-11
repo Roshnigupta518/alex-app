@@ -36,6 +36,7 @@ import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useFocusEffect } from '@react-navigation/native';
 import InstagramStories from '@birdwingo/react-native-instagram-stories';
 import ImageConstants from '../../../constants/ImageConstants';
+import { handleShareStoryFunction } from '../../../validation/helper';
 
 const staticValues = {
   skip: 0,
@@ -97,6 +98,8 @@ const HomeScreen = ({ navigation, route }) => {
   const [currentStory, setCurrentStory] = useState({ userId: null, storyId: null });
   const [likedStories, setLikedStories] = useState([]); // store liked storyIds
   const [isLiked, setIsLiked] = useState(false);
+
+  const { openStoryId } = route.params || {};
 
   const { location, city, error, permissionGranted, refreshLocation } = useLocation();
 
@@ -238,6 +241,7 @@ const HomeScreen = ({ navigation, route }) => {
 
 
   const getStoryHandle = () => {
+    console.log('**********************story updated', hasMore, loading)
     if (loading || !hasMore) return;
 
     let url = { skip: skip, limit: limit };
@@ -284,14 +288,34 @@ const HomeScreen = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    getStoryHandle()
-  }, [])
-
-  useEffect(() => {
     if (isFocused && route?.params?.shouldScrollTopReel) {
-      getStoryHandle(); // latest stories fetch
+      // reset first
+      setSkip(0);
+      setHasMore(true);
+      setStories([]);
+      setLoading(false); // make sure not loading before fetch
     }
   }, [isFocused, route?.params?.shouldScrollTopReel]);
+  
+  useEffect(() => {
+    // jab hasMore true ho jaye & isFocused ho, tab fetch karo
+    if (isFocused && hasMore && skip === 0) {
+      setLoading(true);
+      getStoryHandle();
+    }
+  }, [isFocused, hasMore, skip]);
+  
+  useEffect(() => {
+    if (openStoryId && stories.length > 0) {
+      const index = stories.findIndex(s => s.id === openStoryId);
+      if (index !== -1) {
+        // Agar InstagramStories me openStory method hai to
+        storyref.current?.scrollToStory(index);
+      }
+    }
+  }, [openStoryId, stories]);
+
+  console.log({openStoryId})
 
   const markStoryAsSeen = async (storyId) => {
     try {
@@ -491,9 +515,26 @@ const HomeScreen = ({ navigation, route }) => {
           selectedCity={selectedCityData?.locationType}
           currentCity={city}
         />
-
+     
+        <View style={styles.storyContainer}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('AddStory',{added_from: 1})}
+          style={{ alignItems: 'center', marginHorizontal: 8 }}
+        >
+          <View style={styles.profilesty}>
+            <Image
+              source={userInfo.profile_picture ? {uri:userInfo.profile_picture} :ImageConstants.user }
+              style={styles.profileImg}
+            />
+            {/* Plus icon */}
+            <View style={styles.plusicon}>
+              <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'bold' }}>+</Text>
+            </View>
+          </View>
+          <Text style={{ color: '#fff', fontSize: 12, marginTop: 4 }}>Add Story</Text>
+        </TouchableOpacity>
         {stories.length > 0 &&
-          <SafeAreaView style={{ zIndex: 3, marginLeft: 10, position: 'absolute', top: '10%' }}>
+          <SafeAreaView >
             <InstagramStories
               ref={storyref}
               stories={stories}
@@ -532,7 +573,7 @@ const HomeScreen = ({ navigation, route }) => {
                     tintColor={isLiked ? colors.primaryColor : colors.white} 
                   />
                   </TouchableOpacity >
-                  <TouchableOpacity onPress={()=>alert('share it')}>
+                  <TouchableOpacity onPress={()=>handleShareStoryFunction(currentStory?.storyId)}>
                     <Image source={ImageConstants.share}  />
                   </TouchableOpacity>
                 </View>
@@ -549,13 +590,14 @@ const HomeScreen = ({ navigation, route }) => {
                   setIsLiked(storyObj.is_liked); 
                 }
               }}
-            avatarBorderColors={[colors.primaryColor]}
+            avatarBorderColors={['#0896E6','#FFE35E','#FEDF00','#55A861', '#2291CF']}
             avatarSeenBorderColors={[colors.gray]}
             saveProgress={true}
             />
           </SafeAreaView>
-        
         }
+       
+        </View>
 
         <ScrollView contentContainerStyle={{ flex: 1 }} nestedScrollEnabled={true} refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -795,7 +837,28 @@ const styles = StyleSheet.create({
     // height: HEIGHT,
     backgroundColor: colors.gray,
   },
-
+storyContainer:{ zIndex: 3, marginLeft: 10, position: 'absolute', top: '10%', flexDirection:'row' },
+profilesty:{
+  width: 69,
+  height: 69,
+  borderRadius: 50,
+  borderWidth: 2,
+  borderColor: colors.gray,
+  alignItems: 'center',
+  justifyContent: 'center'
+},
+profileImg:{ width: 60, height:60, borderRadius: 50 },
+plusicon:{
+  position: 'absolute',
+  bottom: -2,
+  right: -2,
+  backgroundColor: colors.primaryColor, // Instagram blue
+  width: 20,
+  height: 20,
+  borderRadius: 10,
+  alignItems: 'center',
+  justifyContent: 'center'
+},
   container: {
     flex: 1,
     backgroundColor: colors.black,

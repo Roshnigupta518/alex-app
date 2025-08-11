@@ -510,7 +510,7 @@ import BackHeader from '../../../components/BackHeader';
 
 let pressTimer;
 
-const StoryCaptureScreen = () => {
+const StoryCaptureScreen = ({route}) => {
   const navigation = useNavigation();
   const cameraRef = useRef(null);
   const [isRecording, setIsRecording] = useState(false);
@@ -518,6 +518,8 @@ const StoryCaptureScreen = () => {
   const [recordingTime, setRecordingTime] = useState(0);
 const recordingInterval = useRef(null);
 
+const {added_from, business_id} = route?.params
+  console.log({added_from, business_id})
 
   const devices = useCameraDevices();
   // const device = devices[cameraPosition];
@@ -569,7 +571,7 @@ const recordingInterval = useRef(null);
         flash: 'off',
         qualityPrioritization: 'quality',
       });
-      navigation.navigate('StoryPreview', { media: { type: 'image', uri: 'file://' + photo.path } });
+      navigation.navigate('StoryPreview', { media: { type: 'image', uri: 'file://' + photo.path, added_from, business_id } });
     } catch (err) {
       console.error('Photo capture error:', err);
     }
@@ -619,7 +621,7 @@ const recordingInterval = useRef(null);
           setIsRecording(false);
           stopRecordingTimer(); // Stop timer after recording ends
           navigation.navigate('StoryPreview', {
-            media: { type: 'video', uri: 'file://' + video.path },
+            media: { type: 'video', uri: 'file://' + video.path, added_from, business_id },
           });
         },
         onRecordingError: (error) => {
@@ -697,10 +699,10 @@ const recordingInterval = useRef(null);
           // });
           alert('Please select a video of 30 seconds or less.')
         } else {
-          navigation.navigate('StoryPreview', { media: { uri: file.path, type: 'video', mediaType : file.mime} });
+          navigation.navigate('StoryPreview', { media: { uri: file.path, type: 'video', mediaType : file.mime, added_from, business_id} });
         }
       } else {
-        navigation.navigate('StoryPreview', { media: { uri: file.path, type: 'image', mediaType : file.mime} });
+        navigation.navigate('StoryPreview', { media: { uri: file.path, type: 'image', mediaType : file.mime, added_from, business_id} });
       }
     } catch (err) {
       console.warn('Gallery pick error:', err);

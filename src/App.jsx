@@ -217,6 +217,9 @@ const App = () => {
             navigationRef.navigate('ClaimBusinessScreen', { place_id: id });
           } else if (type === 'post') {
             navigationRef.navigate('PostDetailScreen', { post_id: id }); // Make sure this screen exists
+          } else if (type === 'story'){
+            navigationRef.navigate('Home', { openStoryId: id });
+            console.log('going to home screen with story id', id)
           }
         } else {
           // Wait for nav readiness
@@ -227,6 +230,8 @@ const App = () => {
                 navigationRef.navigate('ClaimBusinessScreen', { place_id: id });
               } else if (type === 'post') {
                 navigationRef.navigate('PostDetailScreen', { post_id: id });
+              } else if (type === 'story'){
+                navigationRef.navigate('Home', { openStoryId: id });
               }
             }
           }, 100);

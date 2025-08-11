@@ -104,7 +104,46 @@ export const handleSharePostFunction = async (data) => {
 
   } catch (err) {
     console.log('Post dynamic link error:', err);
-    alert('Failed to create post link');
+    // alert('Failed to create post link');
+  }
+};
+
+export const handleShareStoryFunction = async (data) => {
+  console.log({data})
+  try {
+    const dynamicLink = await dynamicLinks().buildShortLink({
+      link: `https://www.thealexapp.com/story/${data}`,  // <-- unique story link
+      domainUriPrefix: 'https://alexsocial.page.link',
+      android: {
+        packageName: 'com.alexsocial',
+      },
+      ios: {
+        bundleId: 'com.alexsocial',
+        appStoreId: '6470377502',
+      },
+      social: {
+        title: data?.postData?.caption || 'Check out this story',
+        descriptionText: data?.postData?.location || `${data?.postData?.city || ''}${data?.postData?.country ? ', ' + data?.postData?.country : ''}` || "Shared from Alex App",
+        imageUrl: data?.postData?.post?.data || data?.postData?.post_thumbnail || "https://alexsocial.com/default_post_image.jpg"
+      },
+    });
+
+    console.log('Generated post dynamic link:', dynamicLink);
+
+    Share.open({
+      message: `Check out this post on Alex App!`,
+      url: dynamicLink,
+    })
+    .then(res => {
+      console.log('Post share success:', res);
+    })
+    .catch(err => {
+      console.log('Post share error:', JSON.stringify(err));
+    });
+
+  } catch (err) {
+    console.log('Post dynamic link error:', err);
+    // alert('Failed to create post link');
   }
 };
 

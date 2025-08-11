@@ -39,6 +39,7 @@ import dynamicLinks from '@react-native-firebase/dynamic-links';
 import Share from 'react-native-share';
 import { MakeFollowedBusinessRequest, unclaimedBusinessRequest } from '../../../services/Utills';
 import { handleShareFunction } from '../../../validation/helper';
+import { useSelector } from 'react-redux';
 
 const ClaimBusinessScreen = ({ navigation, route }) => {
   const follow = route?.params || {};
@@ -46,7 +47,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
   const name = follow.name || '';
   // const screen = route?.params?.screen
    
-  console.log({follow})
+  // console.log({follow})
 
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState(null);
@@ -59,6 +60,8 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
   const [showBanner, setShowBanner] = useState(false);
   const [isFollowLoading, setIsFollowLoading] = useState(false);
   const [isFollow, setIsFollow] = useState(false);
+
+  const userInfo = useSelector(state => state.UserInfoSlice.data);
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -565,10 +568,12 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
                     <Text style={styles.btntxt}>Order now</Text>
                   </TouchableOpacity>}
 
-                  <TouchableOpacity style={styles.button}
-                    onPress={() => navigation.navigate('AddStory') } >
-                    <Text style={styles.btntxt}>Add Story</Text>
-                  </TouchableOpacity>
+                  {data.user_id === userInfo.id && 
+                 <TouchableOpacity style={styles.button}
+                 onPress={() => navigation.navigate('AddStory', {added_from: 2, business_id : data?._id }) } >
+                 <Text style={styles.btntxt}>Add Story</Text>
+               </TouchableOpacity>
+                }
                 </View>
                 :(
                   <View style={styles.socialContent}>
@@ -578,7 +583,6 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
                   </TouchableOpacity>
                     </View>
                 )}
-
 
               </View>
 

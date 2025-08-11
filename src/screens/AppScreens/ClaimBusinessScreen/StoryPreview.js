@@ -62,7 +62,11 @@ const handleUpload = async () => {
         type: getMimeTypeFromUri(media.uri), // always resolve from URI
         name: getFileNameFromPath(media.uri) || `video_${Date.now()}.mp4`
       });
-      formdata.append("added_from", "1");
+      formdata.append("added_from", media.added_from);
+
+      {
+        media.business_id &&  formdata.append("business_id", media.business_id);
+      }
   
       let temp_token = await Storage.get('userdata');
   
