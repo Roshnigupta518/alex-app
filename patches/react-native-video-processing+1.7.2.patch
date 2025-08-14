@@ -28,7 +28,7 @@ index 0000000..0d259dd
 +o/classes
 diff --git a/node_modules/react-native-video-processing/android/build/.transforms/6fefe3f57eb57c6cad3d9fbf88e091f8/transformed/classes/classes_dex/classes.dex b/node_modules/react-native-video-processing/android/build/.transforms/6fefe3f57eb57c6cad3d9fbf88e091f8/transformed/classes/classes_dex/classes.dex
 new file mode 100644
-index 0000000..8513670
+index 0000000..fed6f6f
 Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/.transforms/6fefe3f57eb57c6cad3d9fbf88e091f8/transformed/classes/classes_dex/classes.dex differ
 diff --git a/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/results.bin b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/results.bin
 new file mode 100644
@@ -63,7 +63,7 @@ index 0000000..2a24aae
 Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/Trimmer/Trimmer$FfmpegCmdAsyncTaskParams.dex differ
 diff --git a/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/Trimmer/Trimmer.dex b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/Trimmer/Trimmer.dex
 new file mode 100644
-index 0000000..8db6bd8
+index 0000000..b33ab70
 Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/Trimmer/Trimmer.dex differ
 diff --git a/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/Trimmer/TrimmerManager.dex b/node_modules/react-native-video-processing/android/build/.transforms/a2fa08a4b833a2c93d33695e3320d9b0/transformed/debug/debug_dex/com/shahenlibrary/Trimmer/TrimmerManager.dex
 new file mode 100644
@@ -202,7 +202,7 @@ index 0000000..9e26dfe
 \ No newline at end of file
 diff --git a/node_modules/react-native-video-processing/android/build/intermediates/compile_library_classes_jar/debug/classes.jar b/node_modules/react-native-video-processing/android/build/intermediates/compile_library_classes_jar/debug/classes.jar
 new file mode 100644
-index 0000000..db5163e
+index 0000000..8856101
 Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/compile_library_classes_jar/debug/classes.jar differ
 diff --git a/node_modules/react-native-video-processing/android/build/intermediates/compile_r_class_jar/debug/R.jar b/node_modules/react-native-video-processing/android/build/intermediates/compile_r_class_jar/debug/R.jar
 new file mode 100644
@@ -213,11 +213,11 @@ new file mode 100644
 index 0000000..e69de29
 diff --git a/node_modules/react-native-video-processing/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties b/node_modules/react-native-video-processing/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties
 new file mode 100644
-index 0000000..d4fb07f
+index 0000000..ea3bb78
 --- /dev/null
 +++ b/node_modules/react-native-video-processing/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties
 @@ -0,0 +1 @@
-+#Sun Aug 03 22:54:15 IST 2025
++#Sun Aug 10 15:15:48 IST 2025
 diff --git a/node_modules/react-native-video-processing/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml b/node_modules/react-native-video-processing/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml
 new file mode 100644
 index 0000000..c780be1
@@ -280,7 +280,7 @@ index 0000000..b327dcc
 Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/Trimmer/Trimmer$FfmpegCmdAsyncTaskParams.class differ
 diff --git a/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/Trimmer/Trimmer.class b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/Trimmer/Trimmer.class
 new file mode 100644
-index 0000000..a05f6b4
+index 0000000..f2bdfaf
 Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/Trimmer/Trimmer.class differ
 diff --git a/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/Trimmer/TrimmerManager.class b/node_modules/react-native-video-processing/android/build/intermediates/javac/debug/classes/com/shahenlibrary/Trimmer/TrimmerManager.class
 new file mode 100644
@@ -435,7 +435,7 @@ index 0000000..b327dcc
 Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/Trimmer/Trimmer$FfmpegCmdAsyncTaskParams.class differ
 diff --git a/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/Trimmer/Trimmer.class b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/Trimmer/Trimmer.class
 new file mode 100644
-index 0000000..a05f6b4
+index 0000000..f2bdfaf
 Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/Trimmer/Trimmer.class differ
 diff --git a/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/Trimmer/TrimmerManager.class b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/Trimmer/TrimmerManager.class
 new file mode 100644
@@ -475,7 +475,7 @@ index 0000000..2ef91c4
 Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_dir/debug/com/shahenlibrary/utils/VideoEdit.class differ
 diff --git a/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_jar/debug/classes.jar b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_jar/debug/classes.jar
 new file mode 100644
-index 0000000..3728f0f
+index 0000000..1063f60
 Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/intermediates/runtime_library_classes_jar/debug/classes.jar differ
 diff --git a/node_modules/react-native-video-processing/android/build/intermediates/symbol_list_with_package_name/debug/package-aware-r.txt b/node_modules/react-native-video-processing/android/build/intermediates/symbol_list_with_package_name/debug/package-aware-r.txt
 new file mode 100644
@@ -507,5 +507,58 @@ index 0000000..257c8f6
 +		INJECTED from /Users/Geeta/Desktop/new/tourism_alex_social/node_modules/react-native-video-processing/android/src/main/AndroidManifest.xml
 diff --git a/node_modules/react-native-video-processing/android/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin b/node_modules/react-native-video-processing/android/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin
 new file mode 100644
-index 0000000..a62ec80
+index 0000000..2da2619
 Binary files /dev/null and b/node_modules/react-native-video-processing/android/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin differ
+diff --git a/node_modules/react-native-video-processing/android/src/main/java/com/shahenlibrary/Trimmer/Trimmer.java b/node_modules/react-native-video-processing/android/src/main/java/com/shahenlibrary/Trimmer/Trimmer.java
+index aa43179..15e0ceb 100644
+--- a/node_modules/react-native-video-processing/android/src/main/java/com/shahenlibrary/Trimmer/Trimmer.java
++++ b/node_modules/react-native-video-processing/android/src/main/java/com/shahenlibrary/Trimmer/Trimmer.java
+@@ -374,7 +374,12 @@ public class Trimmer {
+       videoMetadata.putInt("bitrate", bitrate);
+       return videoMetadata;
+     } finally {
+-      retriever.release();
++      try {
++    retriever.release();
++} catch (IOException e) {
++    e.printStackTrace();
++}
++
+     }
+   }
+ 
+diff --git a/node_modules/react-native-video-processing/lib/VideoPlayer/VideoPlayer.ios.js b/node_modules/react-native-video-processing/lib/VideoPlayer/VideoPlayer.ios.js
+index 8c947de..782fbde 100644
+--- a/node_modules/react-native-video-processing/lib/VideoPlayer/VideoPlayer.ios.js
++++ b/node_modules/react-native-video-processing/lib/VideoPlayer/VideoPlayer.ios.js
+@@ -1,12 +1,17 @@
+ import React, { Component } from 'react';
+ import PropTypes from 'prop-types';
+-import { View, ViewPropTypes, requireNativeComponent, NativeModules, UIManager } from 'react-native';
++import { View,  requireNativeComponent, NativeModules, UIManager } from 'react-native';
+ import { getActualSource } from '../utils';
++import ViewPropTypes from 'deprecated-react-native-prop-types'
++
+ const PLAYER_COMPONENT_NAME = 'RNVideoProcessing';
+ 
+ const { RNVideoTrimmer } = NativeModules;
+ 
+-const ProcessingUI = UIManager.getViewManagerConfig('RNVideoProcessing');
++// const ProcessingUI = UIManager.getViewManagerConfig('RNVideoProcessing');
++
++const ProcessingUI = UIManager.getViewManagerConfig('RNVideoProcessing') || { Constants: {} };
++
+ 
+ export class VideoPlayer extends Component {
+   static propTypes = {
+@@ -30,7 +35,9 @@ export class VideoPlayer extends Component {
+     play: false,
+     replay: false,
+     rotate: false,
+-    resizeMode: ProcessingUI.Constants.ScaleNone,
++    // resizeMode: ProcessingUI.Constants.ScaleNone,
++resizeMode: ProcessingUI.Constants.ScaleNone || 'contain',
++
+     volume: 0.0,
+     currentTime: 0,
+     startTime: 0,

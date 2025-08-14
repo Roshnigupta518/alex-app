@@ -21,7 +21,7 @@ const StoryPreview = ({ route, navigation }) => {
   const { media } = route.params;
   const [uploading, setUploading] = React.useState(false);
 
-  // console.log({media})
+  console.log({media})
 
   const {location} = useCheckLocation()
 
@@ -63,6 +63,7 @@ const handleUpload = async () => {
         name: getFileNameFromPath(media.uri) || `video_${Date.now()}.mp4`
       });
       formdata.append("added_from", media.added_from);
+      formdata.append("duration", media.duration);
 
       {
         media.business_id &&  formdata.append("business_id", media.business_id);

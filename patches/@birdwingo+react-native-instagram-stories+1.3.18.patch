@@ -1,0 +1,70 @@
+diff --git a/node_modules/@birdwingo/react-native-instagram-stories/src/components/Avatar/Avatar.styles.ts b/node_modules/@birdwingo/react-native-instagram-stories/src/components/Avatar/Avatar.styles.ts
+index b0c51d6..b244580 100644
+--- a/node_modules/@birdwingo/react-native-instagram-stories/src/components/Avatar/Avatar.styles.ts
++++ b/node_modules/@birdwingo/react-native-instagram-stories/src/components/Avatar/Avatar.styles.ts
+@@ -5,6 +5,7 @@ export default StyleSheet.create( {
+   container: {
+     flexDirection: 'row',
+     alignItems: 'center',
++    marginRight:10,
+   },
+   avatar: {
+     left: AVATAR_OFFSET,
+diff --git a/node_modules/@birdwingo/react-native-instagram-stories/src/components/List/List.styles.ts b/node_modules/@birdwingo/react-native-instagram-stories/src/components/List/List.styles.ts
+index 3eebb14..205d090 100644
+--- a/node_modules/@birdwingo/react-native-instagram-stories/src/components/List/List.styles.ts
++++ b/node_modules/@birdwingo/react-native-instagram-stories/src/components/List/List.styles.ts
+@@ -6,6 +6,8 @@ export default StyleSheet.create( {
+     borderRadius: 8,
+     overflow: 'hidden',
+     width: WIDTH,
++    padding:0,
++    margin:0
+   },
+   content: {
+     position: 'absolute',
+diff --git a/node_modules/@birdwingo/react-native-instagram-stories/src/components/List/index.tsx b/node_modules/@birdwingo/react-native-instagram-stories/src/components/List/index.tsx
+index 9fa47d8..f4739e4 100644
+--- a/node_modules/@birdwingo/react-native-instagram-stories/src/components/List/index.tsx
++++ b/node_modules/@birdwingo/react-native-instagram-stories/src/components/List/index.tsx
+@@ -84,7 +84,14 @@ const StoryList: FC<StoryListProps> = ( {
+           </Animated.View>
+         </Animated.View>
+       </Animated.View>
+-      <StoryFooter stories={stories} active={isActive} activeStory={activeStory} />
++      {/* <StoryFooter stories={stories} active={isActive} activeStory={activeStory} /> */}
++      {props.footerComponent ? (
++  <Animated.View style={{ position: 'absolute', bottom: 0, width: '100%' }}>
++    {props.footerComponent()}
++  </Animated.View>
++) : (
++  <StoryFooter stories={stories} active={isActive} activeStory={activeStory} />
++)}
+     </StoryAnimation>
+   );
+ 
+diff --git a/node_modules/@birdwingo/react-native-instagram-stories/src/components/Modal/Modal.styles.ts b/node_modules/@birdwingo/react-native-instagram-stories/src/components/Modal/Modal.styles.ts
+index 34038e4..3522ff5 100644
+--- a/node_modules/@birdwingo/react-native-instagram-stories/src/components/Modal/Modal.styles.ts
++++ b/node_modules/@birdwingo/react-native-instagram-stories/src/components/Modal/Modal.styles.ts
+@@ -4,6 +4,8 @@ import { HEIGHT, WIDTH } from '../../core/constants';
+ export default StyleSheet.create( {
+   container: {
+     flex: 1,
++    margin:0,
++    padding:0
+   },
+   absolute: {
+     position: 'absolute',
+diff --git a/node_modules/@birdwingo/react-native-instagram-stories/src/components/Modal/index.tsx b/node_modules/@birdwingo/react-native-instagram-stories/src/components/Modal/index.tsx
+index dd93855..826b259 100644
+--- a/node_modules/@birdwingo/react-native-instagram-stories/src/components/Modal/index.tsx
++++ b/node_modules/@birdwingo/react-native-instagram-stories/src/components/Modal/index.tsx
+@@ -502,6 +502,7 @@ const StoryModal = forwardRef<StoryModalPublicMethods, StoryModalProps>( ( {
+                   loaderColor={loaderColor}
+                   loaderBackgroundColor={loaderBackgroundColor}
+                   key={story.id}
++                  footerComponent={footerComponent}
+                   {...props}
+                 />
+               ) )}

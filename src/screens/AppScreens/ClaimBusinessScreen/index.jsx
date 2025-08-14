@@ -529,8 +529,10 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
 
 
                 </View>
+                 
+                 <View style={[st.row,st.ml_10]}>
                  {follow?.fromListing != true ?
-                <View style={styles.socialContent}>
+                <View style={[styles.socialContent,{marginLeft:5}]}>
                   <TouchableOpacity style={styles.button} onPress={()=>makeFollowBusiness()} >
                     {isFollowLoading ? (
                   <ActivityIndicator size={'small'} color={colors.white} />
@@ -567,13 +569,6 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
                     onPress={() => openWebsite(data?.ecommerce_website)} >
                     <Text style={styles.btntxt}>Order now</Text>
                   </TouchableOpacity>}
-
-                  {data.user_id === userInfo.id && 
-                 <TouchableOpacity style={styles.button}
-                 onPress={() => navigation.navigate('AddStory', {added_from: 2, business_id : data?._id }) } >
-                 <Text style={styles.btntxt}>Add Story</Text>
-               </TouchableOpacity>
-                }
                 </View>
                 :(
                   <View style={styles.socialContent}>
@@ -583,6 +578,14 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
                   </TouchableOpacity>
                     </View>
                 )}
+
+                {data.user_id === userInfo.id && 
+                 <TouchableOpacity style={styles.button}
+                 onPress={() => navigation.navigate('AddStory', {added_from: 2, business_id : data?._id }) } >
+                 <Text style={styles.btntxt}>Add Story</Text>
+               </TouchableOpacity>
+                }
+                </View>
 
               </View>
 
@@ -763,7 +766,7 @@ const styles = StyleSheet.create({
   },
   socialContent: {
     flexDirection: 'row',
-    paddingHorizontal: 15
+    // paddingHorizontal: 15
     // marginTop: 20,
   },
   content: {

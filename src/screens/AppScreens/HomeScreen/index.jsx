@@ -240,27 +240,137 @@ const HomeScreen = ({ navigation, route }) => {
   };
 
 
-  const getStoryHandle = () => {
-    console.log('**********************story updated', hasMore, loading)
-    if (loading || !hasMore) return;
+  // const getStoryHandle = () => {
+  //   console.log('**********************story updated', hasMore, loading)
+  //   if (loading || !hasMore) return;
 
-    let url = { skip: skip, limit: limit };
-    GetAllStoryRequest(Object.assign(url))
+  //   let url = { skip: skip, limit: limit };
+  //   GetAllStoryRequest(Object.assign(url))
+  //     .then(res => {
+  //       const dummyFormat = transformApiToDummy(res.result);
+  //       console.log({ res: dummyFormat.length })
+
+  //       if (dummyFormat?.length > 0) {
+  //         setStories(prev => [...prev, ...dummyFormat]);
+  //         setSkip(prev => prev + limit);
+  //         if (dummyFormat.length < limit) {
+  //           setHasMore(false);
+  //         }
+  //       } else {
+  //         setHasMore(false);
+  //       }
+  //     }
+  //     )
+  //     .catch(err => {
+  //       if (err?.message) {
+  //         Toast.error('stories', err.message);
+  //       }
+  //     })
+  //     .finally(() => {
+  //       setLoading(false);
+  //     });
+  // }
+
+  // Story khatam hone par seen true karna
+  
+  // const getStoryHandle = () => {
+  //   console.log('**********************story updated', hasMore, loading)
+  //   if (loading || !hasMore) return;
+  
+  //   let url = { skip: skip, limit: limit };
+  //   GetAllStoryRequest(Object.assign(url))
+  //     .then(res => {
+  //       const dummyFormat = transformApiToDummy(res.result);
+  //       console.log({ res: dummyFormat.length })
+  
+  //       if (dummyFormat?.length > 0) {
+  //         // ✅ "Your Story" object inject karo
+  //         const yourStoryObj = {
+  //           id: userInfo.id,
+  //           name: 'Add story',
+  //           isAddButton: true,
+  //           avatarSource: {uri: userInfo.profile_picture} || ImageConstants.user,
+  //           stories: [],
+  //         };
+  
+  //         // ✅ Merge
+  //         setStories(prev => {
+  //           const merged = skip === 0
+  //             ? [yourStoryObj, ...dummyFormat] // first fetch
+  //             : [...prev, ...dummyFormat];     // pagination
+  
+  //           return merged;
+  //         });
+  
+  //         setSkip(prev => prev + limit);
+  //         if (dummyFormat.length < limit) {
+  //           setHasMore(false);
+  //         }
+  //       } else {
+  //         if (skip === 0) {
+  //           const yourStoryObj = {
+  //             id: userInfo.id,
+  //             name: 'Add story',
+  //             isAddButton: true,
+  //             avatarSource: {uri: userInfo.profile_picture} || ImageConstants.user,
+  //             stories: [],
+  //           };
+  //           setStories([yourStoryObj]);
+  //         }
+  //         setHasMore(false);
+  //       }
+  //     })
+  //     .catch(err => {
+  //       if (err?.message) {
+  //         Toast.error('stories', err.message);
+  //       }
+  //     })
+  //     .finally(() => {
+  //       setLoading(false);
+  //     });
+  // };
+  
+  
+  
+  const getStoryHandle = () => {
+    console.log('**********************story updated', hasMore, loading);
+    if (loading || !hasMore) return;
+  
+    let url = { skip, limit };
+    GetAllStoryRequest(url)
       .then(res => {
         const dummyFormat = transformApiToDummy(res.result);
-        console.log({ res: dummyFormat.length })
+        console.log({ res: dummyFormat.length });
+  
+        // Check if my story exists in API response
+        const myStoryFromApi = dummyFormat.find(s => s.id === userInfo.id);
+  
+        let yourStoryObj = {
+          id: userInfo.id,
+          name: 'Your Story',
+          avatarSource: { uri: userInfo.profile_picture } || ImageConstants.user,
+          stories: myStoryFromApi ? myStoryFromApi.stories : [],
+          // isAddButton: !myStoryFromApi || (myStoryFromApi.stories?.length === 0),
+          isAddButton: true,
 
-        if (dummyFormat?.length > 0) {
-          setStories(prev => [...prev, ...dummyFormat]);
-          setSkip(prev => prev + limit);
-          if (dummyFormat.length < limit) {
-            setHasMore(false);
-          }
+        };
+  
+        let finalStories;
+        if (skip === 0) {
+          // Remove my story from API list (to avoid duplicate)
+          const others = dummyFormat.filter(s => s.id !== userInfo.id);
+          finalStories = [yourStoryObj, ...others];
         } else {
+          finalStories = [...stories, ...dummyFormat];
+        }
+  
+        setStories(finalStories);
+  
+        setSkip(prev => prev + limit);
+        if (dummyFormat.length < limit) {
           setHasMore(false);
         }
-      }
-      )
+      })
       .catch(err => {
         if (err?.message) {
           Toast.error('stories', err.message);
@@ -269,9 +379,10 @@ const HomeScreen = ({ navigation, route }) => {
       .finally(() => {
         setLoading(false);
       });
-  }
+  };
+  
 
-  // Story khatam hone par seen true karna
+
   const handleStorySeen = (userId, storyId) => {
     setStories((prev) =>
       prev.map((user) =>
@@ -315,7 +426,7 @@ const HomeScreen = ({ navigation, route }) => {
     }
   }, [openStoryId, stories]);
 
-  console.log({openStoryId})
+  // console.log({openStoryId})
 
   const markStoryAsSeen = async (storyId) => {
     try {
@@ -330,7 +441,7 @@ const HomeScreen = ({ navigation, route }) => {
   };
 
   const likeStoryHandle = async (storyId) => {
-    console.log({storyId})
+    // console.log({storyId})
     try {
       const res = await likeStoryRequest(storyId);
       console.log('story like ho gyi', storyId, res);
@@ -517,22 +628,6 @@ const HomeScreen = ({ navigation, route }) => {
         />
      
         <View style={styles.storyContainer}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('AddStory',{added_from: 1})}
-          style={{ alignItems: 'center', marginHorizontal: 8 }}
-        >
-          <View style={styles.profilesty}>
-            <Image
-              source={userInfo.profile_picture ? {uri:userInfo.profile_picture} :ImageConstants.user }
-              style={styles.profileImg}
-            />
-            {/* Plus icon */}
-            <View style={styles.plusicon}>
-              <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'bold' }}>+</Text>
-            </View>
-          </View>
-          <Text style={{ color: '#fff', fontSize: 12, marginTop: 4 }}>Add Story</Text>
-        </TouchableOpacity>
         {stories.length > 0 &&
           <SafeAreaView >
             <InstagramStories
@@ -541,8 +636,9 @@ const HomeScreen = ({ navigation, route }) => {
               onStoryPress={(story) => {
                 storyref.current?.open(story.id);
               }}
+              onAddPress={() => navigation.navigate('AddStory',{added_from: 1})} 
               animationDuration={5000}
-              videoAnimationMaxDuration={30000}
+              // videoAnimationMaxDuration={30000}
               // saveProgress={false}
               avatarSize={60}
               storyContainerStyle={{ margin: 0, padding: 0 }}
@@ -837,7 +933,7 @@ const styles = StyleSheet.create({
     // height: HEIGHT,
     backgroundColor: colors.gray,
   },
-storyContainer:{ zIndex: 3, marginLeft: 10, position: 'absolute', top: '10%', flexDirection:'row' },
+storyContainer:{ zIndex: 3, marginLeft: 10, position: 'absolute', top: Platform.OS === 'android' ? '10%' : '17%', flexDirection:'row' },
 profilesty:{
   width: 69,
   height: 69,
