@@ -173,11 +173,11 @@ const {added_from, business_id} = route?.params
         if (file.duration > 30000) {
           // Show trim option if longer than 30s
           console.log({file})
-          // navigation.navigate('TrimScreen', {
-          //   uri: file.path,
-          //   duration: file.duration,
-          // });
-          alert('Please select a video of 30 seconds or less.')
+          navigation.navigate('TrimScreen', {
+            uri: file.path,
+            duration: file.duration,
+          });
+          // alert('Please select a video of 30 seconds or less.')
         } else {
           navigation.navigate('StoryPreview', { media: { uri: file.path, type: 'video', mediaType : file.mime,
              added_from, business_id,  duration: Math.ceil(file.duration / 1000)} });

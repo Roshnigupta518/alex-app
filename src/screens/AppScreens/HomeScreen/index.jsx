@@ -667,6 +667,7 @@ const HomeScreen = ({ navigation, route }) => {
                     <Image 
                     source={isLiked ? ImageConstants.filled_like : ImageConstants.unlike} 
                     tintColor={isLiked ? colors.primaryColor : colors.white} 
+                    style={{resizeMode:'contain'}}
                   />
                   </TouchableOpacity >
                   <TouchableOpacity onPress={()=>handleShareStoryFunction(currentStory?.storyId)}>
