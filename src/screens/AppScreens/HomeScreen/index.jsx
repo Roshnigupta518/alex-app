@@ -441,20 +441,36 @@ const HomeScreen = ({ navigation, route }) => {
   };
 
   const likeStoryHandle = async (storyId) => {
-    // console.log({storyId})
     try {
       const res = await likeStoryRequest(storyId);
+      Toast.success('Story', res?.message, 'bottom');
       console.log('story like ho gyi', storyId, res);
-
+  
+      // ✅ Update local `isLiked` for current story preview
       setIsLiked(prev => !prev);
-     
+  
+      // ✅ Update the story list state so the like count / status updates in UI
+      setStories(prevStories =>
+        prevStories.map(story =>
+          story.id === storyId
+            ? {
+                ...story,
+                isLiked: !story.isLiked,
+              }
+            : story
+        )
+      );
+  
+      
+
     } catch (err) {
-      console.log({err})
+      console.log({ err });
       if (err?.message) {
-        Toast.error('Like stories', err.message);
+        Toast.error('Like stories', err.message, 'bottom');
       }
     }
   };
+  
   
   const _onViewableItemsChanged = useCallback(({ viewableItems }) => {
     if (viewableItems[0]) {
@@ -572,7 +588,6 @@ const HomeScreen = ({ navigation, route }) => {
     }
   }, [reelIndex]);
 
-
   const _renderReels = useCallback(
     ({ item, index }) => {
       return (
@@ -661,7 +676,8 @@ const HomeScreen = ({ navigation, route }) => {
                   justifyContent: 'flex-end',
                   alignItems: 'center',
                 }}>
-                  <TouchableOpacity disabled={isLiked}
+                  <TouchableOpacity
+                  //  disabled={isLiked}
                   style={{ marginRight: 20 }}
                    onPress={()=>likeStoryHandle(currentStory?.storyId)} >
                     <Image 
