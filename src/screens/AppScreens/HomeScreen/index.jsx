@@ -127,6 +127,7 @@ const HomeScreen = ({ navigation, route }) => {
     // Unsubscribe
     return () => unsubscribe();
   }, []);
+
   const onRefresh = React.useCallback(async () => {
     getStoryHandle()
     // setRefreshing(true);
@@ -239,99 +240,6 @@ const HomeScreen = ({ navigation, route }) => {
     }));
   };
 
-
-  // const getStoryHandle = () => {
-  //   console.log('**********************story updated', hasMore, loading)
-  //   if (loading || !hasMore) return;
-
-  //   let url = { skip: skip, limit: limit };
-  //   GetAllStoryRequest(Object.assign(url))
-  //     .then(res => {
-  //       const dummyFormat = transformApiToDummy(res.result);
-  //       console.log({ res: dummyFormat.length })
-
-  //       if (dummyFormat?.length > 0) {
-  //         setStories(prev => [...prev, ...dummyFormat]);
-  //         setSkip(prev => prev + limit);
-  //         if (dummyFormat.length < limit) {
-  //           setHasMore(false);
-  //         }
-  //       } else {
-  //         setHasMore(false);
-  //       }
-  //     }
-  //     )
-  //     .catch(err => {
-  //       if (err?.message) {
-  //         Toast.error('stories', err.message);
-  //       }
-  //     })
-  //     .finally(() => {
-  //       setLoading(false);
-  //     });
-  // }
-
-  // Story khatam hone par seen true karna
-  
-  // const getStoryHandle = () => {
-  //   console.log('**********************story updated', hasMore, loading)
-  //   if (loading || !hasMore) return;
-  
-  //   let url = { skip: skip, limit: limit };
-  //   GetAllStoryRequest(Object.assign(url))
-  //     .then(res => {
-  //       const dummyFormat = transformApiToDummy(res.result);
-  //       console.log({ res: dummyFormat.length })
-  
-  //       if (dummyFormat?.length > 0) {
-  //         // ✅ "Your Story" object inject karo
-  //         const yourStoryObj = {
-  //           id: userInfo.id,
-  //           name: 'Add story',
-  //           isAddButton: true,
-  //           avatarSource: {uri: userInfo.profile_picture} || ImageConstants.user,
-  //           stories: [],
-  //         };
-  
-  //         // ✅ Merge
-  //         setStories(prev => {
-  //           const merged = skip === 0
-  //             ? [yourStoryObj, ...dummyFormat] // first fetch
-  //             : [...prev, ...dummyFormat];     // pagination
-  
-  //           return merged;
-  //         });
-  
-  //         setSkip(prev => prev + limit);
-  //         if (dummyFormat.length < limit) {
-  //           setHasMore(false);
-  //         }
-  //       } else {
-  //         if (skip === 0) {
-  //           const yourStoryObj = {
-  //             id: userInfo.id,
-  //             name: 'Add story',
-  //             isAddButton: true,
-  //             avatarSource: {uri: userInfo.profile_picture} || ImageConstants.user,
-  //             stories: [],
-  //           };
-  //           setStories([yourStoryObj]);
-  //         }
-  //         setHasMore(false);
-  //       }
-  //     })
-  //     .catch(err => {
-  //       if (err?.message) {
-  //         Toast.error('stories', err.message);
-  //       }
-  //     })
-  //     .finally(() => {
-  //       setLoading(false);
-  //     });
-  // };
-  
-  
-  
   const getStoryHandle = () => {
     console.log('**********************story updated', hasMore, loading);
     if (loading || !hasMore) return;
@@ -380,9 +288,22 @@ const HomeScreen = ({ navigation, route }) => {
         setLoading(false);
       });
   };
+
+  // ✅ Jab HomeScreen focus me aaye → resume story
+  useFocusEffect(
+    useCallback(() => {
+      if (storyref.current) {
+        storyref.current.hide();
+      }
+      // return () => {
+      //   // ✅ Jab screen chhod ke jao → pause story
+      //   if (storyref.current) {
+      //     storyref.current.pause();
+      //   }
+      // };
+    }, [])
+  );
   
-
-
   const handleStorySeen = (userId, storyId) => {
     setStories((prev) =>
       prev.map((user) =>
@@ -440,33 +361,23 @@ const HomeScreen = ({ navigation, route }) => {
     }
   };
 
-  const likeStoryHandle = async (storyId) => {
+  const likeStoryHandle = async (storyId, newIsLiked) => {
     try {
       const res = await likeStoryRequest(storyId);
-      Toast.success('Story', res?.message, 'bottom');
-      console.log('story like ho gyi', storyId, res);
+      Toast.success("Story", res?.message, "bottom");
   
-      // ✅ Update local `isLiked` for current story preview
-      setIsLiked(prev => !prev);
-  
-      // ✅ Update the story list state so the like count / status updates in UI
       setStories(prevStories =>
-        prevStories.map(story =>
-          story.id === storyId
-            ? {
-                ...story,
-                isLiked: !story.isLiked,
-              }
-            : story
-        )
+        prevStories.map(user => ({
+          ...user,
+          stories: user.stories.map(st =>
+            st.id === storyId ? { ...st, is_liked: newIsLiked } : st
+          ),
+        }))
       );
-  
-      
-
     } catch (err) {
       console.log({ err });
       if (err?.message) {
-        Toast.error('Like stories', err.message, 'bottom');
+        Toast.error("Like stories", err.message, "bottom");
       }
     }
   };
@@ -666,39 +577,71 @@ const HomeScreen = ({ navigation, route }) => {
               nameTextStyle={{ color: colors.white, textAlign: 'center' }}
               textStyle={{ color: colors.white }}
               footerComponent={() => {
+                const currentStoryData = stories
+                  .find(u => u.id === currentStory?.userId)
+                  ?.stories.find(s => s.id === currentStory?.storyId);
+
                 return(
+                  <View style={{flexDirection:'row', padding:20}}>
+                    {userInfo?.id === currentStory?.userId &&
+                  <TouchableOpacity 
+                    onPress={() => {
+                    navigation.navigate("StoryViewers", {
+                      storyId: currentStory?.storyId,   
+                    });
+                  }}>
+                  <Image source={ImageConstants.openEye}  />
+                </TouchableOpacity>
+                }
                 <View style={{
-                  width: '100%',
-                  paddingVertical: 12,
-                  paddingHorizontal: 20,
+                  width: '90%',
                   backgroundColor: 'rgba(0,0,0,0.3)',
                   flexDirection: 'row',
                   justifyContent: 'flex-end',
-                  alignItems: 'center',
                 }}>
+                  
+                  {currentStoryData?.is_liked ?
+                   <TouchableOpacity
+                   style={{ marginRight: 20 }}
+                    onPress={()=>likeStoryHandle(currentStory?.storyId, false)} >
+                     <Image 
+                     source={ ImageConstants.filled_like } 
+                     tintColor={ colors.primaryColor } 
+                     style={{resizeMode:'contain'}}
+                   />
+                   </TouchableOpacity>
+
+                  :
+
                   <TouchableOpacity
-                  //  disabled={isLiked}
-                  style={{ marginRight: 20 }}
-                   onPress={()=>likeStoryHandle(currentStory?.storyId)} >
-                    <Image 
-                    source={isLiked ? ImageConstants.filled_like : ImageConstants.unlike} 
-                    tintColor={isLiked ? colors.primaryColor : colors.white} 
-                    style={{resizeMode:'contain'}}
-                  />
-                  </TouchableOpacity >
+                   style={{ marginRight: 20 }}
+                    onPress={()=>likeStoryHandle(currentStory?.storyId, true)} >
+                     <Image 
+                     source={ ImageConstants.unlike } 
+                     tintColor={ colors.white } 
+                     style={{resizeMode:'contain'}}
+                   />
+                   </TouchableOpacity>
+
+                }
+                 
+
+
+
                   <TouchableOpacity onPress={()=>handleShareStoryFunction(currentStory?.storyId)}>
                     <Image source={ImageConstants.share}  />
                   </TouchableOpacity>
                 </View>
+                </View>
               )}}
               onStoryStart={(userId, storyId) => {
-                console.log({userId, storyId});
+                // console.log({userId, storyId});
                 setCurrentStory({ userId, storyId });
                 markStoryAsSeen(storyId);
                 handleStorySeen(userId, storyId)
                 const parentUser = stories.find(user => user.id === userId);
                 const storyObj = parentUser?.stories.find(s => s.id === storyId);
-                console.log({storyObj})
+                // console.log({storyObj})
                 if (storyObj) {
                   setIsLiked(storyObj.is_liked); 
                 }
@@ -735,9 +678,6 @@ const HomeScreen = ({ navigation, route }) => {
                 justifyContent: 'center',
               }}>
               <FlatList
-                // refreshControl={
-                //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                // }
                 nestedScrollEnabled={true}
                 ref={flashListRef}
                 data={postArray}

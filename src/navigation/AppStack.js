@@ -49,7 +49,7 @@ import PostDetailScreen from '../screens/AppScreens/HomeScreen/PostDetailScreen'
 import AddStory from '../screens/AppScreens/ClaimBusinessScreen/Addstory';
 import StoryPreview from '../screens/AppScreens/ClaimBusinessScreen/StoryPreview';
 import TrimScreen from '../screens/AppScreens/ClaimBusinessScreen/TrimScreen';
-
+import StoryViewers from '../screens/AppScreens/ClaimBusinessScreen/StoryViewers';
 const Stack = createStackNavigator();
 
 function AppStack({isLoggedIn = false}) {
@@ -143,7 +143,8 @@ function AppStack({isLoggedIn = false}) {
       <Stack.Screen name="AddStory" component={AddStory} />
       <Stack.Screen name="StoryPreview" component={StoryPreview} />
       <Stack.Screen name="TrimScreen" component={TrimScreen} />
-      {/* TrimScreen */}
+      <Stack.Screen name="StoryViewers" component={StoryViewers} />
+      {/*  */}
     </Stack.Navigator>
   );
 }
