@@ -120,7 +120,8 @@ const StoryViewerScreen = ({ navigation, route }) => {
     return (
         <View style={{ flex: 1, backgroundColor: "#fff" }}>
             <BackHeader />
-            <View style={{ alignSelf: 'center', flex: 1 / 2 }}>
+            <View 
+            style={{  flex: 1 / 2 }}>
 
 
                 <InstaThumbnailSlider
@@ -134,7 +135,7 @@ const StoryViewerScreen = ({ navigation, route }) => {
                 <Text style={[st.labelStyle, styles.heading]}>{selectedStory?.viewers?.length} Viewers</Text>
                 <View style={st.alignE}>
                     <TouchableOpacity onPress={() => DeleteStoryById(selectedStory?.id)}>
-                        <Image source={ImageConstants.trash} style={styles.trashicon}
+                        <Image source={ImageConstants.delete_new} style={styles.trashicon}
                             tintColor={colors.black}
                         />
                     </TouchableOpacity>
@@ -159,7 +160,7 @@ const StoryViewerScreen = ({ navigation, route }) => {
                                 <Image
                                     source={ImageConstants.filled_like}
                                     style={{
-                                        position: 'absolute', left: '13%', bottom: 5,
+                                        position: 'absolute', left: '12%', bottom: 0,
                                         width: wp(18)
                                     }}
                                     resizeMode={'center'}

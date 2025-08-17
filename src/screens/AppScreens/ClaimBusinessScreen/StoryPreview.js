@@ -148,6 +148,7 @@ const StoryPreview = ({ route, navigation }) => {
           label="Upload"
           onPress={handleUpload}
           isLoading={uploading}
+          disabled={uploading}
         />
       </View>
     </View>

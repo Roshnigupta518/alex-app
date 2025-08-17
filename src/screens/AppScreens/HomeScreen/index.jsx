@@ -613,6 +613,8 @@ const HomeScreen = ({ navigation, route }) => {
                   flexDirection: 'row',
                   justifyContent: 'flex-end',
                 }}>
+                    {userInfo?.id !== currentStory?.userId &&
+                  <View>
                   {currentStoryData?.is_liked ?
                    <TouchableOpacity
                    style={{ marginRight: 20 }}
@@ -631,8 +633,8 @@ const HomeScreen = ({ navigation, route }) => {
                      style={styles.likeSty}
                    />
                    </TouchableOpacity>
-
                 }
+                </View>}
                  
                   <TouchableOpacity onPress={()=>handleShareStoryFunction(currentStory?.storyId)}>
                     <Image source={ImageConstants.share}  />

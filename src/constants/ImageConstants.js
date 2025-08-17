@@ -53,6 +53,7 @@ const ImageConstants = {
   verticalLine: require('./../assets/images/vertical-line.png'),
   play: require('./../assets/images/play.png'),
   delete: require('./../assets/images/delete.png'),
+  delete_new: require('./../assets/images/delete_new.png'),
   edit_comment: require('./../assets/images/edit_comment.png'),
   searchInput: require('./../assets/images/input-search.png'),
   round_insta: require('./../assets/images/round_insta.png'),
