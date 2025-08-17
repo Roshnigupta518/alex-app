@@ -12,6 +12,9 @@ content:{
 alignC:{
 alignItems:'center'
 },
+alignE:{
+alignItems:'flex-end'
+},
 ml_10:{
   marginLeft:10
 },

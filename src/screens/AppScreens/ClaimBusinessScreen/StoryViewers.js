@@ -13,10 +13,13 @@ import { colors, wp } from "../../../constants";
 import BackHeader from "../../../components/BackHeader";
 import st from "../../../global/styles";
 import ImageConstants from "../../../constants/ImageConstants";
+import { useSelector } from "react-redux";
+import Toast from "../../../constants/Toast";
+import { DeleteStoryRequest } from "../../../../ios/src/services/Utills";
+import InstaThumbnailSlider from "../../../components/InstaThumbnailSlider";
 
-const StoryViewerScreen = ({ route }) => {
-    const { storyId } = route.params || {};
-    console.log({ storyId })
+const StoryViewerScreen = ({ navigation, route }) => {
+    const { storyId, onDelete } = route.params || {};
     const [stories, setStories] = useState([]);
     const [skip, setSkip] = useState(0);
     const limit = 5;
@@ -24,6 +27,36 @@ const StoryViewerScreen = ({ route }) => {
     const [hasMore, setHasMore] = useState(true);
 
     const [selectedStoryIndex, setSelectedStoryIndex] = useState(0);
+
+    const userInfo = useSelector(state => state.UserInfoSlice.data);
+
+    const DeleteStoryById = (storyId) => {
+        if (!storyId) return;
+
+        DeleteStoryRequest(storyId)
+            .then(res => {
+                Toast.success('Story', res?.message);
+
+                setStories(prev => {
+                    const updated = prev.filter(story => story.id !== storyId);
+
+                    // 🔹 Home screen ko update karo
+                    if (onDelete) onDelete(storyId, userInfo?.id);
+
+                    // 🔹 Agar koi story bachi hi nahi -> goBack()
+                    if (updated.length === 0) {
+                        navigation.goBack();
+                    }
+
+                    return updated;
+                });
+            })
+            .catch(err => {
+                console.log('err', err);
+                Toast.error('Story', err?.message);
+            });
+    };
+
 
     const transformStories = (apiResponse) => {
         let storiesList = [];
@@ -48,17 +81,18 @@ const StoryViewerScreen = ({ route }) => {
             const res = await GetAllStoryRequest({ skip, limit });
 
             if (res?.status) {
-                const newStories = transformStories(res.result);
+                // 🔹 Filter only my stories
+                const myStoriesOnly = res.result.filter(user => user.user_id === userInfo.id);
+
+                const newStories = transformStories(myStoriesOnly);
                 const updatedStories = [...stories, ...newStories];
 
                 setStories(prev => [...prev, ...newStories]);
                 setSkip(prev => prev + limit);
 
-
                 // ✅ auto-select passed storyId
                 if (storyId && updatedStories.length > 0) {
                     const foundIndex = updatedStories.findIndex(st => st.id === storyId);
-                    console.log({ foundIndex })
                     if (foundIndex !== -1) {
                         setSelectedStoryIndex(foundIndex);
                     }
@@ -75,6 +109,7 @@ const StoryViewerScreen = ({ route }) => {
         setLoading(false);
     };
 
+
     useEffect(() => {
         fetchStories();
     }, [storyId]);
@@ -86,51 +121,34 @@ const StoryViewerScreen = ({ route }) => {
         <View style={{ flex: 1, backgroundColor: "#fff" }}>
             <BackHeader />
             <View style={{ alignSelf: 'center', flex: 1 / 2 }}>
-                <FlatList
-                    data={stories}
-                    horizontal
-                    keyExtractor={(item, index) => item.id + index}
-                    showsHorizontalScrollIndicator={false}
-                    style={{ marginTop: 10 }}
-                    renderItem={({ item, index }) => {
 
-                        return (
-                            <View style={[st.container, st.alignC]}>
-                                <TouchableOpacity onPress={() => setSelectedStoryIndex(index)}>
-                                    <Image
-                                        source={{ uri: item.media }}
-                                        style={[
-                                            styles.storyThumb,
-                                            index === selectedStoryIndex && styles.activeThumb,
-                                        ]}
-                                        resizeMode="cover"
-                                    />
-                                </TouchableOpacity>
-                                <View style={st.cardContent}>
-                                    <Image source={ImageConstants.openEye} />
-                                    <Text style={st.labelStyle}> {selectedStory?.viewers?.length}</Text>
-                                </View>
-                            </View>
-                        )
-                    }}
-                    onEndReached={fetchStories}
-                    onEndReachedThreshold={0.5}
-                    ListFooterComponent={
-                        loading ? <ActivityIndicator size="small" color="black" /> : null
-                    }
+
+                <InstaThumbnailSlider
+                    stories={stories}
+                    selectedIndex={selectedStoryIndex}
+                    setSelectedIndex={setSelectedStoryIndex}
                 />
             </View>
 
-            <Text style={[st.labelStyle, styles.heading]}>{selectedStory?.viewers?.length} Viewers</Text>
+            <View style={st.businessTimeCon}>
+                <Text style={[st.labelStyle, styles.heading]}>{selectedStory?.viewers?.length} Viewers</Text>
+                <View style={st.alignE}>
+                    <TouchableOpacity onPress={() => DeleteStoryById(selectedStory?.id)}>
+                        <Image source={ImageConstants.trash} style={styles.trashicon}
+                            tintColor={colors.black}
+                        />
+                    </TouchableOpacity>
+                </View>
+            </View>
             <FlatList
                 data={selectedStory.viewers || []}
                 keyExtractor={(item, idx) => item.user_id._id + idx}
                 renderItem={({ item }) => {
                     const hasLiked = likedUserIds.has(item.user_id._id);
 
-                    console.log({ item })
+                    // console.log({ item })
 
-                    console.log({ hasLiked })
+                    // console.log({ hasLiked })
                     return (
                         <View style={styles.viewerRow}>
                             <Image
@@ -139,10 +157,10 @@ const StoryViewerScreen = ({ route }) => {
                             />
                             {hasLiked && (
                                 <Image
-                                    source={ImageConstants.filled_like} 
+                                    source={ImageConstants.filled_like}
                                     style={{
-                                        position:'absolute', left:'13%', bottom:5,
-                                        width:wp(18)
+                                        position: 'absolute', left: '13%', bottom: 5,
+                                        width: wp(18)
                                     }}
                                     resizeMode={'center'}
                                     tintColor={colors.primaryColor}
@@ -169,13 +187,15 @@ const styles = StyleSheet.create({
     storyThumb: {
         width: 120,
         height: 150,
-        marginHorizontal: 8,
-        borderWidth: 2,
-        borderColor: "transparent",
         borderRadius: 5,
     },
     activeThumb: {
         borderColor: colors.primaryColor,
+    },
+    gradientBorder: {
+        padding: 3, 
+        borderRadius: 10,
+        marginHorizontal: 8,
     },
     heading: {
         marginTop: 20,
@@ -198,4 +218,12 @@ const styles = StyleSheet.create({
     name: {
         fontSize: 14,
     },
+    trashicon: {
+        height: wp(22),
+        width: wp(22),
+        alignSelf: 'center',
+        marginVertical: wp(30),
+        marginTop: 20,
+        marginRight: 15
+    }
 });

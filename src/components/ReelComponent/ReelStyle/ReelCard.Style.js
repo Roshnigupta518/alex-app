@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
       height: wp(28),
       width: wp(28),
       resizeMode: 'contain',
-      tintColor: isLiked ? colors.red : colors.white,
+      // tintColor: isLiked ? colors.red : colors.white,
     };
   },
 

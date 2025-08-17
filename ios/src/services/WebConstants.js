@@ -61,4 +61,5 @@ export const api = {
   claimBusiness: '/api/v1/user/business-clame/',
   childBusiness: '/api/v1/user/get-sub-child-category-by-sub-category/',
   getChildBusinesses: '/api/v1/user/business-list-by-child/',
+  deleteStory : '/api/v1/user/delete-story/'
 };

@@ -295,12 +295,7 @@ const HomeScreen = ({ navigation, route }) => {
       if (storyref.current) {
         storyref.current.hide();
       }
-      // return () => {
-      //   // ✅ Jab screen chhod ke jao → pause story
-      //   if (storyref.current) {
-      //     storyref.current.pause();
-      //   }
-      // };
+     
     }, [])
   );
   
@@ -318,6 +313,23 @@ const HomeScreen = ({ navigation, route }) => {
       )
     );
   };
+  
+
+  const handleDeleteStoryFromHome = (storyId, userId) => {
+    setStories(prev =>
+      prev.map(user => {
+        if (user.id === userId) {
+          return {
+            ...user,
+            stories: user.stories.filter(s => s.id !== storyId), // ✅ only story removed
+          };
+        }
+        return user;
+      })
+    );
+  };
+  
+  
 
   useEffect(() => {
     if (isFocused && route?.params?.shouldScrollTopReel) {
@@ -562,6 +574,7 @@ const HomeScreen = ({ navigation, route }) => {
               onStoryPress={(story) => {
                 storyref.current?.open(story.id);
               }}
+            
               onAddPress={() => navigation.navigate('AddStory',{added_from: 1})} 
               animationDuration={5000}
               // videoAnimationMaxDuration={30000}
@@ -587,47 +600,40 @@ const HomeScreen = ({ navigation, route }) => {
                   <TouchableOpacity 
                     onPress={() => {
                     navigation.navigate("StoryViewers", {
-                      storyId: currentStory?.storyId,   
+                      storyId: currentStory?.storyId, 
+                      onDelete: handleDeleteStoryFromHome,
                     });
                   }}>
                   <Image source={ImageConstants.openEye}  />
                 </TouchableOpacity>
                 }
                 <View style={{
-                  width: '90%',
+                  width:  '90%',
                   backgroundColor: 'rgba(0,0,0,0.3)',
                   flexDirection: 'row',
                   justifyContent: 'flex-end',
                 }}>
-                  
                   {currentStoryData?.is_liked ?
                    <TouchableOpacity
                    style={{ marginRight: 20 }}
                     onPress={()=>likeStoryHandle(currentStory?.storyId, false)} >
                      <Image 
                      source={ ImageConstants.filled_like } 
-                     tintColor={ colors.primaryColor } 
-                     style={{resizeMode:'contain'}}
+                    style={styles.likeSty}
                    />
                    </TouchableOpacity>
-
                   :
-
                   <TouchableOpacity
                    style={{ marginRight: 20 }}
                     onPress={()=>likeStoryHandle(currentStory?.storyId, true)} >
                      <Image 
                      source={ ImageConstants.unlike } 
-                     tintColor={ colors.white } 
-                     style={{resizeMode:'contain'}}
+                     style={styles.likeSty}
                    />
                    </TouchableOpacity>
 
                 }
                  
-
-
-
                   <TouchableOpacity onPress={()=>handleShareStoryFunction(currentStory?.storyId)}>
                     <Image source={ImageConstants.share}  />
                   </TouchableOpacity>
@@ -635,16 +641,20 @@ const HomeScreen = ({ navigation, route }) => {
                 </View>
               )}}
               onStoryStart={(userId, storyId) => {
-                // console.log({userId, storyId});
-                setCurrentStory({ userId, storyId });
-                markStoryAsSeen(storyId);
-                handleStorySeen(userId, storyId)
+                
                 const parentUser = stories.find(user => user.id === userId);
                 const storyObj = parentUser?.stories.find(s => s.id === storyId);
-                // console.log({storyObj})
-                if (storyObj) {
-                  setIsLiked(storyObj.is_liked); 
-                }
+               
+                // Check if the current user has stories
+              if (userInfo.id === userId && (!parentUser  || parentUser .stories.length === 0)) {
+                navigation.navigate('AddStory', { added_from: 1 });
+                return; // Prevent further execution of this function
+              }
+
+              setCurrentStory({ userId, storyId });
+              markStoryAsSeen(storyId);
+              handleStorySeen(userId, storyId)
+
               }}
             avatarBorderColors={['#0896E6','#FFE35E','#FEDF00','#55A861', '#2291CF']}
             avatarSeenBorderColors={[colors.gray]}
@@ -919,6 +929,11 @@ plusicon:{
   iconsty: {
     width: wp(20),
     height: wp(20)
+  },
+  likeSty:{
+    height: wp(24),
+    width: wp(24),
+    resizeMode: 'contain',
   }
 });
 

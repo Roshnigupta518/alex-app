@@ -69,6 +69,7 @@
     "react-native-image-zoom-viewer": "^3.0.1",
     "react-native-in-app-updates": "^0.2.2",
     "react-native-keyboard-avoiding-scroll-view": "^1.0.1",
+    "react-native-linear-gradient": "^2.8.3",
     "react-native-maps": "^1.14.0",
     "react-native-masonry-list": "^2.16.1",
     "react-native-otp-textinput": "^1.1.5",
