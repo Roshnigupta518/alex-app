@@ -10,6 +10,169 @@ index b0c51d6..b244580 100644
    },
    avatar: {
      left: AVATAR_OFFSET,
+diff --git a/node_modules/@birdwingo/react-native-instagram-stories/src/components/Avatar/index.tsx b/node_modules/@birdwingo/react-native-instagram-stories/src/components/Avatar/index.tsx
+index 66de125..479c5f7 100644
+--- a/node_modules/@birdwingo/react-native-instagram-stories/src/components/Avatar/index.tsx
++++ b/node_modules/@birdwingo/react-native-instagram-stories/src/components/Avatar/index.tsx
+@@ -28,6 +28,12 @@ const StoryAvatar: FC<StoryAvatarProps> = ( {
+   nameTextProps,
+   renderAvatar,
+   avatarBorderRadius,
++   // 👇 new
++  //  isAddButton,
++  //  onAddStory,
++
++  onAddPress,           // <-- new
++  isAddButton,          // <-- new
+ } ) => {
+ 
+   const loaded = useSharedValue( false );
+@@ -59,10 +65,28 @@ const StoryAvatar: FC<StoryAvatarProps> = ( {
+ 
+   }
+ 
++
++   // If no avatarSource, still render container so + badge can show for "Add story" slot.
++   const finalAvatarSource = avatarSource ?? { uri: '' };
++
++   // avatar press handler: when it's add-slot with no stories -> open add screen
++   const handleAvatarPress = () => {
++     if ( isAddButton && (!stories || stories.length === 0) ) {
++       onAddPress?.();
++     } else {
++       onPress?.();
++     }
++   };
++
+   return (
+     <View style={AvatarStyles.name}>
+       <View style={AvatarStyles.container}>
+-        <TouchableOpacity activeOpacity={0.6} onPress={onPress} testID={`${id}StoryAvatar${stories.length}Story`}>
++        <TouchableOpacity activeOpacity={0.6} 
++        // onPress={onPress} 
++
++        onPress={handleAvatarPress}
++        
++        testID={`${id}StoryAvatar${stories.length}Story`}>
+           <Loader loading={isLoading} color={loaderColor} size={size + AVATAR_OFFSET * 2} />
+           <AnimatedImage
+             source={avatarSource}
+@@ -74,7 +98,56 @@ const StoryAvatar: FC<StoryAvatarProps> = ( {
+             testID="storyAvatarImage"
+             onLoad={onLoad}
+           />
++
++{/* If it's your slot and you have no stories -> big plus centered (like Instagram) */}
++{isAddButton && (!stories || stories.length === 0) && (
++            <View style={{
++              position: 'absolute',
++              right: size/2 - 26,
++              bottom: -2,
++            }}>
++              <View style={{
++                backgroundColor: '#FCE058',
++                borderRadius: 10,
++                width: 20,
++                height: 20,
++                alignItems: 'center',
++                justifyContent: 'center',
++              }}>
++              <Text style={{ color: '#000',  }}>+</Text>
++              </View>
++            </View>
++          )}
++
++          {/* If it's your slot and you HAVE stories -> small corner + badge tappable */}
++          {isAddButton && (stories && stories.length > 0) && (
++            <TouchableOpacity
++              activeOpacity={0.8}
++              onPress={onAddPress}
++              style={{
++                position: 'absolute',
++                right: -2,
++                bottom: 2,
++                alignItems: 'center',
++                justifyContent: 'center',
++              }}
++            >
++                <View style={{
++                backgroundColor: '#FCE058',
++                borderRadius: 10,
++                width: 20,
++                height: 20,
++                alignItems: 'center',
++                justifyContent: 'center',
++              }}>
++              <Text style={{ color: '#000',  }}>+</Text>
++              </View>
++            </TouchableOpacity>
++          )}
++
++
+         </TouchableOpacity>
++
+       </View>
+       {Boolean( showName ) && (
+         <Text
+diff --git a/node_modules/@birdwingo/react-native-instagram-stories/src/components/AvatarList/index.tsx b/node_modules/@birdwingo/react-native-instagram-stories/src/components/AvatarList/index.tsx
+index b1154e0..bdd4697 100644
+--- a/node_modules/@birdwingo/react-native-instagram-stories/src/components/AvatarList/index.tsx
++++ b/node_modules/@birdwingo/react-native-instagram-stories/src/components/AvatarList/index.tsx
+@@ -21,6 +21,9 @@ const StoryAvatarList: FC<StoryAvatarListProps> = ( {
+   stories, loadingStory, seenStories, colors, seenColors, size,
+   showName, nameTextStyle, nameTextProps,
+   avatarListContainerProps, avatarListContainerStyle, avatarBorderRadius, onPress,
++  // 👇 new
++  // onAddStory,
++  onAddPress
+ } ) => {
+ 
+   const renderItem = ( story: InstagramStoryProps ) => (
+@@ -37,6 +40,12 @@ const StoryAvatarList: FC<StoryAvatarListProps> = ( {
+       nameTextProps={nameTextProps}
+       avatarBorderRadius={avatarBorderRadius}
+       key={`avatar${story.id}`}
++      // 👇 new
++      // isAddButton={story.isAddButton}
++      // onAddStory={onAddStory}
++
++      isAddButton={story.isAddButton} 
++      onAddPress={onAddPress}   
+     />
+   );
+ 
+diff --git a/node_modules/@birdwingo/react-native-instagram-stories/src/components/InstagramStories/index.tsx b/node_modules/@birdwingo/react-native-instagram-stories/src/components/InstagramStories/index.tsx
+index bb29e4c..db2ef0b 100644
+--- a/node_modules/@birdwingo/react-native-instagram-stories/src/components/InstagramStories/index.tsx
++++ b/node_modules/@birdwingo/react-native-instagram-stories/src/components/InstagramStories/index.tsx
+@@ -36,6 +36,9 @@ const InstagramStories = forwardRef<InstagramStoriesPublicMethods, InstagramStor
+   avatarBorderRadius,
+   loaderColor,
+   loaderBackgroundColor,
++   // 👇 new
++  //  onAddStory,
++  onAddPress, // <-- new
+   ...props
+ }, ref ) => {
+ 
+@@ -48,7 +51,6 @@ const InstagramStories = forwardRef<InstagramStoriesPublicMethods, InstagramStor
+   const modalRef = useRef<StoryModalPublicMethods>( null );
+ 
+   const onPress = ( id: string ) => {
+-
+     loadingStory.value = id;
+ 
+     if ( loadedStories.value ) {
+@@ -244,6 +246,9 @@ const InstagramStories = forwardRef<InstagramStoriesPublicMethods, InstagramStor
+           avatarListContainerStyle={avatarListContainerStyle}
+           avatarBorderRadius={avatarBorderRadius}
+           onPress={onPress}
++           // 👇 new
++          //  onAddStory={onAddStory}
++          onAddPress={onAddPress}  
+         />
+       )}
+       {/* @ts-expect-error: imageProps type mismatch is intentionally ignored */}
 diff --git a/node_modules/@birdwingo/react-native-instagram-stories/src/components/List/List.styles.ts b/node_modules/@birdwingo/react-native-instagram-stories/src/components/List/List.styles.ts
 index 3eebb14..205d090 100644
 --- a/node_modules/@birdwingo/react-native-instagram-stories/src/components/List/List.styles.ts
@@ -68,3 +231,48 @@ index dd93855..826b259 100644
                    {...props}
                  />
                ) )}
+diff --git a/node_modules/@birdwingo/react-native-instagram-stories/src/core/dto/componentsDTO.ts b/node_modules/@birdwingo/react-native-instagram-stories/src/core/dto/componentsDTO.ts
+index c1a2ad0..64c7738 100644
+--- a/node_modules/@birdwingo/react-native-instagram-stories/src/core/dto/componentsDTO.ts
++++ b/node_modules/@birdwingo/react-native-instagram-stories/src/core/dto/componentsDTO.ts
+@@ -20,6 +20,9 @@ export interface StoryAvatarListProps {
+   avatarListContainerProps: InstagramStoriesProps['avatarListContainerProps'];
+   avatarBorderRadius?: number;
+   onPress: ( id: string ) => void;
++  // 👇 new
++  // onAddStory?: () => void;
++  onAddPress?:()=>void
+ }
+ 
+ export interface StoryAvatarProps extends InstagramStoryProps {
+@@ -33,6 +36,9 @@ export interface StoryAvatarProps extends InstagramStoryProps {
+   nameTextStyle?: TextStyle;
+   nameTextProps?: TextProps;
+   avatarBorderRadius?: number;
++   // 👇 new
++   isAddButton?: boolean;
++   onAddPress?: () => void;
+ }
+ 
+ export interface StoryLoaderProps {
+diff --git a/node_modules/@birdwingo/react-native-instagram-stories/src/core/dto/instagramStoriesDTO.ts b/node_modules/@birdwingo/react-native-instagram-stories/src/core/dto/instagramStoriesDTO.ts
+index 263c8ea..54bbfea 100644
+--- a/node_modules/@birdwingo/react-native-instagram-stories/src/core/dto/instagramStoriesDTO.ts
++++ b/node_modules/@birdwingo/react-native-instagram-stories/src/core/dto/instagramStoriesDTO.ts
+@@ -23,6 +23,7 @@ export interface InstagramStoryProps {
+   onStoryHeaderPress?: () => void;
+   name?: string;
+   stories: StoryItemProps[];
++  isAddButton?: boolean; // 👈 NEW
+ }
+ 
+ export interface InstagramStoriesProps {
+@@ -70,6 +71,8 @@ export interface InstagramStoriesProps {
+   onSwipeUp?: ( userId?: string, storyId?: string ) => void;
+   onStoryStart?: ( userId?: string, storyId?: string ) => void;
+   onStoryEnd?: ( userId?: string, storyId?: string ) => void;
++  // onAddStory?: () => void; // 👈 new
++  onAddPress?: () => void; 
+ }
+ 
+ export type InstagramStoriesPublicMethods = {
