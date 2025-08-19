@@ -70,6 +70,8 @@ const HomeScreen = ({ navigation, route }) => {
   const menuSheetRef = useRef();
   const reportOptionSheet = useRef();
   const [isOnFocusItem, setIsOnFocusItem] = useState(true);
+  const [isStoryOpen, setIsStoryOpen] = useState(false);
+
   const [currentItemIndex, setCurrentItemIndex] = useState(0);
   const [postArray, setPostArray] = useState([]);
   const [paramsValues, setParamsValues] = useState({
@@ -98,6 +100,7 @@ const HomeScreen = ({ navigation, route }) => {
   const [currentStory, setCurrentStory] = useState({ userId: null, storyId: null });
   const [likedStories, setLikedStories] = useState([]); // store liked storyIds
   const [isLiked, setIsLiked] = useState(false);
+  const [storySession, setStorySession] = useState(0);
 
   const { openStoryId } = route.params || {};
 
@@ -529,11 +532,13 @@ const HomeScreen = ({ navigation, route }) => {
             onShareClick={() => shareSheetRef.current?.show()}
             isItemOnFocus={currentItemIndex == index && isOnFocusItem}
             screenHeight={screenHeight}
+            currentIndex={currentItemIndex}
+            isStoryOpen={isStoryOpen} 
           />
         </View>
       );
     },
-    [postArray, currentItemIndex, isOnFocusItem],
+    [postArray, currentItemIndex, isOnFocusItem, isStoryOpen],
   );
   const getItemLayout = (data, index) => ({
     length: screenHeight,
@@ -643,12 +648,15 @@ const HomeScreen = ({ navigation, route }) => {
                 </View>
               )}}
               onStoryStart={(userId, storyId) => {
+                console.log("📢 Story opened -> Pausing reels");
+                setIsStoryOpen(true);
                 
                 const parentUser = stories.find(user => user.id === userId);
                 const storyObj = parentUser?.stories.find(s => s.id === storyId);
                
                 // Check if the current user has stories
-              if (userInfo.id === userId && (!parentUser  || parentUser .stories.length === 0)) {
+              if (userInfo.id === userId && (!parentUser  || parentUser.stories.length === 0)) {
+                storyref.current?.hide(userId);
                 navigation.navigate('AddStory', { added_from: 1 });
                 return; // Prevent further execution of this function
               }
@@ -658,9 +666,21 @@ const HomeScreen = ({ navigation, route }) => {
               handleStorySeen(userId, storyId)
 
               }}
+
+              onStoryEnd={()=> {
+                console.log("📢 Story closed -> Resuming reels");
+                setIsStoryOpen(false);
+                setStorySession((prev) => prev + 1);
+                }}
+
+                onHide={(id) => {
+                  console.log("📢 Story hidden -> Resuming reels");
+                  setIsStoryOpen(false);
+                }}
             avatarBorderColors={['#0896E6','#FFE35E','#FEDF00','#55A861', '#2291CF']}
             avatarSeenBorderColors={[colors.gray]}
             saveProgress={true}
+           
             />
           </SafeAreaView>
         }
@@ -711,7 +731,13 @@ const HomeScreen = ({ navigation, route }) => {
                   alignSelf: 'center',
                 }}
                 keyExtractor={(item, index) => item.id?.toString() || index.toString()}
-                extraData={screenHeight}
+                extraData={{ screenHeight, isStoryOpen,}}   // 👈 force re-render when story state changes
+                onMomentumScrollEnd={(e) => {
+                  const index = Math.round(e.nativeEvent.contentOffset.y / screenHeight);
+                  console.log("📌 Current reel index:", index);
+                  setCurrentItemIndex(index);
+                }}
+
               />
             </View>
           ) :

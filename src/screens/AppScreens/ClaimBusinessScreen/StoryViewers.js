@@ -121,7 +121,7 @@ const StoryViewerScreen = ({ navigation, route }) => {
         <View style={{ flex: 1, backgroundColor: "#fff" }}>
             <BackHeader />
             <View 
-            style={{  flex: 1 / 2 }}>
+            style={{  height:'30%' }}>
 
 
                 <InstaThumbnailSlider

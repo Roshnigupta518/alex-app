@@ -43,8 +43,8 @@ const styles = StyleSheet.create({
   },
 
   rightIconContainer: {
-    height: wp(45),
-    width: wp(45),
+    height: wp(35),
+    width: wp(35),
     backgroundColor: colors.white,
     borderRadius: 40,
     alignItems: 'center',
@@ -55,8 +55,8 @@ const styles = StyleSheet.create({
   },
 
   rightIconStyle: {
-    height: wp(23),
-    width: wp(23),
+    height: wp(20),
+    width: wp(20),
     resizeMode: 'contain',
     tintColor: colors.lightBlack,
   },

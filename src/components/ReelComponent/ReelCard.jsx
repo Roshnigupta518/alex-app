@@ -22,10 +22,16 @@ const ReelCard = ({
   onShareClick = () => {},
   onMenuClick = () => {},
   onFollowingUserClick = () => {},
-  screenHeight
+  screenHeight,
+  currentIndex, isStoryOpen
 }) => {
   const userInfo = useSelector(state => state.UserInfoSlice.data);
   const shouldMute = useSelector(state => state.VideoMuteSlice.isMute);
+
+  const isItemOnFocusnew = idx === currentIndex;
+
+  const isPaused = isStoryOpen || !isItemOnFocusnew;
+
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -34,6 +40,7 @@ const ReelCard = ({
   const [isSaved, setIsSaved] = useState(data?.isSaved || false);
   const [shouldPlay, setShouldPlay] = useState(isItemOnFocus);
   const [muteIconVisible, setMuteIconVisible] = useState(false);
+  const [manualPaused, setManualPaused] = useState(false);
   // console.log({screenHeight})
   useEffect(() => {
     setShouldPlay(
@@ -122,17 +129,34 @@ const ReelCard = ({
     });
   }
   }
+
+  useEffect(() => {
+    console.log(
+      `🎬 ReelCard [${idx}] -> focus: ${isItemOnFocus}, paused: ${isPaused}`
+    );
+  }, [isStoryOpen, isItemOnFocus]);
+  
  
   return (
     <View style={[styles.container,{height:screenHeight}]} key={idx}>
       {data?.postData?.post?.mimetype == 'video/mp4' ? (
-        <VideoPlayer
-          url={data?.postData?.post?.data}
-          shouldPlay={shouldPlay}
-          onMuteClick={changeMuteState}
-          screen={screen}
-          screenHeight = {screenHeight}
-        />
+       <TouchableOpacity
+       activeOpacity={1}
+       style={{ flex: 1 }}
+       onPress={() => {
+         setManualPaused(prev => !prev);
+         console.log(`🎬 ReelCard [${idx}] -> manualPaused: ${!manualPaused}`);
+       }}
+     >
+       <VideoPlayer
+         url={data?.postData?.post?.data}
+         shouldPlay={shouldPlay}
+         onMuteClick={changeMuteState}
+         screen={screen}
+         screenHeight={screenHeight}
+         isPaused={isPaused || shouldPlay}
+       />
+     </TouchableOpacity>
       ) : (
         <Image
           source={{
