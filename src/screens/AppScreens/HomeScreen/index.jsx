@@ -26,17 +26,14 @@ import DeleteCommentSheet from '../../../components/ActionSheetComponent/DeleteC
 import { ReelIndexAction } from '../../../redux/Slices/ReelIndexSlice';
 import NoInternetModal from '../../../components/NoInternetModal';
 import NetInfo from '@react-native-community/netinfo';
-import crashlytics from '@react-native-firebase/crashlytics';
-import Geolocation from '@react-native-community/geolocation';
 import { setCityAction } from '../../../redux/Slices/SelectedCitySlice';
 import useLocation from '../../../hooks/useLocation';
-import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
-import DeviceInfo from 'react-native-device-info';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useFocusEffect } from '@react-navigation/native';
 import InstagramStories from '@birdwingo/react-native-instagram-stories';
 import ImageConstants from '../../../constants/ImageConstants';
 import { handleShareStoryFunction } from '../../../validation/helper';
+import { ChangeMuteAction } from '../../../redux/Slices/VideoMuteSlice';
 
 const staticValues = {
   skip: 0,
@@ -70,7 +67,6 @@ const HomeScreen = ({ navigation, route }) => {
   const menuSheetRef = useRef();
   const reportOptionSheet = useRef();
   const [isOnFocusItem, setIsOnFocusItem] = useState(true);
-  const [isStoryOpen, setIsStoryOpen] = useState(false);
 
   const [currentItemIndex, setCurrentItemIndex] = useState(0);
   const [postArray, setPostArray] = useState([]);
@@ -96,11 +92,8 @@ const HomeScreen = ({ navigation, route }) => {
   const [skip, setSkip] = useState(0);
   const [limit] = useState(5); // fix limit as per API
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true); 
+  const [hasMore, setHasMore] = useState(true);
   const [currentStory, setCurrentStory] = useState({ userId: null, storyId: null });
-  const [likedStories, setLikedStories] = useState([]); // store liked storyIds
-  const [isLiked, setIsLiked] = useState(false);
-  const [storySession, setStorySession] = useState(0);
 
   const { openStoryId } = route.params || {};
 
@@ -226,19 +219,19 @@ const HomeScreen = ({ navigation, route }) => {
 
   const transformApiToDummy = (apiData) => {
     return apiData.map(user => ({
-      id: user.added_from === "2" 
-      ? user.business_id : user.user_id,
+      id: user.added_from === "2"
+        ? user.business_id : user.user_id,
       name: user.user_name,
-      avatarSource: user.user_image 
-      ? { uri: user.user_image }
-      : user.added_from === "2" ? ImageConstants.business_logo : ImageConstants.user,
+      avatarSource: user.user_image
+        ? { uri: user.user_image }
+        : user.added_from === "2" ? ImageConstants.business_logo : ImageConstants.user,
       stories: user.stories.map(story => ({
         id: story.id,
         mediaType: story.media_type === 'video/mp4' ? 'video' : 'image',
         duration: story.duration,
         source: { uri: story.media },
-        is_seen : story.is_seen,
-        is_liked : story.is_liked,
+        is_seen: story.is_seen,
+        is_liked: story.is_liked,
       }))
     }));
   };
@@ -246,16 +239,16 @@ const HomeScreen = ({ navigation, route }) => {
   const getStoryHandle = () => {
     console.log('**********************story updated', hasMore, loading);
     if (loading || !hasMore) return;
-  
+
     let url = { skip, limit };
     GetAllStoryRequest(url)
       .then(res => {
         const dummyFormat = transformApiToDummy(res.result);
         console.log({ res: dummyFormat.length });
-  
+
         // Check if my story exists in API response
         const myStoryFromApi = dummyFormat.find(s => s.id === userInfo.id);
-  
+
         let yourStoryObj = {
           id: userInfo.id,
           name: 'Your Story',
@@ -265,7 +258,7 @@ const HomeScreen = ({ navigation, route }) => {
           isAddButton: true,
 
         };
-  
+
         let finalStories;
         if (skip === 0) {
           // Remove my story from API list (to avoid duplicate)
@@ -274,9 +267,9 @@ const HomeScreen = ({ navigation, route }) => {
         } else {
           finalStories = [...stories, ...dummyFormat];
         }
-  
+
         setStories(finalStories);
-  
+
         setSkip(prev => prev + limit);
         if (dummyFormat.length < limit) {
           setHasMore(false);
@@ -298,25 +291,25 @@ const HomeScreen = ({ navigation, route }) => {
       if (storyref.current) {
         storyref.current.hide();
       }
-     
+
     }, [])
   );
-  
+
   const handleStorySeen = (userId, storyId) => {
     setStories((prev) =>
       prev.map((user) =>
         user.id === userId
           ? {
-              ...user,
-              stories: user.stories.map((s) =>
-                s.id === storyId ? { ...s, is_seen: true } : s
-              ),
-            }
+            ...user,
+            stories: user.stories.map((s) =>
+              s.id === storyId ? { ...s, is_seen: true } : s
+            ),
+          }
           : user
       )
     );
   };
-  
+
 
   const handleDeleteStoryFromHome = (storyId, userId) => {
     setStories(prev =>
@@ -331,8 +324,6 @@ const HomeScreen = ({ navigation, route }) => {
       })
     );
   };
-  
-  
 
   useEffect(() => {
     if (isFocused && route?.params?.shouldScrollTopReel) {
@@ -343,7 +334,7 @@ const HomeScreen = ({ navigation, route }) => {
       setLoading(false); // make sure not loading before fetch
     }
   }, [isFocused, route?.params?.shouldScrollTopReel]);
-  
+
   useEffect(() => {
     // jab hasMore true ho jaye & isFocused ho, tab fetch karo
     if (isFocused && hasMore && skip === 0) {
@@ -351,7 +342,7 @@ const HomeScreen = ({ navigation, route }) => {
       getStoryHandle();
     }
   }, [isFocused, hasMore, skip]);
-  
+
   useEffect(() => {
     if (openStoryId && stories.length > 0) {
       const index = stories.findIndex(s => s.id === openStoryId);
@@ -369,7 +360,7 @@ const HomeScreen = ({ navigation, route }) => {
       const res = await makeStorySeenRequest(storyId);
       console.log('story seen ho gyi', storyId, res);
     } catch (err) {
-      console.log({err})
+      console.log({ err })
       if (err?.message) {
         Toast.error('view stories', err.message);
       }
@@ -380,7 +371,7 @@ const HomeScreen = ({ navigation, route }) => {
     try {
       const res = await likeStoryRequest(storyId);
       Toast.success("Story", res?.message, "bottom");
-  
+
       setStories(prevStories =>
         prevStories.map(user => ({
           ...user,
@@ -396,8 +387,8 @@ const HomeScreen = ({ navigation, route }) => {
       }
     }
   };
-  
-  
+
+
   const _onViewableItemsChanged = useCallback(({ viewableItems }) => {
     if (viewableItems[0]) {
       const index = viewableItems[0]?.index;
@@ -532,13 +523,11 @@ const HomeScreen = ({ navigation, route }) => {
             onShareClick={() => shareSheetRef.current?.show()}
             isItemOnFocus={currentItemIndex == index && isOnFocusItem}
             screenHeight={screenHeight}
-            currentIndex={currentItemIndex}
-            isStoryOpen={isStoryOpen} 
           />
         </View>
       );
     },
-    [postArray, currentItemIndex, isOnFocusItem, isStoryOpen],
+    [postArray, currentItemIndex, isOnFocusItem],
   );
   const getItemLayout = (data, index) => ({
     length: screenHeight,
@@ -569,122 +558,121 @@ const HomeScreen = ({ navigation, route }) => {
           selectedCity={selectedCityData?.locationType}
           currentCity={city}
         />
-     
+
         <View style={styles.storyContainer}>
-        {stories.length > 0 &&
-          <SafeAreaView >
-            <InstagramStories
-              ref={storyref}
-              stories={stories}
-              onStoryPress={(story) => {
-                storyref.current?.open(story.id);
-              }}
-            
-              onAddPress={() => navigation.navigate('AddStory',{added_from: 1})} 
-              animationDuration={5000}
-              // videoAnimationMaxDuration={30000}
-              // saveProgress={false}
-              avatarSize={60}
-              storyContainerStyle={{ margin: 0, padding: 0 }}
-              progressContainerStyle={{ margin: 0, padding: 0 }}
-              containerStyle={{ marginTop: Platform.OS === 'android' && "-20%", zIndex: 3, }}
-              closeIconColor='#fff'
-              progressColor={colors.gray}
-              progressActiveColor={colors.primaryColor}
-              showName={true}
-              nameTextStyle={{ color: colors.white, textAlign: 'center' }}
-              textStyle={{ color: colors.white }}
-              footerComponent={() => {
-                const currentStoryData = stories
-                  .find(u => u.id === currentStory?.userId)
-                  ?.stories.find(s => s.id === currentStory?.storyId);
+          {stories.length > 0 &&
+            <SafeAreaView >
+              <InstagramStories
+                ref={storyref}
+                stories={stories}
+                onStoryPress={(story) => {
+                  storyref.current?.open(story.id);
+                }}
 
-                return(
-                  <View style={{flexDirection:'row', padding:20}}>
-                    {userInfo?.id === currentStory?.userId &&
-                  <TouchableOpacity 
-                    onPress={() => {
-                    navigation.navigate("StoryViewers", {
-                      storyId: currentStory?.storyId, 
-                      onDelete: handleDeleteStoryFromHome,
-                    });
-                  }}>
-                  <Image source={ImageConstants.openEye}  />
-                </TouchableOpacity>
-                }
-                <View style={{
-                  width:  '90%',
-                  backgroundColor: 'rgba(0,0,0,0.3)',
-                  flexDirection: 'row',
-                  justifyContent: 'flex-end',
-                }}>
-                    {userInfo?.id !== currentStory?.userId &&
-                  <View>
-                  {currentStoryData?.is_liked ?
-                   <TouchableOpacity
-                   style={{ marginRight: 20 }}
-                    onPress={()=>likeStoryHandle(currentStory?.storyId, false)} >
-                     <Image 
-                     source={ ImageConstants.filled_like } 
-                    style={styles.likeSty}
-                   />
-                   </TouchableOpacity>
-                  :
-                  <TouchableOpacity
-                   style={{ marginRight: 20 }}
-                    onPress={()=>likeStoryHandle(currentStory?.storyId, true)} >
-                     <Image 
-                     source={ ImageConstants.unlike } 
-                     style={styles.likeSty}
-                   />
-                   </TouchableOpacity>
-                }
-                </View>}
-                 
-                  <TouchableOpacity onPress={()=>handleShareStoryFunction(currentStory?.storyId)}>
-                    <Image source={ImageConstants.share}  />
-                  </TouchableOpacity>
-                </View>
-                </View>
-              )}}
-              onStoryStart={(userId, storyId) => {
-                console.log("📢 Story opened -> Pausing reels");
-                setIsStoryOpen(true);
-                
-                const parentUser = stories.find(user => user.id === userId);
-                const storyObj = parentUser?.stories.find(s => s.id === storyId);
-               
-                // Check if the current user has stories
-              if (userInfo.id === userId && (!parentUser  || parentUser.stories.length === 0)) {
-                storyref.current?.hide(userId);
-                navigation.navigate('AddStory', { added_from: 1 });
-                return; // Prevent further execution of this function
-              }
+                onAddPress={() => navigation.navigate('AddStory', { added_from: 1 })}
+                animationDuration={5000}
+                // videoAnimationMaxDuration={30000}
+                // saveProgress={false}
+                avatarSize={60}
+                storyContainerStyle={{ margin: 0, padding: 0 }}
+                progressContainerStyle={{ margin: 0, padding: 0 }}
+                containerStyle={{ marginTop: Platform.OS === 'android' && "-20%", zIndex: 3, }}
+                closeIconColor='#fff'
+                progressColor={colors.gray}
+                progressActiveColor={colors.primaryColor}
+                showName={true}
+                nameTextStyle={{ color: colors.white, textAlign: 'center' }}
+                textStyle={{ color: colors.white }}
+                footerComponent={() => {
+                  const currentStoryData = stories
+                    .find(u => u.id === currentStory?.userId)
+                    ?.stories.find(s => s.id === currentStory?.storyId);
 
-              setCurrentStory({ userId, storyId });
-              markStoryAsSeen(storyId);
-              handleStorySeen(userId, storyId)
+                  return (
+                    <View style={{ flexDirection: 'row', padding: 20 }}>
+                      {userInfo?.id === currentStory?.userId &&
+                        <TouchableOpacity
+                          onPress={() => {
+                            navigation.navigate("StoryViewers", {
+                              storyId: currentStory?.storyId,
+                              onDelete: handleDeleteStoryFromHome,
+                            });
+                          }}>
+                          <Image source={ImageConstants.openEye} />
+                        </TouchableOpacity>
+                      }
+                      <View style={{
+                        width: '90%',
+                        backgroundColor: 'rgba(0,0,0,0.3)',
+                        flexDirection: 'row',
+                        justifyContent: 'flex-end',
+                      }}>
+                        {userInfo?.id !== currentStory?.userId &&
+                          <View>
+                            {currentStoryData?.is_liked ?
+                              <TouchableOpacity
+                                style={{ marginRight: 20 }}
+                                onPress={() => likeStoryHandle(currentStory?.storyId, false)} >
+                                <Image
+                                  source={ImageConstants.filled_like}
+                                  style={styles.likeSty}
+                                />
+                              </TouchableOpacity>
+                              :
+                              <TouchableOpacity
+                                style={{ marginRight: 20 }}
+                                onPress={() => likeStoryHandle(currentStory?.storyId, true)} >
+                                <Image
+                                  source={ImageConstants.unlike}
+                                  style={styles.likeSty}
+                                />
+                              </TouchableOpacity>
+                            }
+                          </View>}
 
-              }}
+                        <TouchableOpacity onPress={() => handleShareStoryFunction(currentStory?.storyId)}>
+                          <Image source={ImageConstants.share} />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  )
+                }}
+                onStoryStart={(userId, storyId) => {
+                  console.log("📢 Story opened -> Pausing reels");
+                  dispatch(ChangeMuteAction(true)); 
 
-              onStoryEnd={()=> {
-                console.log("📢 Story closed -> Resuming reels");
-                setIsStoryOpen(false);
-                setStorySession((prev) => prev + 1);
+                  const parentUser = stories.find(user => user.id === userId);
+                  const storyObj = parentUser?.stories.find(s => s.id === storyId);
+
+                  // Check if the current user has stories
+                  if (userInfo.id === userId && (!parentUser || parentUser.stories.length === 0)) {
+                    storyref.current?.hide(userId);
+                    navigation.navigate('AddStory', { added_from: 1 });
+                    return; // Prevent further execution of this function
+                  }
+
+                  setCurrentStory({ userId, storyId });
+                  markStoryAsSeen(storyId);
+                  handleStorySeen(userId, storyId)
+
+                }}
+
+                onStoryEnd={() => {
+                  console.log("📢 Story closed -> Resuming reels");
                 }}
 
                 onHide={(id) => {
                   console.log("📢 Story hidden -> Resuming reels");
-                  setIsStoryOpen(false);
+                  dispatch(ChangeMuteAction(false)); 
                 }}
-            avatarBorderColors={['#0896E6','#FFE35E','#FEDF00','#55A861', '#2291CF']}
-            avatarSeenBorderColors={[colors.gray]}
-            saveProgress={true}
-           
-            />
-          </SafeAreaView>
-        }
-       
+                avatarBorderColors={['#0896E6', '#FFE35E', '#FEDF00', '#55A861', '#2291CF']}
+                avatarSeenBorderColors={[colors.gray]}
+                saveProgress={true}
+
+              />
+            </SafeAreaView>
+          }
+
         </View>
 
         <ScrollView contentContainerStyle={{ flex: 1 }} nestedScrollEnabled={true} refreshControl={
@@ -731,13 +719,7 @@ const HomeScreen = ({ navigation, route }) => {
                   alignSelf: 'center',
                 }}
                 keyExtractor={(item, index) => item.id?.toString() || index.toString()}
-                extraData={{ screenHeight, isStoryOpen,}}   // 👈 force re-render when story state changes
-                onMomentumScrollEnd={(e) => {
-                  const index = Math.round(e.nativeEvent.contentOffset.y / screenHeight);
-                  console.log("📌 Current reel index:", index);
-                  setCurrentItemIndex(index);
-                }}
-
+                extraData={{ screenHeight }}   // 👈 force re-render when story state changes
               />
             </View>
           ) :
@@ -928,28 +910,28 @@ const styles = StyleSheet.create({
     // height: HEIGHT,
     backgroundColor: colors.gray,
   },
-storyContainer:{ zIndex: 3, marginLeft: 10, position: 'absolute', top: Platform.OS === 'android' ? '10%' : '17%', flexDirection:'row' },
-profilesty:{
-  width: 69,
-  height: 69,
-  borderRadius: 50,
-  borderWidth: 2,
-  borderColor: colors.gray,
-  alignItems: 'center',
-  justifyContent: 'center'
-},
-profileImg:{ width: 60, height:60, borderRadius: 50 },
-plusicon:{
-  position: 'absolute',
-  bottom: -2,
-  right: -2,
-  backgroundColor: colors.primaryColor, // Instagram blue
-  width: 20,
-  height: 20,
-  borderRadius: 10,
-  alignItems: 'center',
-  justifyContent: 'center'
-},
+  storyContainer: { zIndex: 3, marginLeft: 10, position: 'absolute', top: Platform.OS === 'android' ? '10%' : '17%', flexDirection: 'row' },
+  profilesty: {
+    width: 69,
+    height: 69,
+    borderRadius: 50,
+    borderWidth: 2,
+    borderColor: colors.gray,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  profileImg: { width: 60, height: 60, borderRadius: 50 },
+  plusicon: {
+    position: 'absolute',
+    bottom: -2,
+    right: -2,
+    backgroundColor: colors.primaryColor, // Instagram blue
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   container: {
     flex: 1,
     backgroundColor: colors.black,
@@ -958,7 +940,7 @@ plusicon:{
     width: wp(20),
     height: wp(20)
   },
-  likeSty:{
+  likeSty: {
     height: wp(24),
     width: wp(24),
     resizeMode: 'contain',

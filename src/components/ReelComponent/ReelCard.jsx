@@ -23,15 +23,9 @@ const ReelCard = ({
   onMenuClick = () => {},
   onFollowingUserClick = () => {},
   screenHeight,
-  currentIndex, isStoryOpen
 }) => {
   const userInfo = useSelector(state => state.UserInfoSlice.data);
   const shouldMute = useSelector(state => state.VideoMuteSlice.isMute);
-
-  const isItemOnFocusnew = idx === currentIndex;
-
-  const isPaused = isStoryOpen || !isItemOnFocusnew;
-
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -47,6 +41,8 @@ const ReelCard = ({
       isItemOnFocus && data?.postData?.post?.mimetype == 'video/mp4',
     );
   }, [isItemOnFocus]);
+
+  console.log({isItemOnFocus})
 
   const likePost = async isLike => {
     let likeData = {
@@ -129,12 +125,6 @@ const ReelCard = ({
     });
   }
   }
-
-  useEffect(() => {
-    console.log(
-      `🎬 ReelCard [${idx}] -> focus: ${isItemOnFocus}, paused: ${isPaused}`
-    );
-  }, [isStoryOpen, isItemOnFocus]);
   
  
   return (
@@ -154,7 +144,6 @@ const ReelCard = ({
          onMuteClick={changeMuteState}
          screen={screen}
          screenHeight={screenHeight}
-         isPaused={isPaused || shouldPlay}
        />
      </TouchableOpacity>
       ) : (

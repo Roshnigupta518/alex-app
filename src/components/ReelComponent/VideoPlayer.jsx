@@ -10,22 +10,14 @@ export default function VideoPlayer({
   screen = '',
   onMuteClick = () => {},
   screenHeight,
-  isPaused
 }) {
   const video = React.useRef(null);
   const shouldMute = useSelector(state => state.VideoMuteSlice.isMute);
   const [play, setPlay] = React.useState(false);
 
   React.useEffect(() => {
-    if (!video.current) return;
-
-    if (isPaused) {
-      video.current.pauseAsync();
-    } else if (shouldPlay) {
-      video.current.playAsync();
-    }
-  }, [isPaused, shouldPlay]);
-  
+    setPlay(shouldPlay);
+  }, [shouldPlay]);
 
   return (
     <View style={styles.container}>
@@ -44,7 +36,7 @@ export default function VideoPlayer({
             useNativeControls={false}
             resizeMode={ResizeMode.CONTAIN}
             isLooping
-            shouldPlay={shouldPlay && !isPaused} // ✅ built-in control
+            shouldPlay={play} 
             isMuted={shouldMute}
           />
         )}
