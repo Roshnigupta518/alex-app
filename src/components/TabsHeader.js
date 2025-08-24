@@ -28,7 +28,7 @@ tabsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginTop: wp(20),
-    marginHorizontal: wp(20),
+    // marginHorizontal: wp(20),
   },
 
   tabWrapper: {

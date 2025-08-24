@@ -67,8 +67,8 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     position: 'absolute',
     zIndex: 2,
-    right: 7,
-    top: 5,
+    right: 6,
+    top: 3,
   },
 
   notificationChildView: {

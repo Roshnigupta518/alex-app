@@ -34,7 +34,7 @@ export default function VideoPlayer({
               uri: url,
             }}
             useNativeControls={false}
-            resizeMode={ResizeMode.CONTAIN}
+            resizeMode={ResizeMode.COVER}
             isLooping
             shouldPlay={play} 
             isMuted={shouldMute}

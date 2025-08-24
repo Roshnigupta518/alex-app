@@ -25,7 +25,9 @@ const MediaItem = ({ item, size, onPress, index }) => {
                         />
                     </View>
                     <Image
-                        source={{ uri: item?.postData?.post_thumbnail }}
+                        source={item?.postData?.post_thumbnail ? 
+                            { uri: item?.postData?.post_thumbnail } : 
+                            ImageConstants.business_logo}
                         style={ styles.userPostImage
                     }
                     />

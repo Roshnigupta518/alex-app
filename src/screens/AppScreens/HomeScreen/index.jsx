@@ -234,9 +234,7 @@ useEffect(() => {
       id: user.added_from === "2"
         ? user.business_id : user.user_id,
       name: user.user_name,
-      avatarSource: user.user_image
-        ? { uri: user.user_image }
-        : user.added_from === "2" ? ImageConstants.business_logo : ImageConstants.user,
+      avatarSource: user.user_image? {uri: user.user_image} : ImageConstants.business_logo ,
       stories: user.stories.map(story => ({
         id: story.id,
         mediaType: story.media_type === 'video/mp4' ? 'video' : 'image',
@@ -264,7 +262,7 @@ useEffect(() => {
         let yourStoryObj = {
           id: userInfo.id,
           name: 'Your Story',
-          avatarSource: { uri: userInfo.profile_picture } || ImageConstants.user,
+          avatarSource: userInfo.profile_picture ?{ uri: userInfo.profile_picture } : ImageConstants.business_logo,
           stories: myStoryFromApi ? myStoryFromApi.stories : [],
           // isAddButton: !myStoryFromApi || (myStoryFromApi.stories?.length === 0),
           isAddButton: true,
@@ -520,9 +518,9 @@ useEffect(() => {
   const _renderReels = useCallback(
     ({ item, index }) => {
       return (
-        <View style={[styles.cardContainer, { height: screenHeight }]} key={index}>
+        <View style={[styles.cardContainer, { height: screenHeight }]} >
           <ReelCard
-            // idx={index}
+            idx={index}
             screen={'Home'}
             data={item}
             onCommentClick={idx => {
@@ -587,6 +585,7 @@ useEffect(() => {
                 // videoAnimationMaxDuration={30000}
                 // saveProgress={false}
                 avatarSize={60}
+                imageStyles={{width:60,  height:60}}
                 storyContainerStyle={{ margin: 0, padding: 0 }}
                 progressContainerStyle={{ margin: 0, padding: 0 }}
                 containerStyle={{ marginTop: Platform.OS === 'android' && '-20%', zIndex: 3, }}
@@ -758,7 +757,10 @@ useEffect(() => {
                 contentContainerStyle={{
                   alignSelf: 'center',
                 }}
-                keyExtractor={(item, index) => item.id?.toString() || index.toString()}
+                // keyExtractor={(item, index) => item.id?.toString() || index.toString()}
+                // keyExtractor={(item, index) => `${item._id || item.id || index}`}
+                keyExtractor={(item, index) => `${item.postData?._id || item._id || item.id || 'idx'}_${index}`}
+
                 extraData={{ screenHeight }}   // 👈 force re-render when story state changes
               />
             </View>
