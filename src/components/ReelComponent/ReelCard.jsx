@@ -301,6 +301,7 @@ const ReelCard = ({
             {data?.postData?.taggedUsers.map((item, index) => {
               return (
                 <TouchableOpacity
+                key={item?._id ?? index} 
                   onPress={() =>
                     navigation.navigate('ProfileDetail', {userId: item?._id})
                   }>
@@ -328,6 +329,7 @@ const ReelCard = ({
           {data?.postData?.tagBussiness?.map((item, index) => {
             return (
               <TouchableOpacity
+              key={item?._id ?? index} 
                 onPress={() => {
                   navigation.navigate('ClaimBusinessScreen', {
                     ...item,

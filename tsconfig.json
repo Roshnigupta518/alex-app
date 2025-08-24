@@ -2,6 +2,14 @@
   "extends": "@react-native/typescript-config/tsconfig.json",
   "compilerOptions": {
     "jsx": "react-native",
-    "esModuleInterop": true
-  }
+    "esModuleInterop": true,
+    "skipLibCheck": true, //// ignore type errors in node_modules
+  },
+  "include": [
+    "src",
+    "src/types",                        // 👈 add this line so TS sees your custom .d.ts
+    "index.js",
+    "index.ts",
+    "index.tsx"
+  ]
 }

@@ -19,9 +19,19 @@ const ITEM_WIDTH = 120;
 const SPACING = 15;
 
 const InstaThumbnailSlider = ({ stories, selectedIndex, setSelectedIndex }) => {
+    console.log({selectedIndex})
     const scrollX = useRef(new Animated.Value(0)).current;
     const flatListRef = useRef(null);
     const lastOffset = useRef(0);
+
+    const carouselRef = useRef(null);
+
+useEffect(() => {
+    if (carouselRef.current && selectedIndex < stories.length) {
+        carouselRef.current.snapToItem(selectedIndex, true); 
+    }
+}, [selectedIndex, stories]);
+
 
     useEffect(() => {
         if (flatListRef.current && stories.length > 0) {
@@ -132,13 +142,20 @@ const InstaThumbnailSlider = ({ stories, selectedIndex, setSelectedIndex }) => {
         // />
 
         <Carousel
+            ref={carouselRef}
             data={stories}
             sliderWidth={width}
             itemWidth={ITEM_WIDTH}
             firstItem={selectedIndex}
             inactiveSlideScale={0.85}
             inactiveSlideOpacity={0.7}
-            onSnapToItem={(index) => setSelectedIndex(index)}
+            // onSnapToItem={(index) => setSelectedIndex(index)}
+            onSnapToItem={(index) => {
+                if (index !== selectedIndex) {
+                    console.log({index})
+                  setSelectedIndex(index);
+                }
+              }}
             renderItem={({ item, index }) => (
                 <View style={{ alignItems: 'center' }}>
                     {index === selectedIndex ? (
@@ -147,13 +164,31 @@ const InstaThumbnailSlider = ({ stories, selectedIndex, setSelectedIndex }) => {
                             style={styles.gradientBorder}
                         >
                             <Image
-                                source={{ uri: item.media_type === 'video/mp4' ? item.strory_thumbnail : item.media }}
+                                // source={{ uri: item.media_type === 'video/mp4' ? item.strory_thumbnail : item.media }}
+                                source={
+                                    item.media_type === "video/mp4"
+                                      ? item.strory_thumbnail
+                                        ? { uri: item.strory_thumbnail }
+                                        : ImageConstants.business_logo
+                                      : item.media
+                                        ? { uri: item.media }
+                                        : ImageConstants.business_logo
+                                  }
                                 style={styles.storyThumbInside}
                             />
                         </LinearGradient>
                     ) : (
                         <Image
-                            source={{ uri: item.media_type === 'video/mp4' ? item.strory_thumbnail : item.media }}
+                            // source={{ uri: item.media_type === 'video/mp4' ? item.strory_thumbnail : item.media }}
+                            source={
+                                item.media_type === "video/mp4"
+                                  ? item.strory_thumbnail
+                                    ? { uri: item.strory_thumbnail }
+                                    : ImageConstants.business_logo
+                                  : item.media
+                                    ? { uri: item.media }
+                                    : ImageConstants.business_logo
+                              }
                             style={styles.storyThumb}
                         />
                     )}
@@ -163,6 +198,7 @@ const InstaThumbnailSlider = ({ stories, selectedIndex, setSelectedIndex }) => {
                     </View>
                 </View>
             )}
+            key={selectedIndex}
         />
     );
 };

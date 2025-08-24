@@ -6,7 +6,7 @@ import {
     FlatList,
     TouchableOpacity,
     ActivityIndicator,
-    StyleSheet,
+    StyleSheet, DeviceEventEmitter
 } from "react-native";
 import { GetAllStoryRequest } from "../../../services/Utills";
 import { colors, wp } from "../../../constants";
@@ -19,7 +19,7 @@ import { DeleteStoryRequest } from "../../../../ios/src/services/Utills";
 import InstaThumbnailSlider from "../../../components/InstaThumbnailSlider";
 
 const StoryViewerScreen = ({ navigation, route }) => {
-    const { storyId, onDelete } = route.params || {};
+    const { storyId } = route.params || {};
     const [stories, setStories] = useState([]);
     const [skip, setSkip] = useState(0);
     const limit = 5;
@@ -41,7 +41,12 @@ const StoryViewerScreen = ({ navigation, route }) => {
                     const updated = prev.filter(story => story.id !== storyId);
 
                     // 🔹 Home screen ko update karo
-                    if (onDelete) onDelete(storyId, userInfo?.id);
+                    // if (onDelete) onDelete(storyId, userInfo?.id);
+                     // 🔔 notify HomeScreen (no function in params)
+                        DeviceEventEmitter.emit('storyDeleted', {
+                            storyId,
+                            userId: userInfo?.id,
+                        });
 
                     // 🔹 Agar koi story bachi hi nahi -> goBack()
                     if (updated.length === 0) {
@@ -132,7 +137,10 @@ const StoryViewerScreen = ({ navigation, route }) => {
             </View>
 
             <View style={st.businessTimeCon}>
-                <Text style={[st.labelStyle, styles.heading]}>{selectedStory?.viewers?.length} Viewers</Text>
+                {/* <Text style={[st.labelStyle, styles.heading]}>{selectedStory?.viewers?.length} Viewers</Text> */}
+                 <Text style={[st.labelStyle, styles.heading]}>
+  {[...new Set((selectedStory?.viewers || []).map(v => v.user_id._id))].length} Viewers
+ </Text>
                 <View style={st.alignE}>
                     <TouchableOpacity onPress={() => DeleteStoryById(selectedStory?.id)}>
                         <Image source={ImageConstants.delete_new} style={styles.trashicon}
@@ -143,17 +151,17 @@ const StoryViewerScreen = ({ navigation, route }) => {
             </View>
             <FlatList
                 data={selectedStory.viewers || []}
-                keyExtractor={(item, idx) => item.user_id._id + idx}
+                // keyExtractor={(item, idx) => item.user_id._id + idx}
+                keyExtractor={(item, idx) => `${item.user_id._id}-${idx}`}
                 renderItem={({ item }) => {
                     const hasLiked = likedUserIds.has(item.user_id._id);
-
-                    // console.log({ item })
-
-                    // console.log({ hasLiked })
+                    const profileSource = item.user_id.profile_picture
+                    ? { uri: item.user_id.profile_picture }
+                    : ImageConstants.business_logo;
                     return (
                         <View style={styles.viewerRow}>
                             <Image
-                                source={{ uri: item.user_id.profile_picture }}
+                                source={profileSource}
                                 style={styles.avatar}
                             />
                             {hasLiked && (

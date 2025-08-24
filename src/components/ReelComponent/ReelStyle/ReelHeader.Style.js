@@ -63,17 +63,17 @@ const styles = StyleSheet.create({
 
   notificationParentContainer: {
     backgroundColor: colors.black,
-    padding: 3,
+    padding: 2,
     borderRadius: 30,
     position: 'absolute',
     zIndex: 2,
-    right: 10,
-    top: 10,
+    right: 7,
+    top: 5,
   },
 
   notificationChildView: {
-    height: 7,
-    width: 7,
+    height: 5,
+    width: 5,
     borderRadius: 30,
     backgroundColor: colors.primaryColor,
   },

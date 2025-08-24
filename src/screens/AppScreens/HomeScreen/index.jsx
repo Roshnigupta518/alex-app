@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   Alert,
   BackHandler,
-  Image, TouchableOpacity,
+  Image, TouchableOpacity, DeviceEventEmitter,
   Text, Platform, PermissionsAndroid, AppState, ScrollView, Linking, SafeAreaView
 } from 'react-native';
 import { colors, fonts, HEIGHT, wp } from '../../../constants';
@@ -51,7 +51,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   const tabBarHeight = useBottomTabBarHeight();
   // const screenHeight = (HEIGHT-tabBarHeight) 
-  const screenHeight = Platform.OS == 'ios' ? HEIGHT : HEIGHT - tabBarHeight
+  const screenHeight = Platform.OS == 'ios' ? HEIGHT :  HEIGHT - tabBarHeight
   // console.log({tabBarHeight, screenHeight})
   const storyref = useRef(null)
   const prevNearBy = useRef(nearByType);
@@ -124,11 +124,22 @@ const HomeScreen = ({ navigation, route }) => {
     return () => unsubscribe();
   }, []);
 
+  // inside HomeScreen component:
+useEffect(() => {
+  const sub = DeviceEventEmitter.addListener('storyDeleted', ({ storyId, userId }) => {
+    handleDeleteStoryFromHome(storyId, userId);
+  });
+  return () => sub.remove();
+}, [stories]);
+
   const onRefresh = React.useCallback(async () => {
-    getStoryHandle()
-    // setRefreshing(true);
     setIsLoading(true)
     console.log('call this refresh***************')
+
+    setSkip(0); // Reset skip to 0 to fetch from the start
+    setHasMore(true); // Reset hasMore to true
+    setStories([]); // Clear existing stories
+
     console.log({ selectedCityData, paramsValues, currentCity: city })
 
     pagination.skip = staticValues.skip;
@@ -140,6 +151,7 @@ const HomeScreen = ({ navigation, route }) => {
     setPostArray([]);
     await refreshLocation();
     getAllPosts();
+    getStoryHandle(); // Fetch stories
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
@@ -510,7 +522,7 @@ const HomeScreen = ({ navigation, route }) => {
       return (
         <View style={[styles.cardContainer, { height: screenHeight }]} key={index}>
           <ReelCard
-            idx={index}
+            // idx={index}
             screen={'Home'}
             data={item}
             onCommentClick={idx => {
@@ -567,6 +579,7 @@ const HomeScreen = ({ navigation, route }) => {
                 stories={stories}
                 onStoryPress={(story) => {
                   storyref.current?.open(story.id);
+                  return null;
                 }}
 
                 onAddPress={() => navigation.navigate('AddStory', { added_from: 1 })}
@@ -576,7 +589,7 @@ const HomeScreen = ({ navigation, route }) => {
                 avatarSize={60}
                 storyContainerStyle={{ margin: 0, padding: 0 }}
                 progressContainerStyle={{ margin: 0, padding: 0 }}
-                containerStyle={{ marginTop: Platform.OS === 'android' && "-20%", zIndex: 3, }}
+                containerStyle={{ marginTop: Platform.OS === 'android' && '-20%', zIndex: 3, }}
                 closeIconColor='#fff'
                 progressColor={colors.gray}
                 progressActiveColor={colors.primaryColor}
@@ -595,7 +608,7 @@ const HomeScreen = ({ navigation, route }) => {
                           onPress={() => {
                             navigation.navigate("StoryViewers", {
                               storyId: currentStory?.storyId,
-                              onDelete: handleDeleteStoryFromHome,
+                              // onDelete: handleDeleteStoryFromHome,
                             });
                           }}>
                           <Image source={ImageConstants.openEye} />
@@ -637,6 +650,29 @@ const HomeScreen = ({ navigation, route }) => {
                     </View>
                   )
                 }}
+
+                // footerComponent={ () =>
+                //   <StoriesFooter
+                //     isOwner={userInfo?.id === currentStory?.userId}
+                //     liked={
+                //       stories.find(u => u.id === currentStory?.userId)
+                //              ?.stories.find(s => s.id === currentStory?.storyId)
+                //              ?.is_liked
+                //     }
+                //     onToggleLike={() => {
+                //       const current =
+                //         stories.find(u => u.id === currentStory?.userId)
+                //                ?.stories.find(s => s.id === currentStory?.storyId);
+                //       likeStoryHandle(currentStory?.storyId, !current?.is_liked);
+                //     }}
+                //     onOpenViewers={() => {
+                //       // (we'll fix params in step 2)
+                //       navigation.navigate('StoryViewers', { storyId: currentStory?.storyId });
+                //     }}
+                //     onShare={() => handleShareStoryFunction(currentStory?.storyId)}
+                //   />
+                // }
+
                 onStoryStart={(userId, storyId) => {
                   console.log("📢 Story opened -> Pausing reels");
                   dispatch(ChangeMuteAction(true)); 
@@ -675,9 +711,10 @@ const HomeScreen = ({ navigation, route }) => {
 
         </View>
 
-        <ScrollView contentContainerStyle={{ flex: 1 }} nestedScrollEnabled={true} refreshControl={
+        {/* <ScrollView contentContainerStyle={{ flex: 1 }} nestedScrollEnabled={true} 
+        refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }>
+        }> */}
           {shouldShowLoader ? (
             // Show loader
             <View style={{
@@ -697,8 +734,11 @@ const HomeScreen = ({ navigation, route }) => {
                 height: screenHeight,
                 justifyContent: 'center',
               }}>
-              <FlatList
-                nestedScrollEnabled={true}
+              <FlatList 
+               refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+                nestedScrollEnabled
                 ref={flashListRef}
                 data={postArray}
                 renderItem={_renderReels}
@@ -783,7 +823,7 @@ const HomeScreen = ({ navigation, route }) => {
                   </Text>
                 </View>
               ) : null}
-        </ScrollView>
+        {/* </ScrollView> */}
 
         {/* Comment List Screen */}
         <CommentListSheet
