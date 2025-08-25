@@ -17,7 +17,7 @@ import { useSelector } from "react-redux";
 import Toast from "../../../constants/Toast";
 import { DeleteStoryRequest } from "../../../../ios/src/services/Utills";
 import InstaThumbnailSlider from "../../../components/InstaThumbnailSlider";
-
+import NotFoundAnime from "../../../components/NotFoundAnime";
 const StoryViewerScreen = ({ navigation, route }) => {
     const { storyId } = route.params || {};
     const [stories, setStories] = useState([]);
@@ -139,8 +139,8 @@ const StoryViewerScreen = ({ navigation, route }) => {
             <View style={st.businessTimeCon}>
                 {/* <Text style={[st.labelStyle, styles.heading]}>{selectedStory?.viewers?.length} Viewers</Text> */}
                  <Text style={[st.labelStyle, styles.heading]}>
-  {[...new Set((selectedStory?.viewers || []).map(v => v.user_id._id))].length} Viewers
- </Text>
+                {[...new Set((selectedStory?.viewers || []).map(v => v.user_id._id))].length} Viewers
+                </Text>
                 <View style={st.alignE}>
                     <TouchableOpacity onPress={() => DeleteStoryById(selectedStory?.id)}>
                         <Image source={ImageConstants.delete_new} style={styles.trashicon}
@@ -181,9 +181,10 @@ const StoryViewerScreen = ({ navigation, route }) => {
                     )
                 }}
                 ListEmptyComponent={
-                    <Text style={{ textAlign: "center", marginTop: 20, color: "gray" }}>
-                        No viewers yet
-                    </Text>
+                    loading ?
+                    <ActivityIndicator color={colors.primaryColor}  />
+                     :
+                    <NotFoundAnime />
                 }
             />
         </View>

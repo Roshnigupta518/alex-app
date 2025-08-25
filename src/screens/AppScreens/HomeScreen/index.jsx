@@ -51,7 +51,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   const tabBarHeight = useBottomTabBarHeight();
   // const screenHeight = (HEIGHT-tabBarHeight) 
-  const screenHeight = Platform.OS == 'ios' ? HEIGHT :  HEIGHT - tabBarHeight
+  const screenHeight = Platform.OS == 'ios' ? HEIGHT : HEIGHT - tabBarHeight
   // console.log({tabBarHeight, screenHeight})
   const storyref = useRef(null)
   const prevNearBy = useRef(nearByType);
@@ -98,6 +98,7 @@ const HomeScreen = ({ navigation, route }) => {
   const { openStoryId } = route.params || {};
 
   const { location, city, error, permissionGranted, refreshLocation } = useLocation();
+  console.log({ location, city, error, permissionGranted, refreshLocation })
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -125,12 +126,12 @@ const HomeScreen = ({ navigation, route }) => {
   }, []);
 
   // inside HomeScreen component:
-useEffect(() => {
-  const sub = DeviceEventEmitter.addListener('storyDeleted', ({ storyId, userId }) => {
-    handleDeleteStoryFromHome(storyId, userId);
-  });
-  return () => sub.remove();
-}, [stories]);
+  useEffect(() => {
+    const sub = DeviceEventEmitter.addListener('storyDeleted', ({ storyId, userId }) => {
+      handleDeleteStoryFromHome(storyId, userId);
+    });
+    return () => sub.remove();
+  }, [stories]);
 
   const onRefresh = React.useCallback(async () => {
     setIsLoading(true)
@@ -163,6 +164,7 @@ useEffect(() => {
     if (selectedCityData?.locationType == 'current') {
       if (city == null && error == null) {
         // Still resolving location – do nothing
+        setIsLoading(false);
         return;
       }
       if (!!error) {
@@ -234,7 +236,7 @@ useEffect(() => {
       id: user.added_from === "2"
         ? user.business_id : user.user_id,
       name: user.user_name,
-      avatarSource: user.user_image? {uri: user.user_image} : ImageConstants.business_logo ,
+      avatarSource: user.user_image ? { uri: user.user_image } : ImageConstants.business_logo,
       stories: user.stories.map(story => ({
         id: story.id,
         mediaType: story.media_type === 'video/mp4' ? 'video' : 'image',
@@ -262,7 +264,7 @@ useEffect(() => {
         let yourStoryObj = {
           id: userInfo.id,
           name: 'Your Story',
-          avatarSource: userInfo.profile_picture ?{ uri: userInfo.profile_picture } : ImageConstants.business_logo,
+          avatarSource: userInfo.profile_picture ? { uri: userInfo.profile_picture } : ImageConstants.business_logo,
           stories: myStoryFromApi ? myStoryFromApi.stories : [],
           // isAddButton: !myStoryFromApi || (myStoryFromApi.stories?.length === 0),
           isAddButton: true,
@@ -436,6 +438,8 @@ useEffect(() => {
 
     if ((error || !city) && selectedCityData?.locationType === 'current') {
       setIsLoading(false);
+      setHasTriedFetchingPosts(true)
+      console.log('got an error ')
       return;
     }
 
@@ -554,6 +558,8 @@ useEffect(() => {
   const shouldShowLocationError =
     selectedCityData?.locationType === 'current' && !!error && postArray.length === 0;
 
+  console.log({ shouldShowLoader, shouldShowLocationError, shouldShowEmptyMessage })
+
   return (
     <>
       <View style={styles.container}>
@@ -585,7 +591,7 @@ useEffect(() => {
                 // videoAnimationMaxDuration={30000}
                 // saveProgress={false}
                 avatarSize={60}
-                imageStyles={{width:60,  height:60}}
+                // imageStyles={{width:60,  height:60}}
                 storyContainerStyle={{ margin: 0, padding: 0 }}
                 progressContainerStyle={{ margin: 0, padding: 0 }}
                 containerStyle={{ marginTop: Platform.OS === 'android' && '-20%', zIndex: 3, }}
@@ -650,31 +656,9 @@ useEffect(() => {
                   )
                 }}
 
-                // footerComponent={ () =>
-                //   <StoriesFooter
-                //     isOwner={userInfo?.id === currentStory?.userId}
-                //     liked={
-                //       stories.find(u => u.id === currentStory?.userId)
-                //              ?.stories.find(s => s.id === currentStory?.storyId)
-                //              ?.is_liked
-                //     }
-                //     onToggleLike={() => {
-                //       const current =
-                //         stories.find(u => u.id === currentStory?.userId)
-                //                ?.stories.find(s => s.id === currentStory?.storyId);
-                //       likeStoryHandle(currentStory?.storyId, !current?.is_liked);
-                //     }}
-                //     onOpenViewers={() => {
-                //       // (we'll fix params in step 2)
-                //       navigation.navigate('StoryViewers', { storyId: currentStory?.storyId });
-                //     }}
-                //     onShare={() => handleShareStoryFunction(currentStory?.storyId)}
-                //   />
-                // }
-
                 onStoryStart={(userId, storyId) => {
                   console.log("📢 Story opened -> Pausing reels");
-                  dispatch(ChangeMuteAction(true)); 
+                  dispatch(ChangeMuteAction(true));
 
                   const parentUser = stories.find(user => user.id === userId);
                   const storyObj = parentUser?.stories.find(s => s.id === storyId);
@@ -698,7 +682,7 @@ useEffect(() => {
 
                 onHide={(id) => {
                   console.log("📢 Story hidden -> Resuming reels");
-                  dispatch(ChangeMuteAction(false)); 
+                  dispatch(ChangeMuteAction(false));
                 }}
                 avatarBorderColors={['#0896E6', '#FFE35E', '#FEDF00', '#55A861', '#2291CF']}
                 avatarSeenBorderColors={[colors.gray]}
@@ -710,12 +694,9 @@ useEffect(() => {
 
         </View>
 
-        {/* <ScrollView contentContainerStyle={{ flex: 1 }} nestedScrollEnabled={true} 
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }> */}
-          {shouldShowLoader ? (
-            // Show loader
+
+        {/* {shouldShowLoader ? (
+           
             <View style={{
               alignItems: 'center',
               height: screenHeight / 1.2,
@@ -723,48 +704,107 @@ useEffect(() => {
             }}>
               <ActivityIndicator size="large" color={colors.white} />
             </View>
-            // null
+         
 
-          ) : postArray?.length > 0 ? (
-            // Show post list
-            <View
+          ) : postArray?.length > 0 ? ( */}
+
+        <View
               style={{
-                alignItems: 'center',
+                // alignItems: 'center',
                 height: screenHeight,
-                justifyContent: 'center',
+                // justifyContent: 'center',
               }}>
-              <FlatList 
-               refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-              }
-                nestedScrollEnabled
-                ref={flashListRef}
-                data={postArray}
-                renderItem={_renderReels}
-                showsVerticalScrollIndicator={false}
-                initialScrollIndex={currentItemIndex}
-                disableIntervalMomentum
-                onViewableItemsChanged={_onViewableItemsChanged}
-                viewabilityConfig={_viewabilityConfig}
-                estimatedItemSize={2}
-                pagingEnabled
-                initialNumToRender={2}
-                removeClippedSubviews={true}
-                windowSize={5}
-                maxToRenderPerBatch={5}
-                getItemLayout={getItemLayout}
-                contentInset={{ top: 0, bottom: 0, left: 0, right: 0 }}
-                contentContainerStyle={{
-                  alignSelf: 'center',
-                }}
-                // keyExtractor={(item, index) => item.id?.toString() || index.toString()}
-                // keyExtractor={(item, index) => `${item._id || item.id || index}`}
-                keyExtractor={(item, index) => `${item.postData?._id || item._id || item.id || 'idx'}_${index}`}
+        <FlatList
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          nestedScrollEnabled
+          ref={flashListRef}
+          data={postArray}
+          renderItem={_renderReels}
+          showsVerticalScrollIndicator={false}
+          initialScrollIndex={currentItemIndex}
+          disableIntervalMomentum
+          onViewableItemsChanged={_onViewableItemsChanged}
+          viewabilityConfig={_viewabilityConfig}
+          estimatedItemSize={2}
+          pagingEnabled
+          initialNumToRender={2}
+          removeClippedSubviews={true}
+          windowSize={5}
+          maxToRenderPerBatch={5}
+          getItemLayout={getItemLayout}
+          contentInset={{ top: 0, bottom: 0, left: 0, right: 0 }}
+          contentContainerStyle={{
+            alignSelf: 'center',
+          }}
+          // keyExtractor={(item, index) => item.id?.toString() || index.toString()}
+          // keyExtractor={(item, index) => `${item._id || item.id || index}`}
+          keyExtractor={(item, index) => `${item.postData?._id || item._id || item.id || 'idx'}_${index}`}
 
-                extraData={{ screenHeight }}   // 👈 force re-render when story state changes
-              />
-            </View>
-          ) :
+          extraData={{ screenHeight }}   // 👈 force re-render when story state changes
+
+
+          // 👇👇👇
+          ListEmptyComponent={() => {
+            if (shouldShowLoader) {
+              return (
+                <View style={styles.center}>
+                  <ActivityIndicator size="large" color={colors.white} />
+                </View>
+              );
+            }
+            if (shouldShowLocationError) {
+              return (
+                <View style={styles.center}>
+                  <Text style={{
+                    fontFamily: fonts.bold,
+                    fontSize: wp(16),
+                    color: colors.white,
+                    textAlign: 'center',
+                    marginBottom: 10,
+                  }}>
+                    Failed to fetch location. Please enable location services.
+                  </Text>
+                  <Text onPress={onRefresh} style={{
+                    fontFamily: fonts.bold,
+                    fontSize: wp(16),
+                    color: colors.white,
+                    textAlign: 'center',
+                    marginBottom: 10,
+                  }}>
+                    Retry
+                  </Text>
+                </View>
+              );
+            }
+            if (shouldShowEmptyMessage) {
+              return (
+                <View style={styles.center}>
+                  <Text
+                    onPress={() => {
+                      if (selectedCityData?.locationType === 'current') {
+                        navigation.navigate('PostMediaScreen');
+                      }
+                    }}
+                    style={{
+                      fontFamily: fonts.bold,
+                      fontSize: wp(16),
+                      color: colors.white,
+                    }}>
+                    {selectedCityData?.locationType === 'current'
+                      ? 'Be the first one to post in this city'
+                      : 'No post found!'}
+                  </Text>
+                </View>
+              );
+            }
+            return null;
+          }}
+
+        />
+        </View>
+        {/* ) :
             shouldShowLocationError ? (
 
               <View style={{
@@ -774,7 +814,7 @@ useEffect(() => {
                 alignItems: 'center',
                 paddingHorizontal: 20,
               }}>
-                <Text
+                <Text 
                   style={{
                     fontFamily: fonts.bold,
                     fontSize: wp(16),
@@ -824,10 +864,9 @@ useEffect(() => {
                       : 'No post found!'}
                   </Text>
                 </View>
-              ) : null}
-        {/* </ScrollView> */}
+              ) : null} */}
 
-        {/* Comment List Screen */}
+
         <CommentListSheet
           ref={actionsheetRef}
           postId={postArray[currentItemIndex]?.postData?._id}
@@ -986,6 +1025,12 @@ const styles = StyleSheet.create({
     height: wp(24),
     width: wp(24),
     resizeMode: 'contain',
+  },
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '100%'
   }
 });
 

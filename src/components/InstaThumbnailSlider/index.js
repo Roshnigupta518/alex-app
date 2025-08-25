@@ -198,7 +198,7 @@ useEffect(() => {
                     </View>
                 </View>
             )}
-            key={selectedIndex}
+            // key={selectedIndex}
         />
     );
 };
