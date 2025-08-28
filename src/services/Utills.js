@@ -1211,9 +1211,10 @@ export const getCityDataRequest = async (lat, lng) => {
     try {
       axios({
         method: 'GET',
-        url: `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${Number(
-          lat,
-        )}&lon=${Number(lng)}`,
+        // url: `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${Number(
+        //   lat,
+        // )}&lon=${Number(lng)}`,
+        url :`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyAbFHI5aGGL3YVP0KvD9nDiFKsi_cX3bS0`
       })
         .then(res => {
           resolve(res?.data);

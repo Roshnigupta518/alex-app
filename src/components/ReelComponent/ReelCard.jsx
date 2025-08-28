@@ -144,6 +144,7 @@
           onMuteClick={changeMuteState}
           screen={screen}
           screenHeight={screenHeight}
+          thumbnail={data?.postData?.post_thumbnail}
         />
       </TouchableOpacity>
         ) : (

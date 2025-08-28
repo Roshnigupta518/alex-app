@@ -613,7 +613,6 @@ const HomeScreen = ({ navigation, route }) => {
                           onPress={() => {
                             navigation.navigate("StoryViewers", {
                               storyId: currentStory?.storyId,
-                              // onDelete: handleDeleteStoryFromHome,
                             });
                           }}>
                           <Image source={ImageConstants.openEye} />
@@ -648,7 +647,7 @@ const HomeScreen = ({ navigation, route }) => {
                             }
                           </View>}
 
-                        <TouchableOpacity onPress={() => handleShareStoryFunction(currentStory?.storyId)}>
+                        <TouchableOpacity onPress={() => handleShareStoryFunction(currentStory?.storyId, storyref)}>
                           <Image source={ImageConstants.share} />
                         </TouchableOpacity>
                       </View>

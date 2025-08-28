@@ -903,6 +903,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
   };
 
   const claimBusiness = async payload => {
+    console.log({place_id, payload})
     await claimBusinessRequest(place_id, payload)
       .then(res => {
         Toast.success('Claim Business', res?.message);
@@ -914,14 +915,26 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
       .finally(() => setClaimLoading(false));
   };
 
+  function extractTownStateCountry(components) {
+    let town = components.find(c => c.types.includes("locality"))?.long_name;
+    let state = components.find(c => c.types.includes("administrative_area_level_1"))?.long_name;
+    let country = components.find(c => c.types.includes("country"))?.long_name;
+  
+    return { town, state, country };
+  }
+
   const getCityLocation = (lat, lng, address) => {
     getCityDataRequest(lat, lng)
       .then(res => {
+        console.log({res: res.results[0].address_components})
+        const components = res.results[0].address_components;
+        const { town, state, country } = extractTownStateCountry(components);
+
         const payload = {
           name: name,
-          city: res?.address?.town,
-          state: res?.address?.state,
-          county: res?.address?.country,
+          city: town,
+          state: state,
+          county: country,
           location: address,
           latitude: lat,
           longitude: lng,

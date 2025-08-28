@@ -26,6 +26,7 @@ const HttpRequests = {
   },
 
   postAPI: async (url, data, token = '', header) => {
+    console.log({url})
     const temp_token = await Storage.get('userdata');
     const headers = {
       headers: {

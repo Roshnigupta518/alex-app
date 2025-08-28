@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {View, StyleSheet, Button, TouchableOpacity, Image} from 'react-native';
+import {View, StyleSheet, Button, TouchableOpacity, Image, ActivityIndicator} from 'react-native';
 import {Video, ResizeMode} from 'expo-av';
 import {colors, HEIGHT, WIDTH, wp} from '../../constants';
 import {useSelector} from 'react-redux';
@@ -10,14 +10,38 @@ export default function VideoPlayer({
   screen = '',
   onMuteClick = () => {},
   screenHeight,
+  thumbnail
 }) {
   const video = React.useRef(null);
   const shouldMute = useSelector(state => state.VideoMuteSlice.isMute);
   const [play, setPlay] = React.useState(false);
+  const [isBuffering, setIsBuffering] = React.useState(false)
+  const [error, setError] = React.useState(false)
 
   React.useEffect(() => {
     setPlay(shouldPlay);
   }, [shouldPlay]);
+
+  const getOptimizedMediaUrl = (url, { isVideo = false, width, height } = {}) => {
+    if (!url) return '';
+  
+    const transforms = [];
+    if (isVideo) {
+      transforms.push('vc-auto', 'f-mp4');
+    } else {
+      transforms.push('f-auto', 'q-80');
+    }
+  
+    if (width) transforms.push(`w-${width}`);
+    if (height) transforms.push(`h-${height}`);
+  
+    const tr = transforms.join(',');
+    return `${url}?tr=${encodeURIComponent(tr)}`;
+  };
+
+  const optimizedUrl = getOptimizedMediaUrl(url);
+
+  // console.log({optimizedUrl})
 
   return (
     <View style={styles.container}>
@@ -25,22 +49,46 @@ export default function VideoPlayer({
         activeOpacity={1}
         style={{ width:WIDTH, height: screenHeight, alignItems: 'center'}}
         onPress={onMuteClick}>
-        {url != '' && (
+        {!error && url != '' && (
           <Video
             ref={video}
             // style={styles.video(screen == 'Reel')}
             style={{width:WIDTH, height: screenHeight}}
             source={{
-              uri: url,
+              uri: optimizedUrl,
             }}
             useNativeControls={false}
             resizeMode={ResizeMode.COVER}
             isLooping
             shouldPlay={play} 
             isMuted={shouldMute}
+            onLoadStart={() => setIsBuffering(true)} // start buffering
+            onReadyForDisplay={() => setIsBuffering(false)} // video ready
+            onError={(e) => {
+              console.log("Video error:", e, optimizedUrl);
+              setError(true);
+              setIsBuffering(false);
+            }}
+          />
+        )}
+
+         {/* fallback if decoding fails */}
+         {error && (
+          <Image
+            source={{ uri: thumbnail}}
+            style={{ width: WIDTH, height: screenHeight }}
+          />
+        )}
+
+          {isBuffering && (
+          <ActivityIndicator
+            size="large"
+            color="#fff"
+            style={styles.loader}
           />
         )}
       </TouchableOpacity>
+     
     </View>
   );
 }
@@ -64,5 +112,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
 
     alignItems: 'center',
+  },
+  loader: {
+    position: "absolute",
+    alignSelf: "center",
+    top: "50%",
+    marginTop: -20,
   },
 });

@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {View, StyleSheet, FlatList, Platform, Text} from 'react-native';
+import {View, StyleSheet, FlatList, Platform, Text, InteractionManager} from 'react-native';
 import {colors, HEIGHT, wp} from '../../../constants';
 import ReelCard from '../../../components/ReelComponent/ReelCard';
 import {useIsFocused} from '@react-navigation/native';
@@ -38,6 +38,8 @@ const ReelViewer = ({route}) => {
   const onDeletePost = params?.onDeletePost;
   const currentIndex = params?.currentIndex;
 
+  console.log({currentIndex})
+
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       if (state.isConnected !== null && state.isConnected === false) {
@@ -75,7 +77,8 @@ const ReelViewer = ({route}) => {
 
   useEffect(() => {
     if (isFocused && flashListRef.current && postArray.length > 0) {
-      setTimeout(() => {
+      // setTimeout(() => {
+        InteractionManager.runAfterInteractions(() => {
         flashListRef.current.scrollToIndex({
           index: currentIndex,
           animated: false,
@@ -159,7 +162,7 @@ const ReelViewer = ({route}) => {
           ref={flashListRef}
           data={postArray}
           renderItem={_renderReels}
-          keyExtractor={(item, index) => item.id?.toString() || index.toString()}
+          keyExtractor={(item, index) => item._id?.toString() || index.toString()}
           showsVerticalScrollIndicator={false}
           disableIntervalMomentum
           onViewableItemsChanged={_onViewableItemsChanged}

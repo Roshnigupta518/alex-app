@@ -108,9 +108,10 @@ export const handleSharePostFunction = async (data) => {
   }
 };
 
-export const handleShareStoryFunction = async (data) => {
+export const handleShareStoryFunction = async (data, storyref) => {
   console.log({data})
   try {
+    storyref?.current?.pause();
     const dynamicLink = await dynamicLinks().buildShortLink({
       link: `https://www.thealexapp.com/story/${data}`,  // <-- unique story link
       domainUriPrefix: 'https://alexsocial.page.link',
@@ -139,11 +140,13 @@ export const handleShareStoryFunction = async (data) => {
     })
     .catch(err => {
       console.log('Post share error:', JSON.stringify(err));
-    });
+    })
+    .finally((err)=>{
+      storyref?.current?.resume(); 
+    })
 
   } catch (err) {
     console.log('Post dynamic link error:', err);
-    // alert('Failed to create post link');
   }
 };
 
