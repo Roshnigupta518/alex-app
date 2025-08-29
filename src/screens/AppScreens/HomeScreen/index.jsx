@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import {
   View,
   StyleSheet,
@@ -34,6 +34,7 @@ import InstagramStories from '@birdwingo/react-native-instagram-stories';
 import ImageConstants from '../../../constants/ImageConstants';
 import { handleShareStoryFunction } from '../../../validation/helper';
 import { ChangeMuteAction } from '../../../redux/Slices/VideoMuteSlice';
+import LinearGradient from 'react-native-linear-gradient';
 
 const staticValues = {
   skip: 0,
@@ -98,7 +99,7 @@ const HomeScreen = ({ navigation, route }) => {
   const { openStoryId } = route.params || {};
 
   const { location, city, error, permissionGranted, refreshLocation } = useLocation();
-  console.log({ location, city, error, permissionGranted, refreshLocation })
+  // console.log({ location, city, error, permissionGranted, refreshLocation })
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -249,7 +250,6 @@ const HomeScreen = ({ navigation, route }) => {
   };
 
   const getStoryHandle = () => {
-    console.log('**********************story updated', hasMore, loading);
     if (loading || !hasMore) return;
 
     let url = { skip, limit };
@@ -365,14 +365,13 @@ const HomeScreen = ({ navigation, route }) => {
     }
   }, [openStoryId, stories]);
 
-  // console.log({openStoryId})
 
-  const markStoryAsSeen = async (storyId) => {
+  const markStoryAsSeen = async (userId, storyId) => {
     try {
       const res = await makeStorySeenRequest(storyId);
       console.log('story seen ho gyi', storyId, res);
+      handleStorySeen(userId, storyId)
     } catch (err) {
-      console.log({ err })
       if (err?.message) {
         Toast.error('view stories', err.message);
       }
@@ -446,7 +445,7 @@ const HomeScreen = ({ navigation, route }) => {
     const nearByChanged = JSON.stringify(prevNearByTypeRef.current) !== JSON.stringify(nearByType);
     const locationTypeChanged = prevLocationTypeRef.current !== selectedCityData?.locationType;
 
-    console.log({ nearByChanged, locationTypeChanged, locationType: selectedCityData?.locationType });
+    // console.log({ nearByChanged, locationTypeChanged, locationType: selectedCityData?.locationType });
 
     if (route?.params?.shouldScrollTopReel || nearByChanged || locationTypeChanged) {
       setPostArray([]);
@@ -558,8 +557,7 @@ const HomeScreen = ({ navigation, route }) => {
   const shouldShowLocationError =
     selectedCityData?.locationType === 'current' && !!error && postArray.length === 0;
 
-  console.log({ shouldShowLoader, shouldShowLocationError, shouldShowEmptyMessage })
-
+   
   return (
     <>
       <View style={styles.container}>
@@ -588,10 +586,7 @@ const HomeScreen = ({ navigation, route }) => {
 
                 onAddPress={() => navigation.navigate('AddStory', { added_from: 1 })}
                 animationDuration={5000}
-                // videoAnimationMaxDuration={30000}
-                // saveProgress={false}
                 avatarSize={60}
-                // imageStyles={{width:60,  height:60}}
                 storyContainerStyle={{ margin: 0, padding: 0 }}
                 progressContainerStyle={{ margin: 0, padding: 0 }}
                 containerStyle={{ marginTop: Platform.OS === 'android' && '-20%', zIndex: 3, }}
@@ -670,9 +665,7 @@ const HomeScreen = ({ navigation, route }) => {
                   }
 
                   setCurrentStory({ userId, storyId });
-                  markStoryAsSeen(storyId);
-                  handleStorySeen(userId, storyId)
-
+                  markStoryAsSeen(userId, storyId);
                 }}
 
                 onStoryEnd={() => {
@@ -686,7 +679,7 @@ const HomeScreen = ({ navigation, route }) => {
                 avatarBorderColors={['#0896E6', '#FFE35E', '#FEDF00', '#55A861', '#2291CF']}
                 avatarSeenBorderColors={[colors.gray]}
                 saveProgress={true}
-
+              
               />
             </SafeAreaView>
           }
@@ -990,7 +983,7 @@ const styles = StyleSheet.create({
     // height: HEIGHT,
     backgroundColor: colors.gray,
   },
-  storyContainer: { zIndex: 3, marginLeft: 10, position: 'absolute', top: Platform.OS === 'android' ? '10%' : '17%', flexDirection: 'row' },
+  storyContainer: { zIndex: 3, marginLeft: 10, position: 'absolute', top: Platform.OS === 'android' ? '11%' : '17%', flexDirection: 'row' },
   profilesty: {
     width: 69,
     height: 69,

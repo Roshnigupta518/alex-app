@@ -50,6 +50,7 @@ import AddStory from '../screens/AppScreens/ClaimBusinessScreen/Addstory';
 import StoryPreview from '../screens/AppScreens/ClaimBusinessScreen/StoryPreview';
 import TrimScreen from '../screens/AppScreens/ClaimBusinessScreen/TrimScreen';
 import StoryViewers from '../screens/AppScreens/ClaimBusinessScreen/StoryViewers';
+import PostMediaScreen from '../screens/AppScreens/PostMediaScreen';
 const Stack = createStackNavigator();
 
 function AppStack({isLoggedIn = false}) {
@@ -72,6 +73,7 @@ function AppStack({isLoggedIn = false}) {
       <Stack.Screen name="OTPScreen" component={OTPScreen} />
       <Stack.Screen name="SetupProfileScreen" component={SetupProfileScreen} />
       {/* App Screens */}
+      <Stack.Screen name="PostMediaScreen" component={PostMediaScreen} />
       <Stack.Screen name="HomeScreen" component={BottomTabStack} />
       <Stack.Screen name="MediaReviewScreen" component={MediaReviewScreen} />
       <Stack.Screen name="ProfileDetail" component={ProfileDetail} />

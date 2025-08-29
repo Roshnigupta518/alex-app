@@ -18,8 +18,24 @@ export default function VideoPlayer({
   const [isBuffering, setIsBuffering] = React.useState(false)
   const [error, setError] = React.useState(false)
 
-  React.useEffect(() => {
-    setPlay(shouldPlay);
+  // React.useEffect(() => {
+  //   setPlay(shouldPlay);
+  // }, [shouldPlay]);
+
+   // 👇 Control play/pause imperatively
+   React.useEffect(() => {
+    if (!video.current) return;
+    (async () => {
+      try {
+        if (shouldPlay) {
+          await video.current.playAsync();
+        } else {
+          await video.current.pauseAsync();
+        }
+      } catch (e) {
+        console.log('playback control error:', e);
+      }
+    })();
   }, [shouldPlay]);
 
   const getOptimizedMediaUrl = (url, { isVideo = false, width, height } = {}) => {
@@ -60,7 +76,7 @@ export default function VideoPlayer({
             useNativeControls={false}
             resizeMode={ResizeMode.COVER}
             isLooping
-            shouldPlay={play} 
+            // shouldPlay={play} 
             isMuted={shouldMute}
             onLoadStart={() => setIsBuffering(true)} // start buffering
             onReadyForDisplay={() => setIsBuffering(false)} // video ready
