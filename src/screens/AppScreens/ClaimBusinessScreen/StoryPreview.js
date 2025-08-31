@@ -76,8 +76,8 @@ const StoryPreview = ({ route, navigation }) => {
       const formdata = new FormData();
       formdata.append("type", media.type === 'image' ? 1 : 2);
       formdata.append("caption", "xyz");
-      formdata.append("latitude", location?.latitude);
-      formdata.append("longitude", location?.longitude);
+      formdata.append("latitude", location?.latitude || 0);
+      formdata.append("longitude", location?.longitude || 0);
       formdata.append("mediafile", {
         uri: Platform.OS === "ios"
           ? media.uri.replace("file://", "")

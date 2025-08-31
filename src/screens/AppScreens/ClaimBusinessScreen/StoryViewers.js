@@ -40,8 +40,6 @@ const StoryViewerScreen = ({ navigation, route }) => {
                 setStories(prev => {
                     const updated = prev.filter(story => story.id !== storyId);
 
-                    // 🔹 Home screen ko update karo
-                    // if (onDelete) onDelete(storyId, userInfo?.id);
                      // 🔔 notify HomeScreen (no function in params)
                         DeviceEventEmitter.emit('storyDeleted', {
                             storyId,
@@ -51,6 +49,15 @@ const StoryViewerScreen = ({ navigation, route }) => {
                     // 🔹 Agar koi story bachi hi nahi -> goBack()
                     if (updated.length === 0) {
                         navigation.goBack();
+                    }else {
+                        // 👇 move focus
+                        if (selectedStoryIndex >= updated.length) {
+                            // agar last delete hua, to previous pe jao
+                            setSelectedStoryIndex(updated.length - 1);
+                        } else {
+                            // warna same index pe raho (jo ab agla story hoga)
+                            setSelectedStoryIndex(selectedStoryIndex);
+                        }
                     }
 
                     return updated;
@@ -125,10 +132,7 @@ const StoryViewerScreen = ({ navigation, route }) => {
     return (
         <View style={{ flex: 1, backgroundColor: "#fff" }}>
             <BackHeader />
-            <View 
-            style={{  height:'30%' }}>
-
-
+            <View style={{  height:'30%' }}>
                 <InstaThumbnailSlider
                     stories={stories}
                     selectedIndex={selectedStoryIndex}
@@ -136,6 +140,7 @@ const StoryViewerScreen = ({ navigation, route }) => {
                 />
             </View>
 
+            {!loading &&
             <View style={st.businessTimeCon}>
                 {/* <Text style={[st.labelStyle, styles.heading]}>{selectedStory?.viewers?.length} Viewers</Text> */}
                  <Text style={[st.labelStyle, styles.heading]}>
@@ -148,7 +153,8 @@ const StoryViewerScreen = ({ navigation, route }) => {
                         />
                     </TouchableOpacity>
                 </View>
-            </View>
+            </View> }
+
             <FlatList
                 data={selectedStory.viewers || []}
                 // keyExtractor={(item, idx) => item.user_id._id + idx}

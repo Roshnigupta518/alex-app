@@ -852,12 +852,16 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
     return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      getAllData();
-    });
-    return unsubscribe;
-  }, [navigation, follow]);
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener('focus', () => {
+  //     getAllData();
+  //   });
+  //   return unsubscribe;
+  // }, [navigation, follow]);
+
+  useEffect(()=>{
+    getAllData();
+  },[follow])
 
   const getAllData = () => {
     setIsLoading(true);
@@ -1092,7 +1096,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
   const renderHeader = () => {
     if (isLoading || !data) {
       return (
-        <View style={st.center}>
+        <View style={[st.center,{marginTop:'60%'}]}>
           <ActivityIndicator size="large" color={colors.primaryColor} />
         </View>
       );
@@ -1305,13 +1309,13 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.white }}>
+    // <View style={{ flex: 1, backgroundColor: colors.white }}>
       <FlatList
         data={filteredData}
         keyExtractor={(_, index) => String(index)}
         numColumns={3}
         renderItem={({ item, index }) => (
-          <View >
+         
           <MediaItem
             item={item}
             index={index}
@@ -1325,7 +1329,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
               })
             }
           />
-          </View>
+         
         )}
         ListHeaderComponent={renderHeader}
         ListEmptyComponent={!isLoading ? <NotFoundAnime isLoading={isLoading} /> : null}
@@ -1334,7 +1338,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
           paddingHorizontal:10
         }}
      />
-    </View>
+    // </View>
   );
 };
 

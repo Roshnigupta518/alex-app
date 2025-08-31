@@ -77,8 +77,8 @@ const ReelViewer = ({route}) => {
 
   useEffect(() => {
     if (isFocused && flashListRef.current && postArray.length > 0) {
-      // setTimeout(() => {
-        InteractionManager.runAfterInteractions(() => {
+      setTimeout(() => {
+        // InteractionManager.runAfterInteractions(() => {
         flashListRef.current.scrollToIndex({
           index: currentIndex,
           animated: false,
@@ -107,9 +107,7 @@ const ReelViewer = ({route}) => {
     setCurrentItemIndex(newIndex);
   };  
 
-  const _renderReels = useCallback(
-    ({item, index}) => {
-      // console.log({index, HEIGHT})
+  const _renderReels = useCallback(({item, index}) => {
       return (
         <View style={[styles.cardContainer,{height:screenHeight}]}>
           <ReelCard
@@ -169,8 +167,9 @@ const ReelViewer = ({route}) => {
           viewabilityConfig={_viewabilityConfig}
           pagingEnabled
           snapToInterval={Math.round(screenHeight)}
-          initialNumToRender={5}
-          windowSize={10}
+          initialNumToRender={2}
+          maxToRenderPerBatch={2}  
+          windowSize={2}
           removeClippedSubviews={false}
           getItemLayout={(data, index) => ({
             length: Math.round(screenHeight),
@@ -179,7 +178,7 @@ const ReelViewer = ({route}) => {
           })}
           contentInset={{top: 0, bottom: 0, left: 0, right: 0}}
           contentInsetAdjustmentBehavior="automatic"
-          extraData={Math.round(screenHeight)}
+          // extraData={Math.round(screenHeight)}
           contentContainerStyle={{ padding: 0, margin: 0 }}
           ListEmptyComponent={ListEmptyComponent}
         />

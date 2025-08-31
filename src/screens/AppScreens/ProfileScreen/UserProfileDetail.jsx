@@ -625,7 +625,7 @@ const UserProfileDetail = ({ navigation, route }) => {
             <View style={styles.wdh33}>
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate('FollowUsers', {
+                  navigation.push('FollowUsers', {
                     id: userDetails?._id,
                     type: 'followers',
                   })
@@ -640,7 +640,7 @@ const UserProfileDetail = ({ navigation, route }) => {
             <View style={styles.wdh33}>
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate('FollowUsers', {
+                  navigation.push('FollowUsers', {
                     id: userDetails?._id,
                     type: 'following',
                   })

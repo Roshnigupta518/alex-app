@@ -177,7 +177,7 @@ const FollowUsers = ({navigation, route}) => {
               if(userInfo.id === item?.follow_user_id?._id ){
                 navigation.navigate('ProfileDetail')
             }else{
-              navigation.navigate('UserProfileDetail', {
+              navigation.push('UserProfileDetail', {
                 userId: item?.follow_user_id?._id ,
               })
             }
@@ -186,7 +186,7 @@ const FollowUsers = ({navigation, route}) => {
               if(userInfo.id === item?.user_id?._id ){
                 navigation.navigate('ProfileDetail')
             }else{
-            navigation.navigate('UserProfileDetail', {
+            navigation.push('UserProfileDetail', {
             userId: item?.user_id?._id ,
           })
         }}

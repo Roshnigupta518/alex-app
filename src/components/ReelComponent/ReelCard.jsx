@@ -1,4 +1,4 @@
-  import React, {useCallback, useEffect, useState} from 'react';
+  import React, {useCallback, useEffect, useState, memo} from 'react';
   import {View, Text, Image, TouchableOpacity} from 'react-native';
   import styles from './ReelStyle/ReelCard.Style';
   import VideoPlayer from './VideoPlayer';
@@ -155,6 +155,9 @@
             style={[styles.uploadedImageStyle(screen == 'Reel'),{height:screenHeight}]}
           />
         )}
+
+
+        
 
         <View style={[styles.firstRowContainer(screen == 'Reel')]}>
           {/* First Profile View Row */}
@@ -374,4 +377,15 @@
     );
   };
 
-  export default ReelCard;
+  // export default ReelCard;
+
+export default memo(
+  ReelCard,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.data?._id === nextProps.data?._id && // same reel
+      prevProps.isItemOnFocus === nextProps.isItemOnFocus && // only re-render if focus changes
+      prevProps.screenHeight === nextProps.screenHeight
+    );
+  }
+);
