@@ -131,6 +131,11 @@ btnsty:{borderWidth:1,borderColor:colors.primaryColor,backgroundColor:colors.pri
       fontSize: wp(14),
       color: colors.black,
     },
+    errorText:{
+      fontFamily: fonts.medium,
+      fontSize: wp(12),
+      color: colors.white,
+    }
   
 })
 

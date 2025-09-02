@@ -201,12 +201,14 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
-  Image,
+  Image,Text,
   ActivityIndicator, Animated
 } from "react-native";
-import { Video, ResizeMode } from "expo-av";
+// import { Video, ResizeMode } from "expo-av";
 import { useSelector } from "react-redux";
 import { WIDTH } from "../../constants";
+import Video from "react-native-video";
+import st from "../../global/styles";
 
 export default function VideoPlayer({
   url = "",
@@ -240,53 +242,112 @@ export default function VideoPlayer({
   React.useEffect(() => {
     return () => {
       if (videoRef.current) {
-        videoRef.current.stopAsync().catch(() => {});
-        videoRef.current.unloadAsync().catch(() => { });
         videoRef.current = null;
       }
     };
   }, []);
 
-  // Control playback when props change
-  React.useEffect(() => {
-    let isMounted = true;
-
-    const controlPlayback = async () => {
-      if (!videoRef.current) return;
-
-      try {
-        const status = await videoRef.current.getStatusAsync();
-        if (!isMounted || !status.isLoaded) return;
-
+    // 🟢 Force resume/pause when shouldPlay changes
+    React.useEffect(() => {
+      if (videoRef.current) {
         if (shouldPlay) {
-          if (!status.isPlaying) {
-            await videoRef.current.playAsync();
-          }
+          console.log("▶️ Forcing play");
+          videoRef.current.seek(0); // optional: restart from beginning
         } else {
-          if (status.isPlaying) {
-            await videoRef.current.pauseAsync();
-          }
+          console.log("⏸ Forcing pause");
         }
-      } catch (e) {
-        console.log("playback control error:", e?.message);
       }
-    };
+    }, [shouldPlay]);
 
-    controlPlayback();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [shouldPlay, shouldMute, url]);
+// console.log({shouldPlay})
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
         activeOpacity={1}
         style={{ width: WIDTH, height: screenHeight, alignItems: "center" }}
-        onPress={onMuteClick}
-      >
-        {!error && url !== "" && (
+        onPress={onMuteClick}>
+
+        {/* RN Video player component */}
+        {!error && url !== "" ? (
+          <Video
+            ref={videoRef}
+            source={{ uri: `${url}` }}
+            style={{ width: WIDTH, height: screenHeight }}
+            resizeMode="contain"
+            repeat
+            muted={shouldMute}
+            // shouldPlay={!shouldPlay}
+            paused={!shouldPlay}
+            ignoreSilentSwitch="ignore"
+            playInBackground={false}
+            playWhenInactive={false}
+            poster={thumbnail}
+            posterResizeMode="contain"
+            onLoadStart={() => {
+              setIsBuffering(true);
+              setError(false);
+            }}
+            onLoad={() => {
+              setIsBuffering(false);
+              handleVideoReady();
+            }}
+            onBuffer={({ isBuffering }) => setIsBuffering(isBuffering)}
+            onError={(e) => {
+              console.log("Video error:", e);
+              setError(true);
+              setIsBuffering(false);
+            }}
+          />
+        ):
+          <View style={st.center}>
+            <Text style={st.errorText}>Failed to load</Text>
+           <TouchableOpacity
+             onPress={() => {
+               setError(false);
+               setIsBuffering(true);
+               setIsVideoReady(false);
+             }}>
+             <Text style={st.errorText}>Tap to Retry</Text>
+           </TouchableOpacity>
+         </View>
+        }
+
+        {isBuffering && (
+          <View style={[styles.loaderOverlay, { width: WIDTH, height: screenHeight }]}>
+            <ActivityIndicator size="large" color="#fff" />
+          </View>
+        )}
+
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {},
+  loader: {
+    position: "absolute",
+    alignSelf: "center",
+    top: "50%",
+    marginTop: -20,
+  },
+
+  loaderOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "transparent", // smooth overlay
+  },
+  
+});
+
+  {/* expo player component */}
+        {/* {!error && url !== "" && (
           <Video
             ref={videoRef}
             // key={url} // force reload on URL change
@@ -328,57 +389,6 @@ export default function VideoPlayer({
             progressiveRenderingEnabled={false}
             posterSource={thumbnail ? { uri: thumbnail } : null}
             usePoster={true}
-          />
-        )}
-
-
-        {/* Show thumbnail until video is ready */}
-        {/* {!isVideoReady && thumbnail && (
-          <Animated.Image
-            source={{ uri: thumbnail }}
-            style={{
-              width: WIDTH,
-              height: screenHeight,
-              position: "absolute",
-              resizeMode: 'contain',
-              top: 0,
-              left: 0,
-              opacity: isVideoReady ? fadeAnim : 1, // fade out instead of blink
-            }}
+            useTextureView={false}
           />
         )} */}
-
-       {/* Loader overlay */}
-        {/* {isBuffering && (
-          <View style={[styles.loaderOverlay, { width: WIDTH, height: screenHeight }]}>
-            <ActivityIndicator size="large" color="#fff" />
-          </View>
-        )} */}
-
-      </TouchableOpacity>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {},
-  loader: {
-    position: "absolute",
-    alignSelf: "center",
-    top: "50%",
-    marginTop: -20,
-  },
-
-  loaderOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "transparent", // smooth overlay
-  },
-  
-});
-

@@ -95,6 +95,7 @@ const HomeScreen = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [currentStory, setCurrentStory] = useState({ userId: null, storyId: null });
+  const [isStoryOpen, setIsStoryOpen] = useState(false);
 
   const { openStoryId } = route.params || {};
 
@@ -303,9 +304,9 @@ const HomeScreen = ({ navigation, route }) => {
       if (storyref.current) {
         storyref.current.hide();
       }
-
     }, [])
   );
+
 
   const handleStorySeen = (userId, storyId) => {
     setStories((prev) =>
@@ -368,9 +369,11 @@ const HomeScreen = ({ navigation, route }) => {
 
   const markStoryAsSeen = async (userId, storyId) => {
     try {
+      if(storyId){
       const res = await makeStorySeenRequest(storyId);
-      console.log('story seen ho gyi', storyId, res);
+      // console.log('story seen ho gyi', storyId, res);
       handleStorySeen(userId, storyId)
+      }
     } catch (err) {
       if (err?.message) {
         Toast.error('view stories', err.message);
@@ -536,6 +539,7 @@ const HomeScreen = ({ navigation, route }) => {
             onShareClick={() => shareSheetRef.current?.show()}
             isItemOnFocus={currentItemIndex == index && isOnFocusItem}
             screenHeight={screenHeight}
+            isStoryOpen={isStoryOpen}
           />
         </View>
       );
@@ -557,7 +561,7 @@ const HomeScreen = ({ navigation, route }) => {
   const shouldShowLocationError =
     selectedCityData?.locationType === 'current' && !!error && postArray.length === 0;
 
-   
+
   return (
     <>
       <View style={styles.container}>
@@ -606,6 +610,7 @@ const HomeScreen = ({ navigation, route }) => {
                       {userInfo?.id === currentStory?.userId &&
                         <TouchableOpacity
                           onPress={() => {
+                            storyref?.current?.pause();
                             navigation.navigate("StoryViewers", {
                               storyId: currentStory?.storyId,
                             });
@@ -651,7 +656,9 @@ const HomeScreen = ({ navigation, route }) => {
                 }}
 
                 onStoryStart={(userId, storyId) => {
-                  console.log("📢 Story opened -> Pausing reels");
+                  // console.log("📢 Story opened -> Pausing reels");
+                  console.log("👉 story started");
+                  setIsStoryOpen(true);
                   dispatch(ChangeMuteAction(true));
 
                   const parentUser = stories.find(user => user.id === userId);
@@ -669,194 +676,111 @@ const HomeScreen = ({ navigation, route }) => {
                 }}
 
                 onStoryEnd={() => {
-                  console.log("📢 Story closed -> Resuming reels");
+                  // console.log("📢 Story closed -> Resuming reels");
                 }}
 
                 onHide={(id) => {
-                  console.log("📢 Story hidden -> Resuming reels");
+                  // console.log("📢 Story hidden -> Resuming reels");
+                  console.log("👉 story closed");
+                  setIsStoryOpen(false);
                   dispatch(ChangeMuteAction(false));
                 }}
                 avatarBorderColors={['#0896E6', '#FFE35E', '#FEDF00', '#55A861', '#2291CF']}
                 avatarSeenBorderColors={[colors.gray]}
                 saveProgress={true}
-              
               />
             </SafeAreaView>
           }
 
         </View>
 
-
-        {/* {shouldShowLoader ? (
-           
-            <View style={{
-              alignItems: 'center',
-              height: screenHeight / 1.2,
-              justifyContent: 'center',
-            }}>
-              <ActivityIndicator size="large" color={colors.white} />
-            </View>
-         
-
-          ) : postArray?.length > 0 ? ( */}
-
         <View
-              style={{
-                // alignItems: 'center',
-                height: screenHeight,
-                // justifyContent: 'center',
-              }}>
-        <FlatList
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-          nestedScrollEnabled
-          ref={flashListRef}
-          data={postArray}
-          renderItem={_renderReels}
-          showsVerticalScrollIndicator={false}
-          initialScrollIndex={currentItemIndex}
-          disableIntervalMomentum
-          onViewableItemsChanged={_onViewableItemsChanged}
-          viewabilityConfig={_viewabilityConfig}
-          estimatedItemSize={2}
-          pagingEnabled
-          initialNumToRender={2}
-          removeClippedSubviews={true}
-          windowSize={5}
-          maxToRenderPerBatch={5}
-          getItemLayout={getItemLayout}
-          contentInset={{ top: 0, bottom: 0, left: 0, right: 0 }}
-          contentContainerStyle={{
-            alignSelf: 'center',
-          }}
-          // keyExtractor={(item, index) => item.id?.toString() || index.toString()}
-          // keyExtractor={(item, index) => `${item._id || item.id || index}`}
-          keyExtractor={(item, index) => `${item.postData?._id || item._id || item.id || 'idx'}_${index}`}
-
-          extraData={{ screenHeight }}   // 👈 force re-render when story state changes
-
-
-          // 👇👇👇
-          ListEmptyComponent={() => {
-            if (shouldShowLoader) {
-              return (
-                <View style={styles.center}>
-                  <ActivityIndicator size="large" color={colors.white} />
-                </View>
-              );
+          style={{
+            height: screenHeight,
+          }}>
+          <FlatList
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
-            if (shouldShowLocationError) {
-              return (
-                <View style={styles.center}>
-                  <Text style={{
-                    fontFamily: fonts.bold,
-                    fontSize: wp(16),
-                    color: colors.white,
-                    textAlign: 'center',
-                    marginBottom: 10,
-                  }}>
-                    Failed to fetch location. Please enable location services.
-                  </Text>
-                  <Text onPress={onRefresh} style={{
-                    fontFamily: fonts.bold,
-                    fontSize: wp(16),
-                    color: colors.white,
-                    textAlign: 'center',
-                    marginBottom: 10,
-                  }}>
-                    Retry
-                  </Text>
-                </View>
-              );
-            }
-            if (shouldShowEmptyMessage) {
-              return (
-                <View style={styles.center}>
-                  <Text
-                    onPress={() => {
-                      if (selectedCityData?.locationType === 'current') {
-                        navigation.navigate('PostMediaScreen');
-                      }
-                    }}
-                    style={{
+            nestedScrollEnabled
+            ref={flashListRef}
+            data={postArray}
+            renderItem={_renderReels}
+            showsVerticalScrollIndicator={false}
+            initialScrollIndex={currentItemIndex}
+            disableIntervalMomentum
+            onViewableItemsChanged={_onViewableItemsChanged}
+            viewabilityConfig={_viewabilityConfig}
+            estimatedItemSize={2}
+            pagingEnabled
+            initialNumToRender={2}
+            removeClippedSubviews={true}
+            windowSize={5}
+            maxToRenderPerBatch={5}
+            getItemLayout={getItemLayout}
+            contentInset={{ top: 0, bottom: 0, left: 0, right: 0 }}
+            contentContainerStyle={{
+              alignSelf: 'center',
+            }}
+            keyExtractor={(item, index) => `${item.postData?._id || item._id || item.id || 'idx'}_${index}`}
+            extraData={{ screenHeight }}  
+            ListEmptyComponent={() => {
+              if (shouldShowLoader) {
+                return (
+                  <View style={styles.center}>
+                    <ActivityIndicator size="large" color={colors.white} />
+                  </View>
+                );
+              }
+              if (shouldShowLocationError) {
+                return (
+                  <View style={styles.center}>
+                    <Text style={{
                       fontFamily: fonts.bold,
                       fontSize: wp(16),
                       color: colors.white,
+                      textAlign: 'center',
+                      marginBottom: 10,
                     }}>
-                    {selectedCityData?.locationType === 'current'
-                      ? 'Be the first one to post in this city'
-                      : 'No post found!'}
-                  </Text>
-                </View>
-              );
-            }
-            return null;
-          }}
-
-        />
+                      Failed to fetch location. Please enable location services.
+                    </Text>
+                    <Text onPress={onRefresh} style={{
+                      fontFamily: fonts.bold,
+                      fontSize: wp(16),
+                      color: colors.white,
+                      textAlign: 'center',
+                      marginBottom: 10,
+                    }}>
+                      Retry
+                    </Text>
+                  </View>
+                );
+              }
+              if (shouldShowEmptyMessage) {
+                return (
+                  <View style={styles.center}>
+                    <Text
+                      onPress={() => {
+                        if (selectedCityData?.locationType === 'current') {
+                          navigation.navigate('PostMediaScreen');
+                        }
+                      }}
+                      style={{
+                        fontFamily: fonts.bold,
+                        fontSize: wp(16),
+                        color: colors.white,
+                      }}>
+                      {selectedCityData?.locationType === 'current'
+                        ? 'Be the first one to post in this city'
+                        : 'No post found!'}
+                    </Text>
+                  </View>
+                );
+              }
+              return null;
+            }}
+            />
         </View>
-        {/* ) :
-            shouldShowLocationError ? (
-
-              <View style={{
-                flex: 1,
-                backgroundColor: colors.black,
-                justifyContent: 'center',
-                alignItems: 'center',
-                paddingHorizontal: 20,
-              }}>
-                <Text 
-                  style={{
-                    fontFamily: fonts.bold,
-                    fontSize: wp(16),
-                    color: colors.white,
-                    textAlign: 'center',
-                    marginBottom: 10,
-                  }}>
-                  Failed to fetch location. Please enable location services.
-                </Text>
-
-                <Text
-                  onPress={() => {
-                    setIsLoading(true);
-                    refreshLocation(); // Retry location fetch
-                  }}
-                  style={{
-                    fontFamily: fonts.semiBold,
-                    fontSize: wp(14),
-                    color: colors.primary,
-                    textDecorationLine: 'underline',
-                  }}>
-                  Retry
-                </Text>
-              </View>
-            ) :
-
-              shouldShowEmptyMessage ? (
-                <View style={{
-                  flex: 1,
-                  backgroundColor: colors.black,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                  <Text
-                    onPress={() => {
-                      if (selectedCityData?.locationType === 'current') {
-                        navigation.navigate('PostMediaScreen');
-                      }
-                    }}
-                    style={{
-                      fontFamily: fonts.bold,
-                      fontSize: wp(16),
-                      color: colors.white,
-                    }}>
-                    {selectedCityData?.locationType === 'current'
-                      ? 'Be the first one to post in this city'
-                      : 'No post found!'}
-                  </Text>
-                </View>
-              ) : null} */}
 
 
         <CommentListSheet

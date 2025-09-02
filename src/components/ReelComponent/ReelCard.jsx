@@ -23,6 +23,7 @@
     onMenuClick = () => {},
     onFollowingUserClick = () => {},
     screenHeight,
+    isStoryOpen
   }) => {
     const userInfo = useSelector(state => state.UserInfoSlice.data);
     const shouldMute = useSelector(state => state.VideoMuteSlice.isMute);
@@ -34,15 +35,28 @@
     const [isSaved, setIsSaved] = useState(data?.isSaved || false);
     const [shouldPlay, setShouldPlay] = useState(isItemOnFocus);
     const [muteIconVisible, setMuteIconVisible] = useState(false);
-    const [manualPaused, setManualPaused] = useState(false);
-    // console.log({screenHeight})
-    useEffect(() => {
-      setShouldPlay(
-        isItemOnFocus && data?.postData?.post?.mimetype == 'video/mp4',
-      );
-    }, [isItemOnFocus]);
+    
+    // useEffect(() => {
+    //   setShouldPlay(
+    //     isItemOnFocus && data?.postData?.post?.mimetype == 'video/mp4',
+    //   );
+    // }, [isItemOnFocus]);
 
-    // console.log({isItemOnFocus})
+    useEffect(() => {
+      console.log("🔥 isStoryOpen in ReelCard:", isStoryOpen);
+    
+      if (isStoryOpen) {
+        console.log("pause reel if story is open");
+        setShouldPlay(false);
+      } else {
+        console.log("resume reel if story is close");
+        setShouldPlay(
+          isItemOnFocus && data?.postData?.post?.mimetype === "video/mp4"
+        );
+      }
+    }, [isItemOnFocus, isStoryOpen]);
+    
+    
 
     const likePost = async isLike => {
       let likeData = {
@@ -133,10 +147,6 @@
         <TouchableOpacity
         activeOpacity={1}
         style={{ flex: 1 }}
-        onPress={() => {
-          setManualPaused(prev => !prev);
-          console.log(`🎬 ReelCard [${idx}] -> manualPaused: ${!manualPaused}`);
-        }}
       >
         <VideoPlayer
           url={data?.postData?.post?.data}
@@ -155,9 +165,6 @@
             style={[styles.uploadedImageStyle(screen == 'Reel'),{height:screenHeight}]}
           />
         )}
-
-
-        
 
         <View style={[styles.firstRowContainer(screen == 'Reel')]}>
           {/* First Profile View Row */}

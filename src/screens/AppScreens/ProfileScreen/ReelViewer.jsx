@@ -70,9 +70,9 @@ const ReelViewer = ({route}) => {
       setCurrentItemIndex(viewableItems[0]?.index);
     }
   }, []);
-
+  
   const _viewabilityConfig = {
-    itemVisiblePercentThreshold: 100,
+    itemVisiblePercentThreshold: 90,
   };
 
   useEffect(() => {
@@ -152,15 +152,15 @@ const ReelViewer = ({route}) => {
 
             <View
               style={{
-                alignItems: 'center',
+                // alignItems: 'center',
                 height: screenHeight,
-                justifyContent: 'center',
+                // justifyContent: 'center',
               }}>   
         <FlatList
           ref={flashListRef}
           data={postArray}
           renderItem={_renderReels}
-          keyExtractor={(item, index) => item._id?.toString() || index.toString()}
+          keyExtractor={(item, index) => `${item._id || 'idx'}_${index}`}
           showsVerticalScrollIndicator={false}
           disableIntervalMomentum
           onViewableItemsChanged={_onViewableItemsChanged}
@@ -178,7 +178,7 @@ const ReelViewer = ({route}) => {
           })}
           contentInset={{top: 0, bottom: 0, left: 0, right: 0}}
           contentInsetAdjustmentBehavior="automatic"
-          // extraData={Math.round(screenHeight)}
+          extraData={Math.round(screenHeight)}
           contentContainerStyle={{ padding: 0, margin: 0 }}
           ListEmptyComponent={ListEmptyComponent}
         />
