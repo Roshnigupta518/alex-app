@@ -264,7 +264,7 @@ const HomeScreen = ({ navigation, route }) => {
 
         let yourStoryObj = {
           id: userInfo.id,
-          name: 'Your Story',
+          name: 'You',
           avatarSource: userInfo.profile_picture ? { uri: userInfo.profile_picture } : ImageConstants.business_logo,
           stories: myStoryFromApi ? myStoryFromApi.stories : [],
           // isAddButton: !myStoryFromApi || (myStoryFromApi.stories?.length === 0),

@@ -36,25 +36,25 @@
     const [shouldPlay, setShouldPlay] = useState(isItemOnFocus);
     const [muteIconVisible, setMuteIconVisible] = useState(false);
     
-    // useEffect(() => {
-    //   setShouldPlay(
-    //     isItemOnFocus && data?.postData?.post?.mimetype == 'video/mp4',
-    //   );
-    // }, [isItemOnFocus]);
-
     useEffect(() => {
-      console.log("🔥 isStoryOpen in ReelCard:", isStoryOpen);
+      setShouldPlay(
+        isItemOnFocus && data?.postData?.post?.mimetype == 'video/mp4',
+      );
+    }, [isItemOnFocus]);
+
+    // useEffect(() => {
+    //   console.log("🔥 isStoryOpen in ReelCard:", isStoryOpen);
     
-      if (isStoryOpen) {
-        console.log("pause reel if story is open");
-        setShouldPlay(false);
-      } else {
-        console.log("resume reel if story is close");
-        setShouldPlay(
-          isItemOnFocus && data?.postData?.post?.mimetype === "video/mp4"
-        );
-      }
-    }, [isItemOnFocus, isStoryOpen]);
+    //   if (isStoryOpen) {
+    //     console.log("pause reel if story is open");
+    //     setShouldPlay(false);
+    //   } else {
+    //     console.log("resume reel if story is close");
+    //     setShouldPlay(
+    //       isItemOnFocus && data?.postData?.post?.mimetype === "video/mp4"
+    //     );
+    //   }
+    // }, [isItemOnFocus, isStoryOpen]);
     
     
 

@@ -223,6 +223,7 @@ export default function VideoPlayer({
 
   const [isBuffering, setIsBuffering] = React.useState(false);
   const [error, setError] = React.useState(false);
+  const [resumeKey, setResumeKey] = React.useState(0);
 
   const [isVideoReady, setIsVideoReady] = React.useState(false);
   const fadeAnim = React.useRef(new Animated.Value(1)).current; // thumbnail opacity
@@ -252,7 +253,7 @@ export default function VideoPlayer({
       if (videoRef.current) {
         if (shouldPlay) {
           console.log("▶️ Forcing play");
-          videoRef.current.seek(0); // optional: restart from beginning
+          // videoRef.current.seek(0); // optional: restart from beginning
         } else {
           console.log("⏸ Forcing pause");
         }
@@ -271,6 +272,7 @@ export default function VideoPlayer({
         {/* RN Video player component */}
         {!error && url !== "" ? (
           <Video
+            key={resumeKey}
             ref={videoRef}
             source={{ uri: `${url}` }}
             style={{ width: WIDTH, height: screenHeight }}
