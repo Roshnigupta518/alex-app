@@ -89,8 +89,10 @@
     <string>$(PRODUCT_NAME) wants to access your location coordinates to show your location for business purposes and other features.</string>
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>$(PRODUCT_NAME) would like to access your location while you are using the app for business purposes and other features.</string>
+    <key>NSContactsUsageDescription</key>
+    <string>This app uses your contacts to help you find and connect with friends who are already using the app, making it easier to grow your network.</string>
     <key>NSMicrophoneUsageDescription</key>
-    <string>$(PRODUCT_NAME) requires access to the microphone to enable voice recording for videos.</string>
+    <string>This app uses your microphone so you can record audio while creating and sharing videos with your friends.</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>$(PRODUCT_NAME) would like to access your photo library to allow you to post images and update your profile.</string>
     <key>NSUserNotificationAlertUsageDescription</key>
