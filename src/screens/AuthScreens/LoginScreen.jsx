@@ -74,11 +74,7 @@ const LoginScreen = ({navigation}) => {
   };
 
   const submitLogin = () => {
-    if (!isChecked) {
-      Toast.error("Login", "Please accept Privacy Policy to continue.");
-      return;
-    }
-    
+   
     if (
       !LoginValidation(
         state.password,
@@ -92,10 +88,10 @@ const LoginScreen = ({navigation}) => {
     } 
     
     // 🔹 Agar email/password valid hai to Privacy Policy check karo
-  if (!isChecked) {
-    Toast.error("Login", "Please accept Privacy Policy to continue.");
-    return;
-  }
+      if (!isChecked) {
+        Toast.error("Login", "Please accept Privacy Policy to continue.");
+        return;
+      }
     
     // else {
       let data = {

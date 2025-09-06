@@ -19,6 +19,7 @@ import SetupProfileValidation from './AuthValidation/SetupProfileValidation';
 import {CreateUserProfileRequest} from '../../services/Utills';
 import Toast from '../../constants/Toast';
 import {getFCMToken} from '../../constants/FCMGeneration';
+import CustomCheckBox from '../../components/CustomCheckbox';
 
 const SetupProfileScreen = ({navigation, route}) => {
   const mediaRef = useRef();
@@ -28,6 +29,7 @@ const SetupProfileScreen = ({navigation, route}) => {
   const [isMobileSelected, setMobileSelected] = useState(null);
   const [userImage, setUserImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
   const [state, setState] = useState({
     screenName: '',
     name: '',
@@ -59,7 +61,16 @@ const SetupProfileScreen = ({navigation, route}) => {
       )
     ) {
       return;
-    } else {
+    } 
+
+
+    if (!isChecked) {
+      Toast.error("Login", "Please accept Privacy Policy to continue.");
+      return;
+    }
+    
+    
+    // else {
       let data = new FormData();
       data.append('anonymous_name', state.screenName.trim().replace(/\s+/g, ' '));
       data.append('name', state.name);
@@ -92,7 +103,7 @@ const SetupProfileScreen = ({navigation, route}) => {
           Toast.error('Setup Profile', err?.message);
         })
         .finally(() => setIsLoading(false));
-    }
+    // }
   };
 
   return (
@@ -210,6 +221,16 @@ const SetupProfileScreen = ({navigation, route}) => {
               setState(prevState => ({...prevState, confirmPassword: txt}))
             }
           />
+
+<View>
+          <CustomCheckBox
+        label="By continuing, you agree to our "
+        checked={isChecked}
+        onChange={() => setIsChecked(!isChecked)}
+        color={colors.primaryColor}
+      />
+           
+          </View>
 
           <View style={styles.submitBtnStyle}>
             <CustomButton
