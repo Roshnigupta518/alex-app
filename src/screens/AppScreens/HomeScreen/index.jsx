@@ -35,6 +35,7 @@ import ImageConstants from '../../../constants/ImageConstants';
 import { handleShareStoryFunction } from '../../../validation/helper';
 import { ChangeMuteAction } from '../../../redux/Slices/VideoMuteSlice';
 import LinearGradient from 'react-native-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const staticValues = {
   skip: 0,
@@ -51,8 +52,15 @@ const HomeScreen = ({ navigation, route }) => {
   const userInfo = useSelector(state => state.UserInfoSlice.data);
 
   const tabBarHeight = useBottomTabBarHeight();
+  const insets = useSafeAreaInsets();
+  const statusBarHeight = insets.top;
+
   // const screenHeight = (HEIGHT-tabBarHeight) 
-  const screenHeight = Platform.OS == 'ios' ? HEIGHT : HEIGHT - tabBarHeight
+  // const screenHeight = Platform.OS == 'ios' ? HEIGHT : HEIGHT - tabBarHeight
+  const screenHeight = Platform.OS === 'ios'
+  ? HEIGHT - statusBarHeight
+  : HEIGHT - tabBarHeight - statusBarHeight;
+  
   // console.log({tabBarHeight, screenHeight})
   const storyref = useRef(null)
   const prevNearBy = useRef(nearByType);
@@ -560,8 +568,15 @@ const HomeScreen = ({ navigation, route }) => {
 
   const shouldShowLocationError =
     selectedCityData?.locationType === 'current' && !!error && postArray.length === 0;
-
-
+  
+    const handleLocationServices = () => {
+     if(Platform.OS === 'ios'){
+      Linking.openURL('app-settings')
+     }else{
+      Linking.openSettings()
+     }
+    }
+   
   return (
     <>
       <View style={styles.container}>
@@ -735,7 +750,8 @@ const HomeScreen = ({ navigation, route }) => {
               if (shouldShowLocationError) {
                 return (
                   <View style={styles.center}>
-                    <Text style={{
+                    <Text onPress={()=>handleLocationServices()}
+                     style={{
                       fontFamily: fonts.bold,
                       fontSize: wp(16),
                       color: colors.white,
@@ -753,6 +769,14 @@ const HomeScreen = ({ navigation, route }) => {
                     }}>
                       Retry
                     </Text>
+                    {/* <Text style={{
+                      fontFamily: fonts.bold,
+                      fontSize: wp(16),
+                      color: colors.primaryColor,
+                      textAlign: 'center',
+                      textDecorationLine:'underline'
+                    }}
+                    onPress={handleLocationServices} >Click here</Text> */}
                   </View>
                 );
               }

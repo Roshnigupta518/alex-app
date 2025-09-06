@@ -23,6 +23,8 @@ import {useDispatch} from 'react-redux';
 import {getFCMToken} from '../../constants/FCMGeneration';
 import NoInternetModal from '../../components/NoInternetModal';
 import crashlytics from '@react-native-firebase/crashlytics';
+import CustomCheckBox from '../../components/CustomCheckbox';
+
 const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
@@ -36,6 +38,7 @@ const LoginScreen = ({navigation}) => {
     mobileNo: '',
     password: '',
   });
+  const [isChecked, setIsChecked] = useState(false);
   const [isInternetConnected, setIsInternetConnected] = useState(true);
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -71,6 +74,11 @@ const LoginScreen = ({navigation}) => {
   };
 
   const submitLogin = () => {
+    if (!isChecked) {
+      Toast.error("Login", "Please accept Privacy Policy to continue.");
+      return;
+    }
+    
     if (
       !LoginValidation(
         state.password,
@@ -81,7 +89,15 @@ const LoginScreen = ({navigation}) => {
       )
     ) {
       return;
-    } else {
+    } 
+    
+    // 🔹 Agar email/password valid hai to Privacy Policy check karo
+  if (!isChecked) {
+    Toast.error("Login", "Please accept Privacy Policy to continue.");
+    return;
+  }
+    
+    // else {
       let data = {
         email:
           selectedTab == 0
@@ -123,7 +139,7 @@ const LoginScreen = ({navigation}) => {
           Toast.error('Login', err?.message);
         })
         .finally(() => setIsLoading(false));
-    }
+    // }
   };
 
   useEffect(() => {
@@ -239,11 +255,22 @@ const LoginScreen = ({navigation}) => {
             <Text style={styles.forgetPasswordTxtStyle}>Forgot Password?</Text>
           </TouchableOpacity>
 
+          <View>
+          <CustomCheckBox
+        label="By continuing, you agree to our "
+        checked={isChecked}
+        onChange={() => setIsChecked(!isChecked)}
+        color={colors.primaryColor}
+      />
+           
+          </View>
+
           <View style={styles.submitBtnStyle}>
             <CustomButton
               isLoading={isLoading}
               label="Continue"
               onPress={submitLogin}
+              // disabled={!isChecked}
             />
           </View>
         </View>
