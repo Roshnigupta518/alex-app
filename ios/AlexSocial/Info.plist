@@ -82,21 +82,21 @@
         </dict>
     </dict>
     <key>NSCameraUsageDescription</key>
-    <string>$(PRODUCT_NAME) requires access to the camera to allow users to capture and upload photos for their profiles and post images and videos.</string>
+    <string>ALEX SOCIAL requires access to your camera so you can capture and upload photos or videos for your profile and posts.</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>$(PRODUCT_NAME) would like to access your location for business purposes and other features.</string>
+    <string>ALEX SOCIAL uses your location even when the app is not open to keep your feed updated with nearby posts, friends, and events.</string>
     <key>NSLocationAlwaysUsageDescription</key>
-    <string>$(PRODUCT_NAME) wants to access your location coordinates to show your location for business purposes and other features.</string>
+    <string>ALEX SOCIAL needs access to your location in the background to continue updating your feed with nearby posts, friends, and events.</string>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>$(PRODUCT_NAME) would like to access your location while you are using the app for business purposes and other features.</string>
+    <string>ALEX SOCIAL uses your location while you are using the app to provide a personalized feed of nearby posts, friends, and events.</string>
     <key>NSContactsUsageDescription</key>
-    <string>This app uses your contacts to help you find and connect with friends who are already using the app, making it easier to grow your network.</string>
+    <string>ALEX SOCIAL uses your contacts to help you find and connect with friends who are already using the app, making it easier to grow your network.</string>
     <key>NSMicrophoneUsageDescription</key>
-    <string>This app uses your microphone so you can record audio while creating and sharing videos with your friends.</string>
+    <string>ALEX SOCIAL requires access to your microphone so you can record audio when creating and sharing videos with your friends.</string>
     <key>NSPhotoLibraryUsageDescription</key>
-    <string>$(PRODUCT_NAME) would like to access your photo library to allow you to post images and update your profile.</string>
+    <string>ALEX SOCIAL requires access to your photo and video library so you can upload media for posts and update your profile.</string>
     <key>NSUserNotificationAlertUsageDescription</key>
-    <string>We need to send you notifications for important updates.</string>
+    <string>ALEX SOCIAL sends you notifications to keep you updated when friends interact with your posts or when new features are available.</string>
     <key>FirebaseCrashlyticsCollectionEnabled</key>
     <true/>
     <key>UIAppFonts</key>
