@@ -140,7 +140,6 @@
     }
     }
     
-  
     return (
       <View style={[styles.container,{height:screenHeight}]} key={idx}>
         {data?.postData?.post?.mimetype == 'video/mp4' ? (
