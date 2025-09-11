@@ -15,10 +15,14 @@ import NoInternetModal from '../../../components/NoInternetModal';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { useSelector } from 'react-redux';
 import NotFoundAnime from '../../../components/NotFoundAnime';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const ReelViewer = ({route}) => {
 
-  const screenHeight = Platform.OS == 'ios' ? HEIGHT : HEIGHT -30
+  const insets = useSafeAreaInsets();
+  const statusBarHeight = insets.top;
+
+  const screenHeight = Platform.OS == 'ios' ? HEIGHT-statusBarHeight : HEIGHT - 30
  
   const flashListRef = useRef();
   const deleteCommentRef = useRef();

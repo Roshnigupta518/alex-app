@@ -2,12 +2,13 @@ import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
-  SafeAreaView,
+  // SafeAreaView,
   Image,
   StyleSheet,
   PermissionsAndroid,
   Platform, StatusBar
 } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import AppStack from './navigation/AppStack';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import FlashMessage from 'react-native-flash-message';
@@ -257,8 +258,12 @@ const App = () => {
   };
 
   return (
-    <View style={{flex: 1}}>
-          {/* <StatusBar barStyle="light-content" backgroundColor="black" translucent /> */}
+    <SafeAreaProvider>
+  <SafeAreaView 
+    style={{flex: 1, backgroundColor:'black'}} 
+    edges={['top']}   // 👈 sirf top ke liye safe area apply hoga
+  >
+          {/* <StatusBar barStyle="light-content" backgroundColor="black" /> */}
 
       {isLoading ? (
         <View style={styles.container}>
@@ -266,6 +271,7 @@ const App = () => {
         </View>
       ) : (
         <NavigationContainer ref={navigationRef}>
+          <StatusBar barStyle="light-content" backgroundColor="black" translucent={false} />
           <HandleDeepLink />
           <AppStack isLoggedIn={isLoggedInUser} />
         </NavigationContainer>
@@ -273,7 +279,8 @@ const App = () => {
       <AppUpdateChecker />
       <FlashMessage position="top" style={{zIndex: 2}} />
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
-    </View>
+    </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

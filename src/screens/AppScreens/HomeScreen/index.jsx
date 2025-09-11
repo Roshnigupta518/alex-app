@@ -58,7 +58,7 @@ const HomeScreen = ({ navigation, route }) => {
   // const screenHeight = (HEIGHT-tabBarHeight) 
   // const screenHeight = Platform.OS == 'ios' ? HEIGHT : HEIGHT - tabBarHeight
   const screenHeight = Platform.OS === 'ios'
-  ? HEIGHT - statusBarHeight
+  ? HEIGHT - tabBarHeight - statusBarHeight
   : HEIGHT - tabBarHeight - statusBarHeight;
   
   // console.log({tabBarHeight, screenHeight})
@@ -931,7 +931,8 @@ const styles = StyleSheet.create({
     // height: HEIGHT,
     backgroundColor: colors.gray,
   },
-  storyContainer: { zIndex: 3, marginLeft: 10, position: 'absolute', top: Platform.OS === 'android' ? '11%' : '17%', flexDirection: 'row' },
+  storyContainer: { zIndex: 3, marginLeft: 10, position: 'absolute',
+     top: Platform.OS === 'android' ? '11%' : '11%', flexDirection: 'row' },
   profilesty: {
     width: 69,
     height: 69,
