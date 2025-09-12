@@ -11,7 +11,8 @@ import org.devio.rn.splashscreen.SplashScreen
 class MainActivity : ReactActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        //super.onCreate(savedInstanceState)
+        super.onCreate(null)
         // Show the splash screen
         SplashScreen.show(this)
     }
