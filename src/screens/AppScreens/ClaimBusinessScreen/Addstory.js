@@ -22,6 +22,7 @@ const StoryCaptureScreen = ({route}) => {
   const [isRecording, setIsRecording] = useState(false);
   const [cameraPosition, setCameraPosition] = useState('back');
   const [recordingTime, setRecordingTime] = useState(0);
+  const [ready, setReady] = useState(false);
 const recordingInterval = useRef(null);
 
 const {added_from, business_id} = route?.params
@@ -65,8 +66,19 @@ const {added_from, business_id} = route?.params
     return true;
   };
 
+  // useEffect(() => {
+  //   requestPermissions();
+  // }, []);
+
   useEffect(() => {
-    requestPermissions();
+    const prepare = async () => {
+      const ok = await requestPermissions();
+      if (ok) {
+        // Delay a bit to ensure React bridge is ready
+        setTimeout(() => setReady(true), 200);
+      }
+    };
+    prepare();
   }, []);
 
   const handleCapture = async () => {
@@ -196,6 +208,9 @@ const {added_from, business_id} = route?.params
   };
 
   if (!device) return <Text style={styles.permissionText}>Waiting for camera...</Text>;
+  if (!ready) {
+    return <Text style={styles.permissionText}>Preparing camera...</Text>;
+  }
 
   return (
     <View style={styles.container}>
