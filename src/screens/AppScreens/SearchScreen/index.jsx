@@ -172,6 +172,7 @@ const SearchScreen = ({navigation, route}) => {
                     borderRadius: 10,
                     marginVertical: 5,
                   }}>
+                    <View style={{width:'90%'}}>
                   <Text
                     style={{
                       fontFamily: fonts.medium,
@@ -180,13 +181,15 @@ const SearchScreen = ({navigation, route}) => {
                     }}>
                     {isBusiness ? item.name : item?.name}
                   </Text>
-
+                  </View>
+                  <View style={{width:'10%'}}>
                   <Image
                     source={ImageConstants.leftArrow}
                     style={{
                       transform: [{rotate: '135deg'}],
                     }}
                   />
+                  </View>
                 </TouchableOpacity>
               );
             }}

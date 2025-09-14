@@ -58,9 +58,9 @@ const HomeScreen = ({ navigation, route }) => {
   // const screenHeight = (HEIGHT-tabBarHeight) 
   // const screenHeight = Platform.OS == 'ios' ? HEIGHT : HEIGHT - tabBarHeight
   const screenHeight = Platform.OS === 'ios'
-  ? HEIGHT - tabBarHeight - statusBarHeight
-  : HEIGHT - tabBarHeight - statusBarHeight;
-  
+    ? HEIGHT - tabBarHeight - statusBarHeight
+    : HEIGHT - tabBarHeight - statusBarHeight;
+
   // console.log({tabBarHeight, screenHeight})
   const storyref = useRef(null)
   const prevNearBy = useRef(nearByType);
@@ -102,7 +102,7 @@ const HomeScreen = ({ navigation, route }) => {
   const [limit] = useState(5); // fix limit as per API
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const [currentStory, setCurrentStory] = useState({ userId: null, storyId: null });
+  const [currentStory, setCurrentStory] = useState({ userId: null, storyId: null, name: null, caption: null });
   const [isStoryOpen, setIsStoryOpen] = useState(false);
 
   const { openStoryId } = route.params || {};
@@ -254,6 +254,8 @@ const HomeScreen = ({ navigation, route }) => {
         source: { uri: story.media },
         is_seen: story.is_seen,
         is_liked: story.is_liked,
+        caption: story.caption,
+        tagBusiness: story.tagBussiness || [],
       }))
     }));
   };
@@ -377,10 +379,10 @@ const HomeScreen = ({ navigation, route }) => {
 
   const markStoryAsSeen = async (userId, storyId) => {
     try {
-      if(storyId){
-      const res = await makeStorySeenRequest(storyId);
-      // console.log('story seen ho gyi', storyId, res);
-      handleStorySeen(userId, storyId)
+      if (storyId) {
+        const res = await makeStorySeenRequest(storyId);
+        // console.log('story seen ho gyi', storyId, res);
+        handleStorySeen(userId, storyId)
       }
     } catch (err) {
       if (err?.message) {
@@ -568,15 +570,15 @@ const HomeScreen = ({ navigation, route }) => {
 
   const shouldShowLocationError =
     selectedCityData?.locationType === 'current' && !!error && postArray.length === 0;
-  
-    const handleLocationServices = () => {
-     if(Platform.OS === 'ios'){
+
+  const handleLocationServices = () => {
+    if (Platform.OS === 'ios') {
       Linking.openURL('app-settings')
-     }else{
+    } else {
       Linking.openSettings()
-     }
     }
-   
+  }
+
   return (
     <>
       <View style={styles.container}>
@@ -602,8 +604,14 @@ const HomeScreen = ({ navigation, route }) => {
                   storyref.current?.open(story.id);
                   return null;
                 }}
-
                 onAddPress={() => navigation.navigate('AddStory', { added_from: 1 })}
+                onTagPress={(businessObj) => {
+                  console.log("Clicked business", businessObj);
+                  storyref?.current?.hide();
+                  navigation.navigate("ClaimBusinessScreen", {
+                    ...businessObj, 
+                  });
+                }}
                 animationDuration={5000}
                 avatarSize={60}
                 storyContainerStyle={{ margin: 0, padding: 0 }}
@@ -619,52 +627,70 @@ const HomeScreen = ({ navigation, route }) => {
                   const currentStoryData = stories
                     .find(u => u.id === currentStory?.userId)
                     ?.stories.find(s => s.id === currentStory?.storyId);
-
+                  // console.log({currentStoryData})
                   return (
-                    <View style={{ flexDirection: 'row', padding: 20 }}>
-                      {userInfo?.id === currentStory?.userId &&
-                        <TouchableOpacity
-                          onPress={() => {
-                            storyref?.current?.pause();
-                            navigation.navigate("StoryViewers", {
-                              storyId: currentStory?.storyId,
-                            });
-                          }}>
-                          <Image source={ImageConstants.openEye} />
-                        </TouchableOpacity>
-                      }
-                      <View style={{
-                        width: '90%',
-                        backgroundColor: 'rgba(0,0,0,0.3)',
-                        flexDirection: 'row',
-                        justifyContent: 'flex-end',
-                      }}>
-                        {userInfo?.id !== currentStory?.userId &&
-                          <View>
-                            {currentStoryData?.is_liked ?
-                              <TouchableOpacity
-                                style={{ marginRight: 20 }}
-                                onPress={() => likeStoryHandle(currentStory?.storyId, false)} >
-                                <Image
-                                  source={ImageConstants.filled_like}
-                                  style={styles.likeSty}
-                                />
-                              </TouchableOpacity>
-                              :
-                              <TouchableOpacity
-                                style={{ marginRight: 20 }}
-                                onPress={() => likeStoryHandle(currentStory?.storyId, true)} >
-                                <Image
-                                  source={ImageConstants.unlike}
-                                  style={styles.likeSty}
-                                />
-                              </TouchableOpacity>
-                            }
-                          </View>}
+                    <View style={{ padding: 20 }}>
+                      
 
-                        <TouchableOpacity onPress={() => handleShareStoryFunction(currentStory?.storyId, storyref)}>
-                          <Image source={ImageConstants.share} />
-                        </TouchableOpacity>
+                      {currentStory?.caption &&
+                        <View style={styles.captionContainer}>
+                          <Text numberOfLines={2} style={{
+                            fontFamily: fonts.regular,
+                            fontSize: wp(10),
+                            color: colors.primaryColor,
+                            textAlign:'center'
+                          }}>
+                            {currentStory.caption}
+                          </Text>
+                        </View>
+                      }
+
+                      <View style={{ flexDirection: 'row', }}>
+                        {userInfo?.id === currentStory?.userId &&
+                          <TouchableOpacity
+                            onPress={() => {
+                              storyref?.current?.hide(); //pause tha pahle
+                              navigation.navigate("StoryViewers", {
+                                storyId: currentStory?.storyId,
+                              });
+                            }}>
+                            <Image source={ImageConstants.openEye} />
+                          </TouchableOpacity>
+                        }
+
+                        <View style={{
+                          width: '90%',
+                          backgroundColor: 'rgba(0,0,0,0.3)',
+                          flexDirection: 'row',
+                          justifyContent: 'flex-end',
+                        }}>
+                          {userInfo?.id !== currentStory?.userId &&
+                            <View>
+                              {currentStoryData?.is_liked ?
+                                <TouchableOpacity
+                                  style={{ marginRight: 20 }}
+                                  onPress={() => likeStoryHandle(currentStory?.storyId, false)} >
+                                  <Image
+                                    source={ImageConstants.filled_like}
+                                    style={styles.likeSty}
+                                  />
+                                </TouchableOpacity>
+                                :
+                                <TouchableOpacity
+                                  style={{ marginRight: 20 }}
+                                  onPress={() => likeStoryHandle(currentStory?.storyId, true)} >
+                                  <Image
+                                    source={ImageConstants.unlike}
+                                    style={styles.likeSty}
+                                  />
+                                </TouchableOpacity>
+                              }
+                            </View>}
+
+                          <TouchableOpacity onPress={() => handleShareStoryFunction(currentStory?.storyId, storyref)}>
+                            <Image source={ImageConstants.share} />
+                          </TouchableOpacity>
+                        </View>
                       </View>
                     </View>
                   )
@@ -678,7 +704,7 @@ const HomeScreen = ({ navigation, route }) => {
 
                   const parentUser = stories.find(user => user.id === userId);
                   const storyObj = parentUser?.stories.find(s => s.id === storyId);
-
+                  console.log({ parentUser })
                   // Check if the current user has stories
                   if (userInfo.id === userId && (!parentUser || parentUser.stories.length === 0)) {
                     storyref.current?.hide(userId);
@@ -686,7 +712,12 @@ const HomeScreen = ({ navigation, route }) => {
                     return; // Prevent further execution of this function
                   }
 
-                  setCurrentStory({ userId, storyId });
+                  setCurrentStory({
+                    userId, storyId,
+                    name: parentUser?.name,
+                    avatarSource: parentUser?.avatarSource?.uri,
+                    caption: storyObj?.caption
+                  });
                   markStoryAsSeen(userId, storyId);
                 }}
 
@@ -706,7 +737,6 @@ const HomeScreen = ({ navigation, route }) => {
               />
             </SafeAreaView>
           }
-
         </View>
 
         <View
@@ -738,7 +768,7 @@ const HomeScreen = ({ navigation, route }) => {
               alignSelf: 'center',
             }}
             keyExtractor={(item, index) => `${item.postData?._id || item._id || item.id || 'idx'}_${index}`}
-            extraData={{ screenHeight }}  
+            extraData={{ screenHeight }}
             ListEmptyComponent={() => {
               if (shouldShowLoader) {
                 return (
@@ -750,14 +780,14 @@ const HomeScreen = ({ navigation, route }) => {
               if (shouldShowLocationError) {
                 return (
                   <View style={styles.center}>
-                    <Text onPress={()=>handleLocationServices()}
-                     style={{
-                      fontFamily: fonts.bold,
-                      fontSize: wp(16),
-                      color: colors.white,
-                      textAlign: 'center',
-                      marginBottom: 10,
-                    }}>
+                    <Text onPress={() => handleLocationServices()}
+                      style={{
+                        fontFamily: fonts.bold,
+                        fontSize: wp(16),
+                        color: colors.white,
+                        textAlign: 'center',
+                        marginBottom: 10,
+                      }}>
                       Failed to fetch location. Please enable location services.
                     </Text>
                     <Text onPress={onRefresh} style={{
@@ -803,7 +833,7 @@ const HomeScreen = ({ navigation, route }) => {
               }
               return null;
             }}
-            />
+          />
         </View>
 
 
@@ -931,8 +961,10 @@ const styles = StyleSheet.create({
     // height: HEIGHT,
     backgroundColor: colors.gray,
   },
-  storyContainer: { zIndex: 3, marginLeft: 10, position: 'absolute',
-     top: Platform.OS === 'android' ? '11%' : '11%', flexDirection: 'row' },
+  storyContainer: {
+    zIndex: 3, marginLeft: 10, position: 'absolute',
+    top: Platform.OS === 'android' ? '11%' : '11%', flexDirection: 'row'
+  },
   profilesty: {
     width: 69,
     height: 69,
@@ -941,6 +973,11 @@ const styles = StyleSheet.create({
     borderColor: colors.gray,
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  profileCap: {
+    width: 25, height: 25, borderRadius: 50, marginRight: 10,
+    borderColor: colors.primaryColor,
+    borderWidth: 2
   },
   profileImg: { width: 60, height: 60, borderRadius: 50 },
   plusicon: {
@@ -972,6 +1009,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: '100%'
+  },
+  captionContainer: {
+    // flexDirection: 'row',
+    marginBottom: 10,
+    alignItems:'center'
+  },
+  businessContainer:{backgroundColor:'#fff',
+     padding:10, opacity:0.2,
+    borderRadius:5, alignItems:'center',
+    marginBottom:10
   }
 });
 

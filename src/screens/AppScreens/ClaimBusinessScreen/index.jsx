@@ -1287,7 +1287,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
                 </View>
               )}
 
-              {data?.user_id === userInfo?.id && (
+              {(data?.user_id === userInfo?.id && follow?.fromListing === true) && (
                 <TouchableOpacity
                   style={styles.button}
                   onPress={() => navigation.navigate('AddStory', { added_from: 2, business_id: data?._id })}

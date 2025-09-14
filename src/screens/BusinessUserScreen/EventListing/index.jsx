@@ -7,7 +7,7 @@ import {
   Image,
   FlatList,
   StyleSheet,
-  ImageBackground,
+  ImageBackground, ActivityIndicator
 } from 'react-native';
 import BusinessHeader from '../commonComponents/BusinessHeader';
 import SearchInput from '../../../components/SearchInput';
@@ -98,6 +98,10 @@ const EventUserListingScreen = ({navigation}) => {
           height: HEIGHT / 2,
           justifyContent: 'center',
         }}>
+         {isLoading ? (
+        <ActivityIndicator size={'large'} color={colors.primaryColor} />
+         ):
+          <View style={{ alignItems: 'center',}}>
         <Text
           style={{
             fontFamily: fonts.bold,
@@ -132,8 +136,11 @@ const EventUserListingScreen = ({navigation}) => {
             }}
           />
         </View>
+           </View>
+          }
       </View>
     );
+  
   };
   const _renderEventList = ({item, index}) => {
     return (

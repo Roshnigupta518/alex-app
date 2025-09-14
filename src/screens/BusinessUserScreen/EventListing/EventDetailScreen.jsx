@@ -278,7 +278,7 @@ const EventDetailScreen = ({navigation, route}) => {
                         $ {data?.entry_fee}{' '}
                         <Text
                           style={{fontFamily: fonts.regular, fontSize: wp(10)}}>
-                          (entery fee)
+                          (entry fee)
                         </Text>
                       </Text>
                     </View>
