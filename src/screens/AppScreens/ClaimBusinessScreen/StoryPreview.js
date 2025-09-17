@@ -17,8 +17,9 @@ import useCheckLocation from '../../../hooks/useLocation';
 import CustomButton from '../../../components/CustomButton';
 import { wp, fonts } from '../../../constants';
 import * as VideoThumbnails from 'expo-video-thumbnails';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import ImageConstants from '../../../constants/ImageConstants';
+import { clearBusinessAction } from '../../../redux/Slices/TagBusinessSlice';
 
 const StoryPreview = ({ route, navigation }) => {
   const { media } = route.params;
@@ -35,6 +36,7 @@ const StoryPreview = ({ route, navigation }) => {
   const businessItem = route?.params?.businessItem
 
   const { location } = useCheckLocation()
+  const dispatch = useDispatch()
 
   const getFileNameFromPath = (path) => {
     return path.split('/').pop(); // last part after last slash
@@ -142,6 +144,11 @@ const StoryPreview = ({ route, navigation }) => {
       console.log({ result });
 
       if (result?.status) {
+        setLocationState({
+          name: '',
+          place_id: '',
+        })
+        dispatch(clearBusinessAction())
         Toast.success('Story', result?.message);
         navigation.navigate('Home', { shouldScrollTopReel: true });
       } else {
@@ -260,6 +267,7 @@ const StoryPreview = ({ route, navigation }) => {
           placeholder="Write your caption..."
           value={caption}
           onChangeText={txt => setCaption(txt)}
+          maxLength={500}
         />
   
         {/* Tag Business */}

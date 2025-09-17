@@ -175,7 +175,7 @@ const StoryViewerScreen = ({ navigation, route }) => {
                                     source={ImageConstants.filled_like}
                                     style={{
                                         position: 'absolute', left: '12%', bottom: 0,
-                                        width: wp(18)
+                                        width: wp(18), resizeMode:'center', height: wp(18)
                                     }}
                                     resizeMode={'center'}
                                     tintColor={colors.primaryColor}

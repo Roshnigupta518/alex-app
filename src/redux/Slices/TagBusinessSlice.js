@@ -11,9 +11,12 @@ export const TagBusinessSlice = createSlice({
     tagBusinessAction: (state, action) => {
       state.data = action?.payload;
     },
+    clearBusinessAction:(state, action) => {
+      state.data = null
+    },
   },
 });
 
-export const {tagBusinessAction} = TagBusinessSlice.actions;
+export const {tagBusinessAction, clearBusinessAction} = TagBusinessSlice.actions;
 
 export default TagBusinessSlice.reducer;

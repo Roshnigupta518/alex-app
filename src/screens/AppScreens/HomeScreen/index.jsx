@@ -36,6 +36,7 @@ import { handleShareStoryFunction } from '../../../validation/helper';
 import { ChangeMuteAction } from '../../../redux/Slices/VideoMuteSlice';
 import LinearGradient from 'react-native-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import ReadMore from '@fawazahmed/react-native-read-more';
 
 const staticValues = {
   skip: 0,
@@ -102,7 +103,7 @@ const HomeScreen = ({ navigation, route }) => {
   const [limit] = useState(5); // fix limit as per API
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const [currentStory, setCurrentStory] = useState({ userId: null, storyId: null, name: null, caption: null });
+  const [currentStory, setCurrentStory] = useState({ userId: null, originalId: null, storyId: null, name: null, caption: null, added_from: null });
   const [isStoryOpen, setIsStoryOpen] = useState(false);
 
   const { openStoryId } = route.params || {};
@@ -246,6 +247,8 @@ const HomeScreen = ({ navigation, route }) => {
       id: user.added_from === "2"
         ? user.business_id : user.user_id,
       name: user.user_name,
+      user_id: user.user_id, // 👈 asli user_id bhi rakho
+      added_from: user.added_from, // 👈 ye bhi rakho
       avatarSource: user.user_image ? { uri: user.user_image } : ImageConstants.business_logo,
       stories: user.stories.map(story => ({
         id: story.id,
@@ -259,6 +262,44 @@ const HomeScreen = ({ navigation, route }) => {
       }))
     }));
   };
+
+  // const transformApiToDummy = (apiData) => {
+  //   const mergedMap = {};
+
+  //   apiData.forEach(user => {
+  //     // Same user_id par merge karna hai chahe added_from kuch bhi ho
+  //     const key = user.user_id;
+
+  //     if (!mergedMap[key]) {
+  //       mergedMap[key] = {
+  //         id: user.user_id,
+  //         name: user.user_name,
+  //         avatarSource: user.user_image
+  //           ? { uri: user.user_image }
+  //           : ImageConstants.business_logo,
+  //         stories: [],
+  //       };
+  //     }
+
+  //     // Stories append karo
+  //     const formattedStories = user.stories.map(story => ({
+  //       id: story.id,
+  //       mediaType: story.media_type === 'video/mp4' ? 'video' : 'image',
+  //       duration: story.duration,
+  //       source: { uri: story.media },
+  //       is_seen: story.is_seen,
+  //       is_liked: story.is_liked,
+  //       caption: story.caption,
+  //       tagBusiness: story.tagBussiness || [],
+  //     }));
+
+  //     mergedMap[key].stories = [...mergedMap[key].stories, ...formattedStories];
+  //   });
+
+  //   // Object ko array me convert karo
+  //   return Object.values(mergedMap);
+  // };
+
 
   const getStoryHandle = () => {
     if (loading || !hasMore) return;
@@ -274,12 +315,13 @@ const HomeScreen = ({ navigation, route }) => {
 
         let yourStoryObj = {
           id: userInfo.id,
+          user_id: userInfo.id,
           name: 'You',
           avatarSource: userInfo.profile_picture ? { uri: userInfo.profile_picture } : ImageConstants.business_logo,
           stories: myStoryFromApi ? myStoryFromApi.stories : [],
           // isAddButton: !myStoryFromApi || (myStoryFromApi.stories?.length === 0),
           isAddButton: true,
-
+          added_from: '1',
         };
 
         let finalStories;
@@ -609,7 +651,7 @@ const HomeScreen = ({ navigation, route }) => {
                   console.log("Clicked business", businessObj);
                   storyref?.current?.hide();
                   navigation.navigate("ClaimBusinessScreen", {
-                    ...businessObj, 
+                    ...businessObj,
                   });
                 }}
                 animationDuration={5000}
@@ -627,26 +669,40 @@ const HomeScreen = ({ navigation, route }) => {
                   const currentStoryData = stories
                     .find(u => u.id === currentStory?.userId)
                     ?.stories.find(s => s.id === currentStory?.storyId);
-                  // console.log({currentStoryData})
+                  // console.log({currentStory})
                   return (
                     <View style={{ padding: 20 }}>
-                      
+
 
                       {currentStory?.caption &&
                         <View style={styles.captionContainer}>
-                          <Text numberOfLines={2} style={{
+                          {/* <Text numberOfLines={2} style={{
                             fontFamily: fonts.regular,
                             fontSize: wp(10),
                             color: colors.primaryColor,
                             textAlign:'center'
                           }}>
                             {currentStory.caption}
-                          </Text>
+                          </Text> */}
+
+                          <ReadMore
+                            numberOfLines={2}
+                            style={{
+                              fontFamily: fonts.regular,
+                              fontSize: wp(10),
+                              color: colors.white,
+                              // textAlign:'center'
+                            }}
+                            seeMoreStyle={{ color: colors.primaryColor }}
+                            seeLessStyle={{ color: colors.primaryColor }}>
+                            {currentStory?.caption}
+                          </ReadMore>
+
                         </View>
                       }
 
                       <View style={{ flexDirection: 'row', }}>
-                        {userInfo?.id === currentStory?.userId &&
+                        {/* {userInfo?.id === currentStory?.userId &&
                           <TouchableOpacity
                             onPress={() => {
                               storyref?.current?.hide(); //pause tha pahle
@@ -656,7 +712,24 @@ const HomeScreen = ({ navigation, route }) => {
                             }}>
                             <Image source={ImageConstants.openEye} />
                           </TouchableOpacity>
-                        }
+                        } */}
+
+                        {currentStory && (
+                          (currentStory.added_from === "1" || currentStory.added_from === "2") &&
+                          currentStory?.originalId == userInfo.id && (   // 👈 ab direct story ka user_id check karo
+                            <TouchableOpacity
+                              onPress={() => {
+                                storyref?.current?.hide();
+                                navigation.navigate("StoryViewers", {
+                                  storyId: currentStory?.storyId,
+                                });
+                              }}
+                            >
+                              <Image source={ImageConstants.openEye} />
+                            </TouchableOpacity>
+                          )
+                        )}
+
 
                         <View style={{
                           width: '90%',
@@ -713,8 +786,11 @@ const HomeScreen = ({ navigation, route }) => {
                   }
 
                   setCurrentStory({
-                    userId, storyId,
+                    userId,
+                    originalId: parentUser.user_id,
+                    storyId,
                     name: parentUser?.name,
+                    added_from: parentUser?.added_from, // 👈 added
                     avatarSource: parentUser?.avatarSource?.uri,
                     caption: storyObj?.caption
                   });
@@ -1013,12 +1089,13 @@ const styles = StyleSheet.create({
   captionContainer: {
     // flexDirection: 'row',
     marginBottom: 10,
-    alignItems:'center'
+    alignItems: 'center'
   },
-  businessContainer:{backgroundColor:'#fff',
-     padding:10, opacity:0.2,
-    borderRadius:5, alignItems:'center',
-    marginBottom:10
+  businessContainer: {
+    backgroundColor: '#fff',
+    padding: 10, opacity: 0.2,
+    borderRadius: 5, alignItems: 'center',
+    marginBottom: 10
   }
 });
 

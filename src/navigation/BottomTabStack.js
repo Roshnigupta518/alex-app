@@ -8,6 +8,7 @@ import ProfileRedirect from '../screens/AppScreens/ProfileScreen/ProfileRedirect
 import CustomBottomTab from './CustomBottomTab';
 import BusinessUserListingScreen from '../screens/BusinessUserScreen/BusinessListing';
 import EventUserListingScreen from '../screens/BusinessUserScreen/EventListing';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Tab = createBottomTabNavigator();
 
@@ -16,7 +17,13 @@ function BottomTabStack() {
     <Tab.Navigator
       initialRouteName={'Home'}
       screenOptions={{headerShown: false}}
-      tabBar={props => <CustomBottomTab {...props} />}>
+      // tabBar={props => <CustomBottomTab {...props} />}
+      tabBar={props => (
+        <SafeAreaView edges={['bottom']} style={{ backgroundColor: '#fff' }}>
+          <CustomBottomTab {...props} />
+        </SafeAreaView>
+      )}
+      >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="ChatScreen" component={ChatScreen} />
       <Tab.Screen name="PostMediaScreen" component={PostMediaScreen} />
