@@ -276,7 +276,7 @@ export default function VideoPlayer({
             ref={videoRef}
             source={{ uri: `${url}` }}
             style={{ width: WIDTH, height: screenHeight }}
-            resizeMode="contain"
+            resizeMode='cover'
             repeat
             muted={shouldMute}
             // shouldPlay={!shouldPlay}

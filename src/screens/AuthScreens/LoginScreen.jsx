@@ -24,6 +24,7 @@ import {getFCMToken} from '../../constants/FCMGeneration';
 import NoInternetModal from '../../components/NoInternetModal';
 import crashlytics from '@react-native-firebase/crashlytics';
 import CustomCheckBox from '../../components/CustomCheckbox';
+import CustomContainer from '../../components/container';
 
 const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
@@ -152,7 +153,7 @@ const LoginScreen = ({navigation}) => {
   }, [isFocused]);
   return (
     <>
-      <SafeAreaView style={styles.container}>
+      <CustomContainer>
       <KeyboardAvoidingView
   behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
   style={{flex: 1}}>
@@ -285,7 +286,7 @@ const LoginScreen = ({navigation}) => {
         </ScrollView>
         </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

@@ -20,6 +20,8 @@ import NotFoundAnime from '../../components/NotFoundAnime';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../components/NoInternetModal';
 import crashlytics from '@react-native-firebase/crashlytics';
+import CustomContainer from '../../components/container';
+
 const InterestScreen = ({navigation, route}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [categoryList, setCategoryList] = useState([]);
@@ -103,7 +105,7 @@ const InterestScreen = ({navigation, route}) => {
 
   return (
     <>
-      <SafeAreaView style={styles.container}>
+      <CustomContainer>
         <BackHeader
           rightView={() => {
             return (
@@ -145,7 +147,7 @@ const InterestScreen = ({navigation, route}) => {
             }
           />
         </View>
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

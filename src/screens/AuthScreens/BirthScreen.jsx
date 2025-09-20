@@ -13,6 +13,7 @@ import DatePicker from 'react-native-date-picker';
 import CustomButton from '../../components/CustomButton';
 import BackHeader from '../../components/BackHeader';
 import moment from 'moment';
+import CustomContainer from '../../components/container';
 
 const BirthScreen = ({navigation}) => {
   const temp_year = new Date().getFullYear();
@@ -22,7 +23,7 @@ const BirthScreen = ({navigation}) => {
   const [date, setDate] = useState(tempDate);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <CustomContainer>
       <BackHeader />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.birthdayTxtStyle}>When Is Your Birthday?</Text>
@@ -57,7 +58,7 @@ const BirthScreen = ({navigation}) => {
           />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </CustomContainer>
   );
 };
 

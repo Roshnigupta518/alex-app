@@ -20,6 +20,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../components/NoInternetModal';
 import crashlytics from '@react-native-firebase/crashlytics';
+import CustomContainer from '../../components/container';
 const OTPScreen = ({navigation, route}) => {
   const dispatch = useDispatch();
   const [code, setCode] = useState('');
@@ -136,7 +137,7 @@ const OTPScreen = ({navigation, route}) => {
 
   return (
     <>
-      <SafeAreaView style={styles.container}>
+      <CustomContainer>
         <BackHeader />
 
         <Text style={styles.titleTxtStyle}>Verify Yourself</Text>
@@ -186,7 +187,7 @@ const OTPScreen = ({navigation, route}) => {
             </TouchableOpacity>
           </View>
         </View>
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

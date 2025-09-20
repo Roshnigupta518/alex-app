@@ -1,17 +1,18 @@
 diff --git a/node_modules/@birdwingo/react-native-instagram-stories/src/components/Avatar/Avatar.styles.ts b/node_modules/@birdwingo/react-native-instagram-stories/src/components/Avatar/Avatar.styles.ts
-index b0c51d6..b244580 100644
+index b0c51d6..ba28f7f 100644
 --- a/node_modules/@birdwingo/react-native-instagram-stories/src/components/Avatar/Avatar.styles.ts
 +++ b/node_modules/@birdwingo/react-native-instagram-stories/src/components/Avatar/Avatar.styles.ts
-@@ -5,6 +5,7 @@ export default StyleSheet.create( {
+@@ -5,6 +5,8 @@ export default StyleSheet.create( {
    container: {
      flexDirection: 'row',
      alignItems: 'center',
-+    marginRight:10,
++    marginRight:5,
++    marginStart:10
    },
    avatar: {
      left: AVATAR_OFFSET,
 diff --git a/node_modules/@birdwingo/react-native-instagram-stories/src/components/Avatar/index.tsx b/node_modules/@birdwingo/react-native-instagram-stories/src/components/Avatar/index.tsx
-index 66de125..479c5f7 100644
+index 66de125..9638153 100644
 --- a/node_modules/@birdwingo/react-native-instagram-stories/src/components/Avatar/index.tsx
 +++ b/node_modules/@birdwingo/react-native-instagram-stories/src/components/Avatar/index.tsx
 @@ -28,6 +28,12 @@ const StoryAvatar: FC<StoryAvatarProps> = ( {
@@ -57,7 +58,7 @@ index 66de125..479c5f7 100644
            <Loader loading={isLoading} color={loaderColor} size={size + AVATAR_OFFSET * 2} />
            <AnimatedImage
              source={avatarSource}
-@@ -74,7 +98,56 @@ const StoryAvatar: FC<StoryAvatarProps> = ( {
+@@ -74,11 +98,60 @@ const StoryAvatar: FC<StoryAvatarProps> = ( {
              testID="storyAvatarImage"
              onLoad={onLoad}
            />
@@ -114,6 +115,11 @@ index 66de125..479c5f7 100644
        </View>
        {Boolean( showName ) && (
          <Text
+-          {...nameTextProps}
++          {...nameTextProps} numberOfLines={2}
+           style={[ { width: size + AVATAR_OFFSET * 2 }, nameTextStyle ]}
+         >
+           {name}
 diff --git a/node_modules/@birdwingo/react-native-instagram-stories/src/components/AvatarList/index.tsx b/node_modules/@birdwingo/react-native-instagram-stories/src/components/AvatarList/index.tsx
 index b1154e0..bdd4697 100644
 --- a/node_modules/@birdwingo/react-native-instagram-stories/src/components/AvatarList/index.tsx
@@ -142,9 +148,18 @@ index b1154e0..bdd4697 100644
    );
  
 diff --git a/node_modules/@birdwingo/react-native-instagram-stories/src/components/InstagramStories/index.tsx b/node_modules/@birdwingo/react-native-instagram-stories/src/components/InstagramStories/index.tsx
-index bb29e4c..db2ef0b 100644
+index bb29e4c..93f85d3 100644
 --- a/node_modules/@birdwingo/react-native-instagram-stories/src/components/InstagramStories/index.tsx
 +++ b/node_modules/@birdwingo/react-native-instagram-stories/src/components/InstagramStories/index.tsx
+@@ -4,7 +4,7 @@ import React, {
+ import { useSharedValue } from 'react-native-reanimated';
+ import { Image } from 'react-native';
+ import { clearProgressStorage, getProgressStorage, setProgressStorage } from '../../core/helpers/storage';
+-import { InstagramStoriesProps, InstagramStoriesPublicMethods } from '../../core/dto/instagramStoriesDTO';
++import { InstagramStoriesProps, InstagramStoriesPublicMethods, InstagramStoryProps } from '../../core/dto/instagramStoriesDTO';
+ import { ProgressStorageProps } from '../../core/dto/helpersDTO';
+ import {
+   ANIMATION_DURATION, DEFAULT_COLORS, SEEN_LOADER_COLORS,
 @@ -36,6 +36,9 @@ const InstagramStories = forwardRef<InstagramStoriesPublicMethods, InstagramStor
    avatarBorderRadius,
    loaderColor,
@@ -155,15 +170,27 @@ index bb29e4c..db2ef0b 100644
    ...props
  }, ref ) => {
  
-@@ -48,7 +51,6 @@ const InstagramStories = forwardRef<InstagramStoriesPublicMethods, InstagramStor
-   const modalRef = useRef<StoryModalPublicMethods>( null );
+@@ -46,9 +49,10 @@ const InstagramStories = forwardRef<InstagramStoriesPublicMethods, InstagramStor
+   const loadingStory = useSharedValue<string | undefined>( undefined );
  
-   const onPress = ( id: string ) => {
--
+   const modalRef = useRef<StoryModalPublicMethods>( null );
++  type SeenMap = Record<string, string>;
+ 
+-  const onPress = ( id: string ) => {
+ 
++  const onPress = ( id: string ) => {
      loadingStory.value = id;
  
      if ( loadedStories.value ) {
-@@ -244,6 +246,9 @@ const InstagramStories = forwardRef<InstagramStoriesPublicMethods, InstagramStor
+@@ -98,6 +102,7 @@ const InstagramStories = forwardRef<InstagramStoriesPublicMethods, InstagramStor
+ 
+   };
+ 
++  
+   const onSeenStoriesChange = async ( user: string, value: string ) => {
+ 
+     if ( !saveProgress ) {
+@@ -244,6 +249,9 @@ const InstagramStories = forwardRef<InstagramStoriesPublicMethods, InstagramStor
            avatarListContainerStyle={avatarListContainerStyle}
            avatarBorderRadius={avatarBorderRadius}
            onPress={onPress}
@@ -187,10 +214,64 @@ index 3eebb14..205d090 100644
    content: {
      position: 'absolute',
 diff --git a/node_modules/@birdwingo/react-native-instagram-stories/src/components/List/index.tsx b/node_modules/@birdwingo/react-native-instagram-stories/src/components/List/index.tsx
-index 9fa47d8..f4739e4 100644
+index 9fa47d8..116e5e2 100644
 --- a/node_modules/@birdwingo/react-native-instagram-stories/src/components/List/index.tsx
 +++ b/node_modules/@birdwingo/react-native-instagram-stories/src/components/List/index.tsx
-@@ -84,7 +84,14 @@ const StoryList: FC<StoryListProps> = ( {
+@@ -11,7 +11,7 @@ import { StoryListProps } from '../../core/dto/componentsDTO';
+ import { HEIGHT } from '../../core/constants';
+ import StoryContent from '../Content';
+ import StoryFooter from '../Footer';
+-
++import { Text, TouchableOpacity } from 'react-native';
+ const StoryList: FC<StoryListProps> = ( {
+   id, stories, index, x, activeUser, activeStory, progress, seenStories, paused,
+   onLoad, videoProps, progressColor, progressActiveColor, mediaContainerStyle, imageStyles,
+@@ -80,11 +80,59 @@ const StoryList: FC<StoryListProps> = ( {
+               progressContainerStyle={progressContainerStyle}
+             />
+             <StoryHeader {...props} />
++
++             {/* 🔥 TagBusiness Overlay */}
++            {stories[activeStoryIndex.value]?.tagBusiness?.length > 0 && (
++  <Animated.View
++    style={{
++      position: 'absolute',
++      bottom: '15%',
++      right: 0,
++      justifyContent: 'center',
++      zIndex: 999,
++      elevation: 5,
++    }}
++  >
++    <TouchableOpacity
++      activeOpacity={0.8}
++      onPress={() => {
++        if (props.onTagPress) {
++          props.onTagPress(stories[activeStoryIndex.value].tagBusiness[0]); 
++        }
++      }}
++    >
++      <Text numberOfLines={1}
++        style={{
++          color: 'white',
++          backgroundColor: 'rgba(0,0,0,0.5)',
++          paddingHorizontal: 12,
++          paddingVertical: 6,
++          borderRadius: 12,
++          fontWeight: 'bold',
++          textDecorationLine: 'underline',
++        }}
++      >
++        @{stories[activeStoryIndex.value].tagBusiness[0].name}
++      </Text>
++    </TouchableOpacity>
++  </Animated.View>
++)}
++
++            {/* 🔥 End Overlay */}
++
++
+             <StoryContent stories={stories} active={isActive} activeStory={activeStory} />
            </Animated.View>
          </Animated.View>
        </Animated.View>
@@ -232,7 +313,7 @@ index dd93855..826b259 100644
                  />
                ) )}
 diff --git a/node_modules/@birdwingo/react-native-instagram-stories/src/core/dto/componentsDTO.ts b/node_modules/@birdwingo/react-native-instagram-stories/src/core/dto/componentsDTO.ts
-index c1a2ad0..64c7738 100644
+index c1a2ad0..c04c66a 100644
 --- a/node_modules/@birdwingo/react-native-instagram-stories/src/core/dto/componentsDTO.ts
 +++ b/node_modules/@birdwingo/react-native-instagram-stories/src/core/dto/componentsDTO.ts
 @@ -20,6 +20,9 @@ export interface StoryAvatarListProps {
@@ -255,11 +336,26 @@ index c1a2ad0..64c7738 100644
  }
  
  export interface StoryLoaderProps {
+@@ -180,6 +186,7 @@ export interface StoryListProps extends InstagramStoryProps, StoryHeaderProps {
+   loaderColor?: string;
+   loaderBackgroundColor?: string;
+   onLoad: ( duration?: number ) => void;
++  onTagPress?: (story: any) => void;   // ✅ ye line add karo
+ }
+ 
+ export interface StoryVideoProps {
 diff --git a/node_modules/@birdwingo/react-native-instagram-stories/src/core/dto/instagramStoriesDTO.ts b/node_modules/@birdwingo/react-native-instagram-stories/src/core/dto/instagramStoriesDTO.ts
-index 263c8ea..54bbfea 100644
+index 263c8ea..d8febd0 100644
 --- a/node_modules/@birdwingo/react-native-instagram-stories/src/core/dto/instagramStoriesDTO.ts
 +++ b/node_modules/@birdwingo/react-native-instagram-stories/src/core/dto/instagramStoriesDTO.ts
-@@ -23,6 +23,7 @@ export interface InstagramStoryProps {
+@@ -17,15 +17,18 @@ export interface StoryItemProps {
+ 
+ export interface InstagramStoryProps {
+   id: string;
++  is_seen?: boolean;  
+   avatarSource: ImageProps['source'];
+   renderAvatar?: ( seen: boolean ) => ReactNode;
+   renderStoryHeader?: () => ReactNode;
    onStoryHeaderPress?: () => void;
    name?: string;
    stories: StoryItemProps[];
@@ -267,7 +363,11 @@ index 263c8ea..54bbfea 100644
  }
  
  export interface InstagramStoriesProps {
-@@ -70,6 +71,8 @@ export interface InstagramStoriesProps {
++  id: any;
+   stories: InstagramStoryProps[];
+   saveProgress?: boolean;
+   avatarBorderColors?: string[];
+@@ -70,6 +73,8 @@ export interface InstagramStoriesProps {
    onSwipeUp?: ( userId?: string, storyId?: string ) => void;
    onStoryStart?: ( userId?: string, storyId?: string ) => void;
    onStoryEnd?: ( userId?: string, storyId?: string ) => void;

@@ -277,7 +277,7 @@ const App = () => {
         </NavigationContainer>
       )}
       <AppUpdateChecker />
-      <FlashMessage position="top" style={{zIndex: 2}} />
+      <FlashMessage position="top" style={{zIndex: 2, paddingTop:30 }} />
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </SafeAreaView>
     </SafeAreaProvider>

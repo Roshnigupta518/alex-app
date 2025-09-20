@@ -22,7 +22,7 @@ const ReelViewer = ({route}) => {
   const insets = useSafeAreaInsets();
   const statusBarHeight = insets.top;
 
-  const screenHeight = Platform.OS == 'ios' ? HEIGHT-statusBarHeight : HEIGHT - insets.bottom-30
+  const screenHeight = Platform.OS == 'ios' ? HEIGHT-statusBarHeight : HEIGHT - insets.bottom-40
  
   const flashListRef = useRef();
   const deleteCommentRef = useRef();

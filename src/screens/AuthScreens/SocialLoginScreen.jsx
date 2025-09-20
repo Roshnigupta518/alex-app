@@ -29,7 +29,7 @@ import Storage from './../../constants/Storage';
 import {getFCMToken} from '../../constants/FCMGeneration';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../components/NoInternetModal';
-
+import CustomContainer from '../../components/container';
 import crashlytics from '@react-native-firebase/crashlytics';
 const SocialLoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
@@ -347,7 +347,9 @@ const SocialLoginScreen = ({navigation}) => {
 
   return (
     <>
+      <CustomContainer>
       <ImageBackground source={ImageConstants.loginbg} style={{flex: 1}}>
+      
         <View style={styles.container}>
           <Text style={styles.titleStyle}>Create or Login Account</Text>
 
@@ -428,6 +430,8 @@ const SocialLoginScreen = ({navigation}) => {
           </View>
         </View>
       </ImageBackground>
+      </CustomContainer>
+
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

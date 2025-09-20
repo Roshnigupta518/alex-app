@@ -17,6 +17,8 @@ import Toast from '../../constants/Toast';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../components/NoInternetModal';
 import crashlytics from '@react-native-firebase/crashlytics';
+import CustomContainer from '../../components/container';
+
 const CreatePasswordScreen = ({navigation, route}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [state, setState] = useState({
@@ -72,7 +74,7 @@ const CreatePasswordScreen = ({navigation, route}) => {
 
   return (
     <>
-      <SafeAreaView style={styles.container}>
+      <CustomContainer>
         <BackHeader />
 
         <Text style={styles.titleTxtStyle}>Create New Password</Text>
@@ -108,7 +110,7 @@ const CreatePasswordScreen = ({navigation, route}) => {
             />
           </View>
         </View>
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

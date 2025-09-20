@@ -20,7 +20,7 @@ import {CreateUserProfileRequest} from '../../services/Utills';
 import Toast from '../../constants/Toast';
 import {getFCMToken} from '../../constants/FCMGeneration';
 import CustomCheckBox from '../../components/CustomCheckbox';
-
+import CustomContainer from '../../components/container';
 const SetupProfileScreen = ({navigation, route}) => {
   const mediaRef = useRef();
 
@@ -107,7 +107,7 @@ const SetupProfileScreen = ({navigation, route}) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <CustomContainer>
       <BackHeader />
 
       <Text style={styles.titleTxtStyle}>Setup Profile</Text>
@@ -248,7 +248,7 @@ const SetupProfileScreen = ({navigation, route}) => {
         onCameraClick={res => setUserImage(res)}
         onMediaClick={res => setUserImage(res)}
       />
-    </SafeAreaView>
+    </CustomContainer>
   );
 };
 

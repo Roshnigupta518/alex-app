@@ -15,7 +15,7 @@ import {ForgetPasswordRequest} from '../../services/Utills';
 import Toast from '../../constants/Toast';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../components/NoInternetModal';
-
+import CustomContainer from '../../components/container';
 import crashlytics from '@react-native-firebase/crashlytics';
 const ForgetPasswordScreen = ({navigation}) => {
   const [state, setState] = useState({
@@ -76,7 +76,7 @@ const ForgetPasswordScreen = ({navigation}) => {
 
   return (
     <>
-      <SafeAreaView style={styles.container}>
+      <CustomContainer>
         <BackHeader />
 
         <Text style={styles.titleTxtStyle}>Forgot Password?</Text>
@@ -102,7 +102,7 @@ const ForgetPasswordScreen = ({navigation}) => {
             />
           </View>
         </View>
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

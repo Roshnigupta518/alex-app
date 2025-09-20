@@ -1015,7 +1015,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
   const openWebsite = async businessUrl => {
     try {
       const supported = await Linking.canOpenURL(businessUrl);
-      if (supported) await Linking.openURL(businessUrl);
+       await Linking.openURL(businessUrl);
     } catch (e) {
       // ignore
     }
