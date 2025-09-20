@@ -17,6 +17,7 @@ import Share from 'react-native-share';
 import Toast from '../../constants/Toast';
 import * as RNFS from 'react-native-fs';
 import SharedGroupPreferences from 'react-native-shared-group-preferences';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const ShareSheet = forwardRef((data, ref) => {
   const shareIcons = [
     {icon: ImageConstants.round_fb, action: null},
@@ -25,7 +26,7 @@ const ShareSheet = forwardRef((data, ref) => {
     {icon: ImageConstants.round_twitter, action: null},
   ];
   const [isLoading, setisLoading] = useState(false);
-
+  const insets = useSafeAreaInsets();
   const [selectedIcon, setSelectedIcon] = useState(null);
   const cleanAndResolve = localFile => {
     RNFS.unlink(localFile).then(resolve);
@@ -46,7 +47,7 @@ const ShareSheet = forwardRef((data, ref) => {
   return (
     <ActionSheet
       ref={actionSheetRef}
-      containerStyle={styles.container}
+      containerStyle={[styles.container,{ paddingBottom: insets.bottom }]}
       onClose={() => setSelectedIcon(null)}>
       <View style={styles.subView}>
         <View style={styles.drawerHandleStyle} />

@@ -19,6 +19,7 @@ import Toast from '../../../constants/Toast';
 import MediaItem from '../../../components/GridView';
 import NotFoundAnime from '../../../components/NotFoundAnime';
 import st from '../../../global/styles';
+import CustomContainer from '../../../components/container';
 
 const PostByPlaces = ({ navigation, route }) => {
     const userInfo = useSelector(state => state.UserInfoSlice.data);
@@ -53,7 +54,7 @@ const PostByPlaces = ({ navigation, route }) => {
 
     return (
         <>
-            <SafeAreaView style={styles.container}>
+            <CustomContainer>
                 <BackHeader
                 label={`Posts of ${id}`}
                 />
@@ -98,7 +99,7 @@ const PostByPlaces = ({ navigation, route }) => {
 
 
                 </View>
-            </SafeAreaView>
+            </CustomContainer>
         </>
     );
 };

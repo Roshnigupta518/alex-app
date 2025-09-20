@@ -20,7 +20,7 @@ import ReadMore from '@fawazahmed/react-native-read-more';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../../components/NoInternetModal';
 import NotFoundAnime from '../../../components/NotFoundAnime';
-
+import CustomContainer from '../../../components/container';
 const ExploreDetailScreen = ({navigation, route}) => {
   const {data} = route?.params;
   const [isFav, setIsFav] = useState(
@@ -120,11 +120,7 @@ const ExploreDetailScreen = ({navigation, route}) => {
 
   return (
     <>
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: colors.white,
-        }}>
+      <CustomContainer>
         <ImageBackground
           source={{uri: data?.explorelBanner}}
           style={{
@@ -351,7 +347,7 @@ const ExploreDetailScreen = ({navigation, route}) => {
            
           </ScrollView>
         </View>
-      </View>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

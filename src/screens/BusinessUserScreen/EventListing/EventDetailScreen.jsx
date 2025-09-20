@@ -21,6 +21,7 @@ import ReadMore from '@fawazahmed/react-native-read-more';
 import moment from 'moment';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../../components/NoInternetModal';
+import CustomContainer from '../../../components/container';
 const EventDetailScreen = ({navigation, route}) => {
   const {data} = route?.params;
   const [isInternetConnected, setIsInternetConnected] = useState(true);
@@ -67,11 +68,7 @@ const EventDetailScreen = ({navigation, route}) => {
 
   return (
     <>
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: colors.white,
-        }}>
+      <CustomContainer>
         <ImageBackground
           source={ImageConstants.event_banner}
           style={{
@@ -402,7 +399,7 @@ const EventDetailScreen = ({navigation, route}) => {
             </View>
           </ScrollView>
         </View>
-      </View>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

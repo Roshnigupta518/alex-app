@@ -18,6 +18,7 @@ import Toast from "../../../constants/Toast";
 import { DeleteStoryRequest } from "../../../../ios/src/services/Utills";
 import InstaThumbnailSlider from "../../../components/InstaThumbnailSlider";
 import NotFoundAnime from "../../../components/NotFoundAnime";
+import CustomContainer from "../../../components/container";
 
 const StoryViewerScreen = ({ navigation, route }) => {
     const { storyId,  } = route.params || {};
@@ -149,7 +150,7 @@ const StoryViewerScreen = ({ navigation, route }) => {
     const likedUserIds = new Set(selectedStory.likes?.map(like => like.user_id._id) || []);
 
     return (
-        <View style={{ flex: 1, backgroundColor: "#fff" }}>
+        <CustomContainer>
             <BackHeader />
             <View style={{  height:'30%' }}>
                 <InstaThumbnailSlider
@@ -212,7 +213,7 @@ const StoryViewerScreen = ({ navigation, route }) => {
                     <NotFoundAnime />
                 }
             />
-        </View>
+        </CustomContainer>
     );
 }
 

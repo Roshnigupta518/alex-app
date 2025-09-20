@@ -19,7 +19,7 @@ import DeleteChatSheet from '../../../components/ActionSheetComponent/DeleteChat
 import NotFoundAnime from '../../../components/NotFoundAnime';
 import NoInternetModal from '../../../components/NoInternetModal';
 import NetInfo from '@react-native-community/netinfo';
-
+import CustomContainer from '../../../components/container';
 const ChatScreen = ({navigation}) => {
   const isFocused = useIsFocused();
   const userInfo = useSelector(state => state.UserInfoSlice.data);
@@ -183,11 +183,7 @@ const ChatScreen = ({navigation}) => {
 
   return (
     <>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: colors.white,
-        }}>
+      <CustomContainer>
         <View
           style={{
             padding: wp(20),
@@ -347,7 +343,7 @@ const ChatScreen = ({navigation}) => {
           }}
           // onCloseSheet={() => swipeRef?.current?.manuallyOpenAllRows(0)}
         />
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

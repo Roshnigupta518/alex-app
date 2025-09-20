@@ -19,6 +19,7 @@ import NotFoundAnime from '../../../components/NotFoundAnime';
 import BackHeader from '../../../components/BackHeader';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../../components/NoInternetModal';
+import CustomContainer from '../../../components/container';
 const BusinessChildScreen = ({navigation, route}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [subCategory, setSubCategory] = useState([]);
@@ -66,11 +67,7 @@ const BusinessChildScreen = ({navigation, route}) => {
 
   return (
     <>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: colors.white,
-        }}>
+      <CustomContainer>
         {/* <NotificationSearchHeader /> */}
         <BackHeader />
 
@@ -152,7 +149,7 @@ const BusinessChildScreen = ({navigation, route}) => {
           />
         </View>
         {/* <View style={{height: wp(80)}} /> */}
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

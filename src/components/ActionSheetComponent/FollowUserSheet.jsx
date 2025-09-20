@@ -6,7 +6,7 @@ import ImageConstants from '../../constants/ImageConstants';
 import CustomButton from '../CustomButton';
 import {MakeFollowedBusinessRequest, MakeFollowedUserRequest} from '../../services/Utills';
 import Toast from '../../constants/Toast';
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const FollowUserSheet = forwardRef(
   (
     {
@@ -25,6 +25,7 @@ const FollowUserSheet = forwardRef(
     console.log({businessDetail})
     const actionSheetRef = useRef(null);
     const [isLoading, setIsLoading] = useState(false);
+    const insets = useSafeAreaInsets();
     // Expose actionSheetRef to parent component through forwarded ref
     React.useImperativeHandle(ref, () => ({
       show: () => {
@@ -131,7 +132,7 @@ const FollowUserSheet = forwardRef(
       //   </View>
       // </ActionSheet>
 
-      <ActionSheet ref={actionSheetRef} containerStyle={styles.container}>
+      <ActionSheet ref={actionSheetRef} containerStyle={[styles.container,{ paddingBottom: insets.bottom }]}>
         <View style={styles.subView}>
           <View style={styles.drawerHandleStyle} />
 

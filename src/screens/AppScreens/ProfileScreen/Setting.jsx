@@ -24,6 +24,7 @@ import {LoginManager, AccessToken, Settings} from 'react-native-fbsdk-next';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import BackHeader from '../../../components/BackHeader';
+import CustomContainer from '../../../components/container';
 
 const ProfileScreen = ({navigation}) => {
   const [isInternetConnected, setIsInternetConnected] = useState(true);
@@ -207,11 +208,7 @@ const ProfileScreen = ({navigation}) => {
   };
   return (
     <>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: colors.white,
-        }}>
+      <CustomContainer>
           <BackHeader label='Settings' />
 
         <View
@@ -241,7 +238,7 @@ const ProfileScreen = ({navigation}) => {
           ref={switchUserRef}
           onActionDone={() => navigation.navigate('HomeScreen')}
         />
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

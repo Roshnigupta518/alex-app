@@ -20,7 +20,7 @@ import * as VideoThumbnails from 'expo-video-thumbnails';
 import { useSelector, useDispatch } from 'react-redux';
 import ImageConstants from '../../../constants/ImageConstants';
 import { clearBusinessAction } from '../../../redux/Slices/TagBusinessSlice';
-
+import CustomContainer from '../../../components/container';
 const StoryPreview = ({ route, navigation }) => {
   const { media } = route.params;
   // console.log({media})
@@ -259,7 +259,7 @@ const StoryPreview = ({ route, navigation }) => {
       <SafeAreaView style={{ position: 'absolute', zIndex: 3 }}>
         <BackHeader />
       </SafeAreaView>
-  
+      <CustomContainer>
       {/* Media Preview */}
       <View style={styles.previewContainer}>
         {media.type === 'image' ? (
@@ -329,6 +329,7 @@ const StoryPreview = ({ route, navigation }) => {
           disabled={uploading}
         />
       </View>
+      </CustomContainer>
     </View>
   );
   
@@ -430,7 +431,7 @@ const styles = StyleSheet.create({
   },
   uploadContainer: {
     position: 'absolute',
-    bottom: wp(20),
+    bottom: wp(50),
     left: wp(15),
     right: wp(15),
   },

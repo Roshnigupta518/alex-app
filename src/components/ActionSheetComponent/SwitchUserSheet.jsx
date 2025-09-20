@@ -9,13 +9,13 @@ import {SwitchUserRequest} from '../../services/Utills';
 import Toast from '../../constants/Toast';
 import {userDataAction} from '../../redux/Slices/UserInfoSlice';
 import Storage from '../../constants/Storage';
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const SwitchUserSheet = forwardRef(({onActionDone = () => {}}, ref) => {
   const reportItems = [
     {username: 'User Account', type: 1},
     {username: 'Business Account', type: 2},
   ];
-
+  const insets = useSafeAreaInsets();
   const dispatch = useDispatch();
   const userInfo = useSelector(state => state.UserInfoSlice.data);
   const actionSheetRef = useRef(null);
@@ -62,7 +62,7 @@ const SwitchUserSheet = forwardRef(({onActionDone = () => {}}, ref) => {
   };
 
   return (
-    <ActionSheet ref={actionSheetRef} containerStyle={styles.container}>
+    <ActionSheet ref={actionSheetRef} containerStyle={[styles.container,{ paddingBottom: insets.bottom }]}>
       <View style={styles.subView}>
         <View style={styles.drawerHandleStyle} />
 

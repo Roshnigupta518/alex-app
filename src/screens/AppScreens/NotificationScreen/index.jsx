@@ -24,6 +24,8 @@ import NotFoundAnime from '../../../components/NotFoundAnime';
 import {current} from '@reduxjs/toolkit';
 import NoInternetModal from '../../../components/NoInternetModal';
 import NetInfo from '@react-native-community/netinfo';
+import CustomContainer from '../../../components/container';
+
 const NotificationScreen = ({navigation}) => {
   const notificationRef = useRef();
   const swipeRef = useRef(null);
@@ -141,11 +143,7 @@ const NotificationScreen = ({navigation}) => {
 
   return (
     <>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: colors.white,
-        }}>
+      <CustomContainer>
         <BackHeader label="Notifications" />
 
         <View
@@ -262,7 +260,7 @@ const NotificationScreen = ({navigation}) => {
             getAllNotification();
           }}
         />
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

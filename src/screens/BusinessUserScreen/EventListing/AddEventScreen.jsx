@@ -27,6 +27,8 @@ import moment from 'moment';
 import momentTimeZone from 'moment-timezone';
 import NoInternetModal from '../../../components/NoInternetModal';
 import NetInfo from '@react-native-community/netinfo';
+import CustomContainer from '../../../components/container';
+
 const AddEventScreen = ({navigation}) => {
   const dateRef = useRef();
   const timeRef = useRef();
@@ -130,11 +132,7 @@ const AddEventScreen = ({navigation}) => {
 
   return (
     <>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: colors.white,
-        }}>
+      <CustomContainer>
         <BackHeader label="Events" />
 
         <View
@@ -381,7 +379,7 @@ const AddEventScreen = ({navigation}) => {
             onPress={SubmitEvent}
           />
         </View>
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

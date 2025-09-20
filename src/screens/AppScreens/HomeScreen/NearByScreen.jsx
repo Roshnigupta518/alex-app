@@ -20,6 +20,7 @@ import Geolocation from '@react-native-community/geolocation';
 import MilesListSheet from '../../../components/ActionSheetComponent/MilesListSheet';
 import NotFoundAnime from '../../../components/NotFoundAnime';
 import { setCityAction } from '../../../redux/Slices/SelectedCitySlice';
+import CustomContainer from '../../../components/container';
 
 const NearByScreen = ({navigation}) => {
   const mileListRef = useRef();
@@ -191,7 +192,7 @@ const NearByScreen = ({navigation}) => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <CustomContainer>
       <View style={styles.subViewContainer}>
         <View style={styles.searchView}>
           <SearchInput
@@ -238,7 +239,7 @@ const NearByScreen = ({navigation}) => {
           navigation.navigate('HomeScreen', {shouldScrollTopReel: true});
         }}
       />
-    </SafeAreaView>
+    </CustomContainer>
   );
 };
 

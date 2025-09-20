@@ -15,6 +15,8 @@ import NotFoundAnime from '../../../components/NotFoundAnime';
 import {useIsFocused} from '@react-navigation/native';
 import NoInternetModal from '../../../components/NoInternetModal';
 import NetInfo from '@react-native-community/netinfo';
+import CustomContainer from '../../../components/container';
+
 const ExploreScreen = ({navigation}) => {
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(false);
@@ -151,11 +153,7 @@ const ExploreScreen = ({navigation}) => {
 
   return (
     <>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: colors.white,
-        }}>
+      <CustomContainer>
         <View
           style={{
             padding: wp(10),
@@ -215,7 +213,7 @@ const ExploreScreen = ({navigation}) => {
             />
           </View>
         </View>
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

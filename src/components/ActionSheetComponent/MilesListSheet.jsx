@@ -2,7 +2,7 @@ import React, {forwardRef, useEffect, useRef, useState} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
 import {colors, fonts, HEIGHT, WIDTH, wp} from '../../constants';
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const MilesListSheet = forwardRef(({onMileSelect = () => {}}, ref) => {
   const miles_list = [
     {label: '5 miles', value: '5'},
@@ -13,7 +13,7 @@ const MilesListSheet = forwardRef(({onMileSelect = () => {}}, ref) => {
   ];
 
   const actionSheetRef = useRef(null);
-
+  const insets = useSafeAreaInsets();
   // Expose actionSheetRef to parent component through forwarded ref
   React.useImperativeHandle(ref, () => ({
     show: () => {
@@ -25,7 +25,7 @@ const MilesListSheet = forwardRef(({onMileSelect = () => {}}, ref) => {
   }));
 
   return (
-    <ActionSheet ref={actionSheetRef} containerStyle={styles.container}>
+    <ActionSheet ref={actionSheetRef} containerStyle={[styles.container,{ paddingBottom: insets.bottom }]}>
       <View style={styles.subView}>
         <View style={styles.drawerHandleStyle} />
 

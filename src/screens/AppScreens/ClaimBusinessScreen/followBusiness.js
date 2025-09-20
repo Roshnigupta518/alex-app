@@ -8,7 +8,7 @@ import { getAllBusinessFollowerRequest } from "../../../services/Utills";
 import ImageConstants from "../../../constants/ImageConstants";
 import Toast from "../../../constants/Toast";
 import { useSelector } from "react-redux";
-
+import CustomContainer from "../../../components/container";
 const FollowBusiness = ({ navigation, route }) => {
     const [searchedUser, setSearchedUser] = useState([])
     const [users, setUsers] = useState([])
@@ -94,8 +94,7 @@ const FollowBusiness = ({ navigation, route }) => {
 
     return (
         <>
-            <SafeAreaView
-                style={st.container}>
+            <CustomContainer>
                 <BackHeader label={'Business Followers'} />
                 <View style={st.content}>
                     <SearchInput
@@ -115,7 +114,7 @@ const FollowBusiness = ({ navigation, route }) => {
                     />
 
                 </View>
-            </SafeAreaView>
+            </CustomContainer>
         </>
     )
 }

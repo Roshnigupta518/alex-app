@@ -17,6 +17,8 @@ import ImageConstants from '../../../constants/ImageConstants';
 import UnblockUserSheet from '../../../components/ActionSheetComponent/UnblockUserSheet';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../../components/NoInternetModal';
+import CustomContainer from '../../../components/container';
+
 const BlockListScreen = ({navigation, route}) => {
   const unblockRef = useRef();
   const [isLoading, setIsLoading] = useState(false);
@@ -174,11 +176,7 @@ const BlockListScreen = ({navigation, route}) => {
 
   return (
     <>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: colors.white,
-        }}>
+      <CustomContainer>
         <BackHeader label={'Blocked Users'} />
 
         <View
@@ -210,7 +208,7 @@ const BlockListScreen = ({navigation, route}) => {
           ref={unblockRef}
           onUnBlock={() => getBlockedUsers()}
         />
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

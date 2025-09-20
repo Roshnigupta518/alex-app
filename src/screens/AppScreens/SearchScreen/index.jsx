@@ -16,7 +16,7 @@ import ImageConstants from '../../../constants/ImageConstants';
 import {getAllUsersRequest, getAllBussinessRequest, getAllGlobalSearchRequest} from '../../../services/Utills';
 import Toast from '../../../constants/Toast';
 import NotFoundAnime from '../../../components/NotFoundAnime';
-
+import CustomContainer from '../../../components/container';
 const SearchScreen = ({navigation, route}) => {
   const userInfo = useSelector(state => state.UserInfoSlice.data);
   const [searchTxt, setSearchTxt] = useState('');
@@ -119,10 +119,7 @@ const SearchScreen = ({navigation, route}) => {
   }
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-      }}>
+    <CustomContainer>
       <BackHeader />
 
       <View
@@ -196,7 +193,7 @@ const SearchScreen = ({navigation, route}) => {
           />
         </View>
       </View>
-    </SafeAreaView>
+    </CustomContainer>
   );
 };
 

@@ -29,6 +29,7 @@ import NoInternetModal from '../../../components/NoInternetModal';
 import DatePicker from 'react-native-date-picker';
 import st from '../../../global/styles';
 import ImageConstants from '../../../constants/ImageConstants';
+import CustomContainer from '../../../components/container';
 
 const AddBusinessScreen = ({ navigation, route }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -270,11 +271,7 @@ const AddBusinessScreen = ({ navigation, route }) => {
     }
   };
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: colors.white,
-      }}>
+    <CustomContainer>
       <BackHeader label="Register Your Business" />
 
       <View
@@ -557,7 +554,7 @@ const AddBusinessScreen = ({ navigation, route }) => {
           onPress={route?.params?.isEdit ? UpdateBusiness : SubmitBusiness}
         />
       </View>
-    </SafeAreaView>
+    </CustomContainer>
   );
 };
 

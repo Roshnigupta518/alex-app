@@ -24,6 +24,8 @@ import _ from 'lodash';
 import {tagBusinessAction} from '../../../redux/Slices/TagBusinessSlice';
 import NoInternetModal from '../../../components/NoInternetModal';
 import NetInfo from '@react-native-community/netinfo';
+import CustomContainer from '../../../components/container';
+
 const TagBusinessScreen = ({navigation}) => {
   const tagBusinessList = useSelector(state => state.tagBusinessSlice?.data);
   const dispatch = useDispatch();
@@ -118,11 +120,7 @@ const TagBusinessScreen = ({navigation}) => {
 
   return (
     <>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: colors.white,
-        }}>
+      <CustomContainer>
         <BackHeader />
 
         <View
@@ -347,7 +345,7 @@ const TagBusinessScreen = ({navigation}) => {
             </View>
           </View>
         </View>
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

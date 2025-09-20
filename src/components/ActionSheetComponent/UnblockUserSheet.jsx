@@ -11,7 +11,7 @@ import {
   DeleteCommentRequest,
   DeleteNotifcationRequest,
 } from '../../services/Utills';
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const UnblockUserSheet = forwardRef(
   ({onUnBlock = () => {}, onCloseSheet = () => {}}, ref) => {
     const actionSheetRef = useRef(null);
@@ -27,7 +27,7 @@ const UnblockUserSheet = forwardRef(
         actionSheetRef.current?.hide(false);
       },
     }));
-
+    const insets = useSafeAreaInsets();
     const unBlockUser = id => {
       let data = {
         comment: 'Unblock',
@@ -49,7 +49,7 @@ const UnblockUserSheet = forwardRef(
       <ActionSheet
         ref={actionSheetRef}
         onClose={onCloseSheet}
-        containerStyle={styles.container}>
+        containerStyle={[styles.container,{ paddingBottom: insets.bottom }]}>
         <View style={styles.subView}>
           <View style={styles.drawerHandleStyle} />
 

@@ -16,6 +16,8 @@ import {getFavirouteExploreRequest} from '../../../services/Utills';
 import NotFoundAnime from '../../../components/NotFoundAnime';
 import NoInternetModal from '../../../components/NoInternetModal';
 import NetInfo from '@react-native-community/netinfo';
+import CustomContainer from '../../../components/container';
+
 const FavouriteScreen = ({navigation, route}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [exploreList, setExploreList] = useState([]);
@@ -184,11 +186,7 @@ const FavouriteScreen = ({navigation, route}) => {
 
   return (
     <>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: colors.white,
-        }}>
+      <CustomContainer>
         <BackHeader label="Favorites" />
 
         <View
@@ -203,7 +201,7 @@ const FavouriteScreen = ({navigation, route}) => {
             ListEmptyComponent={<NotFoundAnime isLoading={isLoading} />}
           />
         </View>
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

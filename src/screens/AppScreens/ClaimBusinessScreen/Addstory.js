@@ -13,6 +13,7 @@ import { Camera, useCameraDevices } from 'react-native-vision-camera';
 import ImagePicker from 'react-native-image-crop-picker';
 import { useNavigation } from '@react-navigation/native';
 import BackHeader from '../../../components/BackHeader';
+import CustomContainer from '../../../components/container';
 
 let pressTimer;
 
@@ -213,7 +214,7 @@ const {added_from, businessItem} = route?.params //businessItem
   }
 
   return (
-    <View style={styles.container}>
+    <CustomContainer>
        <SafeAreaView style={{zIndex:3}}>
            <BackHeader />
        </SafeAreaView>
@@ -261,7 +262,7 @@ const {added_from, businessItem} = route?.params //businessItem
   </View>
 </View>
 
-    </View>
+    </CustomContainer>
   );
 };
 
@@ -276,7 +277,7 @@ const styles = StyleSheet.create({
 
   footerContainer: {
     position: 'absolute',
-    bottom: 30,
+    bottom: 50,
     width: '100%',
     alignItems: 'center',
   },

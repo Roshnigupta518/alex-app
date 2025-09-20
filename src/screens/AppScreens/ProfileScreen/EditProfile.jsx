@@ -33,6 +33,7 @@ import TabsHeader from '../../../components/TabsHeader';
 import NotFoundAnime from '../../../components/NotFoundAnime';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import MobileNoInput from '../../../components/MobileNoInput';
+import CustomContainer from '../../../components/container';
 
 const EditProfileScreen = ({ navigation, route }) => {
   const mediaRef = useRef(null);
@@ -466,7 +467,7 @@ const EditProfileScreen = ({ navigation, route }) => {
 
   return (
     <>
-      <SafeAreaView style={styles.container}>
+      <CustomContainer>
         <BackHeader label='Edit Profile' labelStyle={{ textAlign: 'center' }} />
         {!isLoading ? (
           <ScrollView
@@ -512,7 +513,7 @@ const EditProfileScreen = ({ navigation, route }) => {
             setImageData(res);
           }}
         />
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

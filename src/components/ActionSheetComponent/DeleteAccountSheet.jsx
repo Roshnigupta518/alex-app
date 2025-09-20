@@ -5,9 +5,10 @@ import {colors, fonts, WIDTH, wp} from '../../constants';
 import CustomButton from '../CustomButton';
 import {DeleteAccountRequest} from '../../services/Utills';
 import Toast from '../../constants/Toast';
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const DeleteAccountSheet = forwardRef(({onSuccess = () => {}}, ref) => {
   const actionSheetRef = useRef(null);
+  const insets = useSafeAreaInsets();
 
   const [isLoading, setIsLoading] = useState(false);
   // Expose actionSheetRef to parent component through forwarded ref
@@ -36,7 +37,7 @@ const DeleteAccountSheet = forwardRef(({onSuccess = () => {}}, ref) => {
   };
 
   return (
-    <ActionSheet ref={actionSheetRef} containerStyle={styles.container}>
+    <ActionSheet ref={actionSheetRef} containerStyle={[styles.container,{ paddingBottom: insets.bottom }]}>
       <View style={styles.subView}>
         <View style={styles.drawerHandleStyle} />
 

@@ -11,12 +11,13 @@ import {
   DeleteCommentRequest,
   DeleteNotifcationRequest,
 } from '../../services/Utills';
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const DeleteBusinessSheet = forwardRef(
   ({onDelete = () => {}, onCloseSheet = () => {}}, ref) => {
     const actionSheetRef = useRef(null);
     const [notificationId, setNotificationId] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const insets = useSafeAreaInsets();
     // Expose actionSheetRef to parent component through forwarded ref
     React.useImperativeHandle(ref, () => ({
       show: id => {
@@ -46,7 +47,7 @@ const DeleteBusinessSheet = forwardRef(
       <ActionSheet
         ref={actionSheetRef}
         onClose={onCloseSheet}
-        containerStyle={styles.container}>
+        containerStyle={[styles.container,{ paddingBottom: insets.bottom }]}>
         <View style={styles.subView}>
           <View style={styles.drawerHandleStyle} />
 

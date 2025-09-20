@@ -17,6 +17,7 @@ import NotFoundAnime from '../../../components/NotFoundAnime';
 import st from '../../../global/styles';
 import { getAllPlacesRequest, getAllCitiesRequest, getAllCountryRequest } from '../../../services/Utills';
 import PlacesItem from '../../../components/placesItems'
+import CustomContainer from '../../../components/container';
 
 const UserPlaces = ({ navigation, route }) => {
 
@@ -110,7 +111,7 @@ const UserPlaces = ({ navigation, route }) => {
 
     return (
         <>
-            <SafeAreaView style={st.container}>
+            <CustomContainer>
                 <BackHeader label={type} />
 
                 <View style={st.content}>
@@ -131,7 +132,7 @@ const UserPlaces = ({ navigation, route }) => {
                     keyExtractor={item => item._id}
                     contentContainerStyle={st.content}
                 />
-            </SafeAreaView>
+            </CustomContainer>
         </>
     )
 }

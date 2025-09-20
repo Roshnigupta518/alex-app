@@ -19,6 +19,7 @@ import ImageConstants from '../../../constants/ImageConstants';
 import ReadMore from '@fawazahmed/react-native-read-more';
 import NoInternetModal from '../../../components/NoInternetModal';
 import NetInfo from '@react-native-community/netinfo';
+import CustomContainer from '../../../components/container';
 const BusinessDetailScreen = ({navigation, route}) => {
   const {data} = route?.params;
   const latitude = Number(data?.latitude);
@@ -79,11 +80,7 @@ const BusinessDetailScreen = ({navigation, route}) => {
 
   return (
     <>
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: colors.white,
-        }}>
+      <CustomContainer>
         <ImageBackground
           source={
             data?.banner ? {uri: data?.banner} : ImageConstants.business_banner
@@ -266,7 +263,7 @@ const BusinessDetailScreen = ({navigation, route}) => {
             </View>
           </ScrollView>
         </View>
-      </View>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

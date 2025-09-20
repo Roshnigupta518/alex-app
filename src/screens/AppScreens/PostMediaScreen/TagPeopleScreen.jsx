@@ -21,6 +21,8 @@ import {useSelector} from 'react-redux';
 import NotFoundAnime from './../../../components/NotFoundAnime';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../../components/NoInternetModal';
+import CustomContainer from '../../../components/container';
+
 const TagPeopleScreen = ({navigation}) => {
   const tagPeopleList = useSelector(state => state.TagPeopleSlice?.data);
   const dispatch = useDispatch();
@@ -92,11 +94,7 @@ const TagPeopleScreen = ({navigation}) => {
 
   return (
     <>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: colors.white,
-        }}>
+      <CustomContainer>
         <BackHeader />
 
         <View
@@ -237,7 +235,7 @@ const TagPeopleScreen = ({navigation}) => {
             </View>
           </View>
         </View>
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

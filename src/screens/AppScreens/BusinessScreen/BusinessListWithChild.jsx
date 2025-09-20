@@ -18,6 +18,8 @@ import SearchInput from '../../../components/SearchInput';
 import NotFoundAnime from '../../../components/NotFoundAnime';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../../components/NoInternetModal';
+import CustomContainer from '../../../components/container';
+
 const BusinessListWithChild = ({navigation, route}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [searchTxt, setSearchTxt] = useState('');
@@ -64,11 +66,7 @@ const BusinessListWithChild = ({navigation, route}) => {
 
   return (
     <>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: colors.white,
-        }}>
+      <CustomContainer>
         <BackHeader label="Business Type" />
 
         <View
@@ -147,7 +145,7 @@ const BusinessListWithChild = ({navigation, route}) => {
             />
           </View>
         </View>
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

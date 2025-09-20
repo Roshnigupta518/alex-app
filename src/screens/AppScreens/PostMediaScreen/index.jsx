@@ -16,6 +16,7 @@ import {useIsFocused} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
 import {tagPeopleAction} from '../../../redux/Slices/TagPeopleSlice';
 import {tagBusinessAction} from '../../../redux/Slices/TagBusinessSlice';
+import CustomContainer from '../../../components/container';
 
 const PostMediaScreen = ({navigation, route}) => {
   const isFocused = useIsFocused();
@@ -65,7 +66,7 @@ const PostMediaScreen = ({navigation, route}) => {
   }, [isFocused]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <CustomContainer>
       <View style={styles.subContainer}>
         <Text style={styles.titleStyle}>Create Post</Text>
 
@@ -112,7 +113,7 @@ const PostMediaScreen = ({navigation, route}) => {
           })
         }
       />
-    </SafeAreaView>
+    </CustomContainer>
   );
 };
 

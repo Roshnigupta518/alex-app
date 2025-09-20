@@ -20,6 +20,7 @@ import {
 } from '../../services/Utills';
 import Toast from '../../constants/Toast';
 import {useSelector} from 'react-redux';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const CommentListSheet = forwardRef(
   (
@@ -41,7 +42,7 @@ const CommentListSheet = forwardRef(
     const [isSelfComment, setIsSelfComment] = useState(false);
     const [commentList, setCommentList] = useState([]);
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
+    const insets = useSafeAreaInsets();
     const GetAllComments = id => {
       setIsLoading(true);
       GetAllCommentRequest(id)
@@ -164,7 +165,7 @@ const CommentListSheet = forwardRef(
           setCommentList([]);
           GetAllComments(postId);
         }}
-        containerStyle={styles.container}>
+        containerStyle={[styles.container,{ paddingBottom: insets.bottom }]}>
         <View style={styles.subView}>
           <View style={styles.drawerHandleStyle} />
 

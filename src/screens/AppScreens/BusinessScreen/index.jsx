@@ -17,6 +17,7 @@ import BackHeader from '../../../components/BackHeader';
 import {useIsFocused} from '@react-navigation/native';
 import NoInternetModal from '../../../components/NoInternetModal';
 import NetInfo from '@react-native-community/netinfo';
+import CustomContainer from '../../../components/container';
 const BusinessListingScreen = ({navigation, route}) => {
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(false);
@@ -67,11 +68,7 @@ const BusinessListingScreen = ({navigation, route}) => {
 
   return (
     <>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: colors.white,
-        }}>
+      <CustomContainer>
         {route?.params?.shouldGoBack ? (
           <BackHeader />
         ) : (
@@ -150,7 +147,7 @@ const BusinessListingScreen = ({navigation, route}) => {
           />
         </View>
         {/* <View style={{height: wp(80)}} /> */}
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

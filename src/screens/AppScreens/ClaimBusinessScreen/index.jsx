@@ -818,6 +818,7 @@ import ReadMore from '@fawazahmed/react-native-read-more';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import Share from 'react-native-share';
 import { useSelector } from 'react-redux';
+import CustomContainer from '../../../components/container';
 
 const ClaimBusinessScreen = ({ navigation, route }) => {
   const follow = route?.params || {};
@@ -1312,6 +1313,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
 
   return (
     // <View style={{ flex: 1, backgroundColor: colors.white }}>
+    <CustomContainer>
       <FlatList
         data={filteredData}
         keyExtractor={(_, index) => String(index)}
@@ -1340,6 +1342,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
           paddingHorizontal:10
         }}
      />
+     </CustomContainer>
     // </View>
   );
 };

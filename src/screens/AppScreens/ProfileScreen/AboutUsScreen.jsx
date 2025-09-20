@@ -12,6 +12,8 @@ import {OurMissionRequest, ourVisionRequest} from '../../../services/Utills';
 import Toast from '../../../constants/Toast';
 import NoInternetModal from '../../../components/NoInternetModal';
 import NetInfo from '@react-native-community/netinfo';
+import CustomContainer from '../../../components/container';
+
 const AboutUsScreen = ({navigation, route}) => {
   const [missionTxt, setMissionTxt] = useState('');
   const [visionTxt, setVisionTxt] = useState('');
@@ -70,11 +72,7 @@ const AboutUsScreen = ({navigation, route}) => {
 
   return (
     <>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: colors.white,
-        }}>
+      <CustomContainer>
         <BackHeader label="About Us" />
         {isLoading ? (
           <View
@@ -171,7 +169,7 @@ const AboutUsScreen = ({navigation, route}) => {
             </View>
           </ScrollView>
         )}
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

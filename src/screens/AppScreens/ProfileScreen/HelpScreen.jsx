@@ -21,6 +21,7 @@ import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../../components/NoInternetModal';
 import checkValidation from '../../../validation';
 import styles from '../../../global/styles';
+import CustomContainer from '../../../components/container';
 
 const HelpScreen = ({navigation}) => {
   const [getContentLoading, setGetContentLoading] = useState(false);
@@ -221,11 +222,7 @@ const HelpScreen = ({navigation}) => {
 
   return (
     <>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: colors.white,
-        }}>
+      <CustomContainer>
         <BackHeader label="Help" />
         <KeyboardAvoidingScrollView>
           <FlatList
@@ -235,7 +232,7 @@ const HelpScreen = ({navigation}) => {
             ListFooterComponent={<ListFooterComponent />}
           />
         </KeyboardAvoidingScrollView>
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

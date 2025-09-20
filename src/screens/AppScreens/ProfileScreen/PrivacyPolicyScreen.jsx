@@ -16,10 +16,13 @@ import {
 import Toast from '../../../constants/Toast';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../../components/NoInternetModal';
+import CustomContainer from '../../../components/container';
+
 const PrivacyPolicyScreen = ({navigation, route}) => {
   const [content, setContent] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isInternetConnected, setIsInternetConnected] = useState(true);
+
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       if (state.isConnected !== null && state.isConnected === false) {
@@ -62,7 +65,7 @@ const PrivacyPolicyScreen = ({navigation, route}) => {
   }, []);
 
   return (
-    <>
+    <CustomContainer>
       <SafeAreaView
         style={{
           flex: 1,
@@ -126,7 +129,7 @@ const PrivacyPolicyScreen = ({navigation, route}) => {
         )}
       </SafeAreaView>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
-    </>
+    </CustomContainer>
   );
 };
 

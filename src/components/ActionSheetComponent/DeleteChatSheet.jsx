@@ -7,12 +7,12 @@ import CustomButton from '../CustomButton';
 import Toast from '../../constants/Toast';
 import database from '@react-native-firebase/database';
 import {useSelector} from 'react-redux';
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const DeleteChatSheet = forwardRef(
   ({onSuccess = () => {}, onCloseSheet = () => {}}, ref) => {
     const actionSheetRef = useRef(null);
     const userInfo = useSelector(state => state.UserInfoSlice.data);
-
+    const insets = useSafeAreaInsets();
     const [chatId, setChatId] = useState('');
     const [username, setUsername] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -56,7 +56,7 @@ const DeleteChatSheet = forwardRef(
       <ActionSheet
         ref={actionSheetRef}
         onClose={onCloseSheet}
-        containerStyle={styles.container}>
+        containerStyle={[styles.container,{ paddingBottom: insets.bottom }]}>
         <View style={styles.subView}>
           <View style={styles.drawerHandleStyle} />
 

@@ -10,6 +10,8 @@ import Toast from '../../../constants/Toast';
 import {ChangePasswordRequest} from '../../../services/Utills';
 import NoInternetModal from '../../../components/NoInternetModal';
 import NetInfo from '@react-native-community/netinfo';
+import CustomContainer from '../../../components/container';
+
 const ChangePasswordScreen = ({navigation, route}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [state, setState] = useState({
@@ -99,11 +101,7 @@ const ChangePasswordScreen = ({navigation, route}) => {
 
   return (
     <>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: colors.white,
-        }}>
+      <CustomContainer>
         <BackHeader label="Change Password" />
 
         <KeyboardAvoidingScrollView>
@@ -156,7 +154,7 @@ const ChangePasswordScreen = ({navigation, route}) => {
             onPress={submitPassword}
           />
         </KeyboardAvoidingScrollView>
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

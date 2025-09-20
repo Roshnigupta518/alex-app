@@ -18,6 +18,7 @@ import NotFoundAnime from '../../../components/NotFoundAnime';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../../components/NoInternetModal';
 import ReadMore from '@fawazahmed/react-native-read-more';
+import CustomContainer from '../../../components/container';
 const PopularCategoryScreen = ({navigation, route}) => {
   const [searchTxt, setSearchTxt] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -193,10 +194,7 @@ const PopularCategoryScreen = ({navigation, route}) => {
 
   return (
     <>
-      <SafeAreaView
-        style={{
-          flex: 1,
-        }}>
+      <CustomContainer>
         <View
           style={{
             //   padding: wp(20),
@@ -229,7 +227,7 @@ const PopularCategoryScreen = ({navigation, route}) => {
             />
           </View>
         </View>
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

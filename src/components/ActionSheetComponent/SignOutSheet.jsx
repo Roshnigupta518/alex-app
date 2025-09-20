@@ -5,10 +5,10 @@ import {colors, fonts, WIDTH, wp} from '../../constants';
 import CustomButton from '../CustomButton';
 import {DeleteAccountRequest} from '../../services/Utills';
 import Toast from '../../constants/Toast';
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const SignOutSheet = forwardRef(({onSuccess = () => {}}, ref) => {
   const actionSheetRef = useRef(null);
-
+  const insets = useSafeAreaInsets();
   // Expose actionSheetRef to parent component through forwarded ref
   React.useImperativeHandle(ref, () => ({
     show: () => {
@@ -25,7 +25,7 @@ const SignOutSheet = forwardRef(({onSuccess = () => {}}, ref) => {
   };
 
   return (
-    <ActionSheet ref={actionSheetRef} containerStyle={styles.container}>
+    <ActionSheet ref={actionSheetRef} containerStyle={[styles.container,{ paddingBottom: insets.bottom }]}>
       <View style={styles.subView}>
         <View style={styles.drawerHandleStyle} />
 

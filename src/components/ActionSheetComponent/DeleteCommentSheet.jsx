@@ -7,12 +7,13 @@ import CustomButton from '../CustomButton';
 import Toast from '../../constants/Toast';
 import database from '@react-native-firebase/database';
 import {DeleteCommentRequest} from '../../services/Utills';
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const DeleteCommentSheet = forwardRef(
   ({onDelete = () => {}, onCloseSheet = () => {}}, ref) => {
     const actionSheetRef = useRef(null);
     const [commentId, setCommentId] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const insets = useSafeAreaInsets();
     // Expose actionSheetRef to parent component through forwarded ref
     React.useImperativeHandle(ref, () => ({
       show: id => {
@@ -42,7 +43,7 @@ const DeleteCommentSheet = forwardRef(
       <ActionSheet
         ref={actionSheetRef}
         onClose={onCloseSheet}
-        containerStyle={styles.container}>
+        containerStyle={[styles.container,{ paddingBottom: insets.bottom }]}>
         <View style={styles.subView}>
           <View style={styles.drawerHandleStyle} />
 

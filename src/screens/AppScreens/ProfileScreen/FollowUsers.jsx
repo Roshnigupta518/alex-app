@@ -23,6 +23,7 @@ import NotFoundAnime from '../../../components/NotFoundAnime';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../../components/NoInternetModal';
 import { useSelector } from 'react-redux';
+import CustomContainer from '../../../components/container';
 
 const FollowUsers = ({navigation, route}) => {
   const [searchTxt, setSearchTxt] = useState('');
@@ -453,10 +454,7 @@ const FollowUsers = ({navigation, route}) => {
 
   return (
     <>
-      <SafeAreaView
-        style={{
-          flex: 1,
-        }}>
+      <CustomContainer>
         <BackHeader
           label={route?.params?.type == 'following' ? 'Following' : 'Followers'}
         />
@@ -487,7 +485,7 @@ const FollowUsers = ({navigation, route}) => {
             />
           </View>
         </View>
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

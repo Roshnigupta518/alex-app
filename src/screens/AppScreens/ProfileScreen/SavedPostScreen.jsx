@@ -19,6 +19,8 @@ import NotFoundAnime from '../../../components/NotFoundAnime';
 import {isArray} from 'lodash';
 import NoInternetModal from '../../../components/NoInternetModal';
 import NetInfo from '@react-native-community/netinfo';
+import CustomContainer from '../../../components/container';
+
 const SavedPostScreen = ({navigation, route}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [postData, setPostData] = useState([]);
@@ -114,7 +116,7 @@ const SavedPostScreen = ({navigation, route}) => {
 
   return (
     <>
-      <SafeAreaView style={styles.container}>
+      <CustomContainer>
         <BackHeader label="Saved Posts" />
 
         <View style={styles.listViewStyle}>
@@ -125,7 +127,7 @@ const SavedPostScreen = ({navigation, route}) => {
             numColumns={2}
           />
         </View>
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

@@ -513,6 +513,7 @@ import NotFoundAnime from '../../../components/NotFoundAnime';
 import MediaItem from '../../../components/GridView';
 import { SocialLinks } from '../../../components/social';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import CustomContainer from '../../../components/container';
 
 const UserProfileDetail = ({ navigation, route }) => {
   const userInfo = useSelector(state => state.UserInfoSlice.data);
@@ -777,7 +778,7 @@ const UserProfileDetail = ({ navigation, route }) => {
   const filteredData = getFilteredData();
 
   return (
-    <SafeAreaView style={styles.container}>
+    <CustomContainer>
       <FlatList
         data={filteredData}
         keyExtractor={(item, index) => index.toString()}
@@ -794,12 +795,12 @@ const UserProfileDetail = ({ navigation, route }) => {
             index={index}
           />
         )}
-        contentContainerStyle={{ padding: 15, paddingBottom: insets.bottom + 20,  }}
+        contentContainerStyle={{ padding: 15 }}
         ListHeaderComponent={renderHeader}
         ListEmptyComponent={<NotFoundAnime isLoading={isLoading} />}
         showsVerticalScrollIndicator={false}
       />
-    </SafeAreaView>
+    </CustomContainer>
   );
 };
 

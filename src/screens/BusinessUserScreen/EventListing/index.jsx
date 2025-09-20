@@ -23,6 +23,7 @@ import {useSelector} from 'react-redux';
 import {useIsFocused} from '@react-navigation/native';
 import NoInternetModal from '../../../components/NoInternetModal';
 import NetInfo from '@react-native-community/netinfo';
+import CustomContainer from '../../../components/container';
 const EventUserListingScreen = ({navigation}) => {
   const swipeRef = useRef();
   const isFocused = useIsFocused();
@@ -261,11 +262,7 @@ const EventUserListingScreen = ({navigation}) => {
 
   return (
     <>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: colors.white,
-        }}>
+      <CustomContainer>
         <BusinessHeader
           label="Event Listing"
           onAction={() => navigation.navigate('AddEventScreen')}
@@ -300,7 +297,7 @@ const EventUserListingScreen = ({navigation}) => {
   )}
 </View>
 
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

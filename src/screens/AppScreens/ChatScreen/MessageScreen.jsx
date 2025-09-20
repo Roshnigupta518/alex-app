@@ -16,6 +16,7 @@ import Toast from '../../../constants/Toast';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetModal from '../../../components/NoInternetModal';
 import { ChatReadAction } from '../../../redux/Slices/ChatReadSlice';
+import CustomContainer from '../../../components/container';
 
 const MessageScreen = ({navigation, route}) => {
   const {chatId, chatObjKey, reciever, isSelfReadable, isOppReadable} =
@@ -168,11 +169,7 @@ const MessageScreen = ({navigation, route}) => {
 
   return (
     <>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: colors.white,
-        }}>
+      <CustomContainer>
         <View
           style={{
             flexDirection: 'row',
@@ -233,7 +230,7 @@ const MessageScreen = ({navigation, route}) => {
             }}
           />
         </View>
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

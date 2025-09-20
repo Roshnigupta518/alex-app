@@ -11,7 +11,7 @@ import {
   deletePostRequest
 } from '../../services/Utills';
 import Toast from '../../constants/Toast';
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const ReportTypeOptionSheet = forwardRef(({onActionDone = () => {}}, ref) => {
   const reportItems = [
     {label: 'Nudity'},
@@ -20,7 +20,7 @@ const ReportTypeOptionSheet = forwardRef(({onActionDone = () => {}}, ref) => {
     {label: 'False information'},
     {label: 'Something else'},
   ];
-
+  const insets = useSafeAreaInsets();
   const actionSheetRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState('');
@@ -117,7 +117,7 @@ const ReportTypeOptionSheet = forwardRef(({onActionDone = () => {}}, ref) => {
   return (
     <ActionSheet
       ref={actionSheetRef}
-      containerStyle={styles.container}
+      containerStyle={[styles.container,{ paddingBottom: insets.bottom }]}
       onClose={() => setSelectedOption(null)}>
       <View style={styles.subView}>
         <View style={styles.drawerHandleStyle} />

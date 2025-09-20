@@ -7,7 +7,6 @@ import ImagePicker from 'react-native-image-crop-picker';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Toast from '../constants/Toast';
 import {check, request, PERMISSIONS, RESULTS, openSettings} from 'react-native-permissions';
-
 const MediaPickerSheet = forwardRef(
   (
     {mediaType = 'photo', onCameraClick = () => {}, onMediaClick = () => {}},
@@ -180,7 +179,7 @@ const MediaPickerSheet = forwardRef(
 const styles = StyleSheet.create({
   container: {
     marginTop: wp(20),
-    marginBottom: wp(30),
+    marginBottom: wp(50),
     marginHorizontal: wp(25),
   },
 

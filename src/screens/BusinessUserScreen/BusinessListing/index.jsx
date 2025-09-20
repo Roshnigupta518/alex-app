@@ -23,7 +23,7 @@ import { useSelector } from 'react-redux';
 import { useIsFocused } from '@react-navigation/native';
 import DeleteBusinessSheet from '../../../components/ActionSheetComponent/DeleteBusinessSheet';
 import st from '../../../global/styles';
-
+import CustomContainer from '../../../components/container';
 const BusinessUserListingScreen = ({ navigation, route }) => {
   const isFocused = useIsFocused();
   const swipeRef = useRef();
@@ -192,11 +192,7 @@ const BusinessUserListingScreen = ({ navigation, route }) => {
   };
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: colors.white,
-      }}>
+    <CustomContainer>
       <BusinessHeader
         label="Business Listing"
         onAction={() =>
@@ -283,7 +279,7 @@ const BusinessUserListingScreen = ({ navigation, route }) => {
       }
 
       <DeleteBusinessSheet ref={deleteSheet} onDelete={getBusinessList} />
-    </SafeAreaView>
+    </CustomContainer>
   );
 };
 

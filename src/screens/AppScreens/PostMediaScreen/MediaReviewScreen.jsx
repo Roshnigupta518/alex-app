@@ -23,6 +23,7 @@ import {AddAddressAction} from '../../../redux/Slices/AddAddressSlice';
 import Storage from '../../../constants/Storage';
 import {api, BASE_URL} from '../../../services/WebConstants';
 import NoInternetModal from '../../../components/NoInternetModal';
+import CustomContainer from '../../../components/container';
 
 import NetInfo from '@react-native-community/netinfo';
 const MediaReviewScreen = ({navigation, route}) => {
@@ -251,7 +252,7 @@ const MediaReviewScreen = ({navigation, route}) => {
 
   return (
     <>
-      <View style={styles.container}>
+      <CustomContainer>
         <View style={styles.backButtonStyle}>
           <BackHeader />
         </View>
@@ -440,7 +441,7 @@ const MediaReviewScreen = ({navigation, route}) => {
           </View>
           <View style={{height: 70}} />
         </KeyboardAvoidingScrollView>
-      </View>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );

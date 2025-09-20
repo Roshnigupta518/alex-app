@@ -185,11 +185,12 @@ const CustomBottomTab = ({state, descriptors, navigation}) => {
      
       flexDirection: "row",
       backgroundColor: "#fff",
-      paddingBottom: bottomInset,   // 👈 fix here
+      paddingBottom: bottomInset ,   // 👈 fix here
       height: 60 + bottomInset,     // 👈 adjust height
       borderTopWidth: 0.5,
       borderTopColor: "#ccc",
-    }]}>
+    }
+    ]}>
       {state.routes.map((route, index) => {
         if (showingScreen?.includes(route?.name)) {
           const {options} = descriptors[route.key];

@@ -8,6 +8,7 @@ import {useDispatch} from 'react-redux';
 import {AddAddressAction} from '../../../redux/Slices/AddAddressSlice';
 import NoInternetModal from '../../../components/NoInternetModal';
 import NetInfo from '@react-native-community/netinfo';
+import CustomContainer from '../../../components/container';
 const GetAddress = ({navigation}) => {
   const dispatch = useDispatch();
   const [isInternetConnected, setIsInternetConnected] = useState(true);
@@ -38,11 +39,7 @@ const GetAddress = ({navigation}) => {
 
   return (
     <>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: colors.white,
-        }}>
+      <CustomContainer>
         <BackHeader label="Add Address" />
 
         <View
@@ -113,7 +110,7 @@ const GetAddress = ({navigation}) => {
             ]}
           />
         </View>
-      </SafeAreaView>
+      </CustomContainer>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>
   );
