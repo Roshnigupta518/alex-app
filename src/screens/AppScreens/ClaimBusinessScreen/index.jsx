@@ -868,6 +868,7 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
     GetBusinessDetailById(place_id || '')
       .then(res => {
         setData(res?.result || []);
+        console.log('businessv result', res?.result)
         const objId = res?.result?._id;
         const isValidObjectId = id => /^[a-f\d]{24}$/i.test(id);
         setIsClaimed(isValidObjectId(objId));
@@ -1164,7 +1165,6 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
               <View style={[st.row]}>
                 <Text
                   numberOfLines={2}
-                  adjustsFontSizeToFit
                   style={{ fontFamily: fonts.bold, fontSize: wp(16), color: colors.black }}
                 >
                   {data?.name || name}
@@ -1290,7 +1290,9 @@ const ClaimBusinessScreen = ({ navigation, route }) => {
               {(data?.user_id === userInfo?.id && follow?.fromListing === true) && (
                 <TouchableOpacity
                   style={styles.button}
-                  onPress={() => navigation.navigate('AddStory', { added_from: 2, business_id: data?._id })}
+                  onPress={() => navigation.navigate('AddStory', { added_from: 2, 
+                    businessItem: {_id: data?._id, name: data.name, place_id: data?.place_id }
+                   })}
                 >
                   <Text style={styles.btntxt}>Add Story</Text>
                 </TouchableOpacity>

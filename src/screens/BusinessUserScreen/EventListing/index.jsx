@@ -27,7 +27,7 @@ const EventUserListingScreen = ({navigation}) => {
   const swipeRef = useRef();
   const isFocused = useIsFocused();
   const userInfo = useSelector(state => state.UserInfoSlice.data);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [eventList, setEventList] = useState([]);
   const [eventSearchList, setEventSearchList] = useState([]);
   const [searchTxt, setSearchTxt] = useState('');
@@ -284,19 +284,22 @@ const EventUserListingScreen = ({navigation}) => {
           />
         </View>
 
-        <View
-          style={{
-            padding: wp(15),
-            flex: 1,
-          }}>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={eventSearchList}
-            renderItem={_renderEventList}
-            ListEmptyComponent={<EmptyView />}
-            ListFooterComponent={<View style={{height: 100}} />}
-          />
-        </View>
+        <View style={{ flex: 1, padding: wp(15) }}>
+  {isLoading ? (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <ActivityIndicator size="large" color={colors.primaryColor} />
+    </View>
+  ) : (
+    <FlatList
+      showsVerticalScrollIndicator={false}
+      data={eventSearchList}
+      renderItem={_renderEventList}
+      ListEmptyComponent={<EmptyView />}
+      ListFooterComponent={<View style={{ height: 100 }} />}
+    />
+  )}
+</View>
+
       </SafeAreaView>
       {/* <NoInternetModal shouldShow={!isInternetConnected} /> */}
     </>

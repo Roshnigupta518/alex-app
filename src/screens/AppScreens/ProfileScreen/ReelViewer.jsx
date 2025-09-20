@@ -22,7 +22,7 @@ const ReelViewer = ({route}) => {
   const insets = useSafeAreaInsets();
   const statusBarHeight = insets.top;
 
-  const screenHeight = Platform.OS == 'ios' ? HEIGHT-statusBarHeight : HEIGHT - 30
+  const screenHeight = Platform.OS == 'ios' ? HEIGHT-statusBarHeight : HEIGHT - insets.bottom-30
  
   const flashListRef = useRef();
   const deleteCommentRef = useRef();
@@ -148,7 +148,7 @@ const ReelViewer = ({route}) => {
         <View
           style={{
             position: 'absolute',
-            top: Platform.OS == 'ios' ? wp(40) : wp(10),
+            // top: Platform.OS == 'ios' ? wp(40) : wp(10),
             zIndex: 3,
           }}>
           <BackHeader />
@@ -183,7 +183,8 @@ const ReelViewer = ({route}) => {
           contentInset={{top: 0, bottom: 0, left: 0, right: 0}}
           contentInsetAdjustmentBehavior="automatic"
           extraData={Math.round(screenHeight)}
-          contentContainerStyle={{ padding: 0, margin: 0 }}
+          contentContainerStyle={{ padding: 0, margin: 0,paddingBottom: insets.bottom + 20, }}
+          
           ListEmptyComponent={ListEmptyComponent}
         />
       </View>

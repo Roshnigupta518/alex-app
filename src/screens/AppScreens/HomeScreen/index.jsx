@@ -138,12 +138,81 @@ const HomeScreen = ({ navigation, route }) => {
 
   // inside HomeScreen component:
   useEffect(() => {
-    const sub = DeviceEventEmitter.addListener('storyDeleted', ({ storyId, userId }) => {
-      handleDeleteStoryFromHome(storyId, userId);
+    const sub = DeviceEventEmitter.addListener('storyDeleted', ({ storyId, userId, addedFrom }) => {
+      if(addedFrom === '2'){
+      handleDeleteStoryFromHome(storyId, userId, addedFrom);
+    }else{
+      handleDeleteStoryFromMy(storyId, userId, addedFrom);
+    }
     });
     return () => sub.remove();
   }, [stories]);
 
+  useEffect(() => {
+    const listener = DeviceEventEmitter.addListener('STORY_UPLOADED', (newStory) => {
+     console.log({newStory})
+
+    //  if (newStory.added_from == '1') {
+      getStoryHandle()
+    //  }
+
+      // setStories(prev => {
+      //   const newStories = [...prev];
+        
+      //   if (newStory.added_from === '1') {
+      //     // getStoryHandle()
+      //     // Personal story: keep it at front
+      //     // const yourIndex = newStories.findIndex(s => s.user_id === userInfo.id && s.added_from === '1');
+      //     // if (yourIndex !== -1) {
+      //     //   newStories[yourIndex].stories = [newStory, ...newStories[yourIndex].stories];
+      //     // } else {
+      //     //   const yourStoryObj = {
+      //     //     id: userInfo.id,
+      //     //     user_id: userInfo.id,
+      //     //     name: 'You',
+      //     //     avatarSource: userInfo.profile_picture ? { uri: userInfo.profile_picture } : ImageConstants.business_logo,
+      //     //     stories: [newStory],
+      //     //     isAddButton: true,
+      //     //     added_from: '1',
+      //     //   };
+      //     //   newStories.unshift(yourStoryObj);
+      //     // }
+      //   } else if (newStory.added_from === '2') {
+      //     // Business story: insert immediately after "You" card
+      //     const yourIndex = newStories.findIndex(s => s.user_id === userInfo.id && s.added_from === '1');
+      //     const businessIndex = newStories.findIndex(s => s.user_id === userInfo.id && s.added_from === '2');
+      
+      //     if (businessIndex !== -1) {
+      //       newStories[businessIndex].stories = [newStory, ...newStories[businessIndex].stories];
+      //     } else {
+      //       const businessStoryObj = {
+      //         id: userInfo.id + '_business',
+      //         user_id: userInfo.id,
+      //         name: userInfo.business_name || 'Business',
+      //         avatarSource: userInfo.business_image ? { uri: userInfo.business_image } : ImageConstants.business_logo,
+      //         stories: [newStory],
+      //         isAddButton: false,
+      //         added_from: '2',
+      //       };
+      
+      //       // Insert after "You" card if exists, else at front
+      //       if (yourIndex !== -1) {
+      //         newStories.splice(yourIndex + 1, 0, businessStoryObj);
+      //       } else {
+      //         newStories.unshift(businessStoryObj);
+      //       }
+      //     }
+      //   }
+      
+      //   return newStories;
+      // });
+      
+   
+    });
+  
+    return () => listener.remove();
+  }, []);
+  
   const onRefresh = React.useCallback(async () => {
     setIsLoading(true)
     console.log('call this refresh***************')
@@ -263,49 +332,11 @@ const HomeScreen = ({ navigation, route }) => {
     }));
   };
 
-  // const transformApiToDummy = (apiData) => {
-  //   const mergedMap = {};
-
-  //   apiData.forEach(user => {
-  //     // Same user_id par merge karna hai chahe added_from kuch bhi ho
-  //     const key = user.user_id;
-
-  //     if (!mergedMap[key]) {
-  //       mergedMap[key] = {
-  //         id: user.user_id,
-  //         name: user.user_name,
-  //         avatarSource: user.user_image
-  //           ? { uri: user.user_image }
-  //           : ImageConstants.business_logo,
-  //         stories: [],
-  //       };
-  //     }
-
-  //     // Stories append karo
-  //     const formattedStories = user.stories.map(story => ({
-  //       id: story.id,
-  //       mediaType: story.media_type === 'video/mp4' ? 'video' : 'image',
-  //       duration: story.duration,
-  //       source: { uri: story.media },
-  //       is_seen: story.is_seen,
-  //       is_liked: story.is_liked,
-  //       caption: story.caption,
-  //       tagBusiness: story.tagBussiness || [],
-  //     }));
-
-  //     mergedMap[key].stories = [...mergedMap[key].stories, ...formattedStories];
-  //   });
-
-  //   // Object ko array me convert karo
-  //   return Object.values(mergedMap);
-  // };
-
-
   const getStoryHandle = () => {
     if (loading || !hasMore) return;
 
     let url = { skip, limit };
-    GetAllStoryRequest(url)
+    GetAllStoryRequest()
       .then(res => {
         const dummyFormat = transformApiToDummy(res.result);
         console.log({ res: dummyFormat.length });
@@ -350,7 +381,7 @@ const HomeScreen = ({ navigation, route }) => {
       });
   };
 
-  // ✅ Jab HomeScreen focus me aaye → resume story
+
   useFocusEffect(
     useCallback(() => {
       if (storyref.current) {
@@ -358,7 +389,6 @@ const HomeScreen = ({ navigation, route }) => {
       }
     }, [])
   );
-
 
   const handleStorySeen = (userId, storyId) => {
     setStories((prev) =>
@@ -376,7 +406,8 @@ const HomeScreen = ({ navigation, route }) => {
   };
 
 
-  const handleDeleteStoryFromHome = (storyId, userId) => {
+  const handleDeleteStoryFromMy = (storyId, userId, addedFrom) => {
+    console.log({addedFrom})
     setStories(prev =>
       prev.map(user => {
         if (user.id === userId) {
@@ -389,6 +420,24 @@ const HomeScreen = ({ navigation, route }) => {
       })
     );
   };
+  
+  const handleDeleteStoryFromHome = (storyId, userId, addedFrom) => {
+    setStories(prev =>
+      prev
+        .map(user => {
+  
+          // ✅ Case 2: Business story (added_from = "2")
+          if (addedFrom === "2" && user.id === userId) {
+            const updatedStories = user.stories.filter(s => s.id !== storyId);
+            return updatedStories.length > 0 ? { ...user, stories: updatedStories } : null;
+          }
+  
+          return user;
+        })
+        .filter(Boolean) // remove empty cards
+    );
+  };
+  
 
   useEffect(() => {
     if (isFocused && route?.params?.shouldScrollTopReel) {
@@ -641,6 +690,7 @@ const HomeScreen = ({ navigation, route }) => {
             <SafeAreaView >
               <InstagramStories
                 ref={storyref}
+                key={stories.length} 
                 stories={stories}
                 onStoryPress={(story) => {
                   storyref.current?.open(story.id);
@@ -666,6 +716,22 @@ const HomeScreen = ({ navigation, route }) => {
                 nameTextStyle={{ color: colors.white, textAlign: 'center' }}
                 textStyle={{ color: colors.white }}
                 footerComponent={() => {
+                  if (!currentStory || !currentStory.storyId) return null; 
+
+                 // 👇 sirf apni sari stories
+                 const myStoriesData = stories.find(
+                  item => item.user_id === userInfo.id && item.added_from === "2"
+                );
+                
+                const myStories = myStoriesData ? myStoriesData.stories : [];
+                // console.log("My Stories", myStories);
+                
+
+                //  for(let i=0; stories.length>i; i++){
+                //   console.log('hi',stories[i])
+                //  }
+
+                  // console.log({myStories})
                   const currentStoryData = stories
                     .find(u => u.id === currentStory?.userId)
                     ?.stories.find(s => s.id === currentStory?.storyId);
@@ -676,14 +742,6 @@ const HomeScreen = ({ navigation, route }) => {
 
                       {currentStory?.caption &&
                         <View style={styles.captionContainer}>
-                          {/* <Text numberOfLines={2} style={{
-                            fontFamily: fonts.regular,
-                            fontSize: wp(10),
-                            color: colors.primaryColor,
-                            textAlign:'center'
-                          }}>
-                            {currentStory.caption}
-                          </Text> */}
 
                           <ReadMore
                             numberOfLines={2}
@@ -691,7 +749,6 @@ const HomeScreen = ({ navigation, route }) => {
                               fontFamily: fonts.regular,
                               fontSize: wp(10),
                               color: colors.white,
-                              // textAlign:'center'
                             }}
                             seeMoreStyle={{ color: colors.primaryColor }}
                             seeLessStyle={{ color: colors.primaryColor }}>
@@ -702,26 +759,15 @@ const HomeScreen = ({ navigation, route }) => {
                       }
 
                       <View style={{ flexDirection: 'row', }}>
-                        {/* {userInfo?.id === currentStory?.userId &&
-                          <TouchableOpacity
-                            onPress={() => {
-                              storyref?.current?.hide(); //pause tha pahle
-                              navigation.navigate("StoryViewers", {
-                                storyId: currentStory?.storyId,
-                              });
-                            }}>
-                            <Image source={ImageConstants.openEye} />
-                          </TouchableOpacity>
-                        } */}
-
                         {currentStory && (
                           (currentStory.added_from === "1" || currentStory.added_from === "2") &&
-                          currentStory?.originalId == userInfo.id && (   // 👈 ab direct story ka user_id check karo
+                          currentStory?.originalId == userInfo.id && (   
                             <TouchableOpacity
                               onPress={() => {
                                 storyref?.current?.hide();
                                 navigation.navigate("StoryViewers", {
                                   storyId: currentStory?.storyId,
+                                  stories: myStories,
                                 });
                               }}
                             >
@@ -777,7 +823,7 @@ const HomeScreen = ({ navigation, route }) => {
 
                   const parentUser = stories.find(user => user.id === userId);
                   const storyObj = parentUser?.stories.find(s => s.id === storyId);
-                  console.log({ parentUser })
+                  // console.log({ parentUser })
                   // Check if the current user has stories
                   if (userInfo.id === userId && (!parentUser || parentUser.stories.length === 0)) {
                     storyref.current?.hide(userId);
@@ -787,7 +833,7 @@ const HomeScreen = ({ navigation, route }) => {
 
                   setCurrentStory({
                     userId,
-                    originalId: parentUser.user_id,
+                    originalId: parentUser?.user_id,
                     storyId,
                     name: parentUser?.name,
                     added_from: parentUser?.added_from, // 👈 added
@@ -798,7 +844,8 @@ const HomeScreen = ({ navigation, route }) => {
                 }}
 
                 onStoryEnd={() => {
-                  // console.log("📢 Story closed -> Resuming reels");
+                  console.log("📢 Story closed -> Resuming reels");
+                  setCurrentStory()
                 }}
 
                 onHide={(id) => {
@@ -1038,8 +1085,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.gray,
   },
   storyContainer: {
-    zIndex: 3, marginLeft: 10, position: 'absolute',
-    top: Platform.OS === 'android' ? '11%' : '11%', flexDirection: 'row'
+    zIndex: 3, 
+    // marginLeft: 10, 
+    // paddingStart:10,
+    position: 'absolute',
+    top: Platform.OS === 'android' ? '13%' : '13%',
+    left:0,
+    right:0
+    //  flexDirection: 'row'
   },
   profilesty: {
     width: 69,

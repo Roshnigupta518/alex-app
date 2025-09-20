@@ -18,13 +18,16 @@ import Toast from "../../../constants/Toast";
 import { DeleteStoryRequest } from "../../../../ios/src/services/Utills";
 import InstaThumbnailSlider from "../../../components/InstaThumbnailSlider";
 import NotFoundAnime from "../../../components/NotFoundAnime";
+
 const StoryViewerScreen = ({ navigation, route }) => {
-    const { storyId } = route.params || {};
+    const { storyId,  } = route.params || {};
     const [stories, setStories] = useState([]);
     const [skip, setSkip] = useState(0);
     const limit = 5;
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
+
+    // console.log({stories})
 
     const [selectedStoryIndex, setSelectedStoryIndex] = useState(0);
 
@@ -41,10 +44,21 @@ const StoryViewerScreen = ({ navigation, route }) => {
                     const updated = prev.filter(story => story.id !== storyId);
 
                      // 🔔 notify HomeScreen (no function in params)
-                        DeviceEventEmitter.emit('storyDeleted', {
-                            storyId,
-                            userId: userInfo?.id,
-                        });
+                        // DeviceEventEmitter.emit('storyDeleted', {
+                        //     storyId,
+                        //     userId: userInfo?.id,
+                        //     addedFrom: selectedStory.added_from, // pass personal/business info
+                        // });
+
+                         // 🔔 notify HomeScreen with correct id (business_id OR user_id)
+                         console.log('story business id',selectedStory.business_id )
+        DeviceEventEmitter.emit('storyDeleted', {
+            storyId,
+            userId: selectedStory.added_from === "2"
+    ? selectedStory.business_id  // 👈 match STORY_UPLOADED card id
+    : userInfo?.id,
+            addedFrom: selectedStory.added_from,
+          });
 
                     // 🔹 Agar koi story bachi hi nahi -> goBack()
                     if (updated.length === 0) {
@@ -69,7 +83,6 @@ const StoryViewerScreen = ({ navigation, route }) => {
             });
     };
 
-
     const transformStories = (apiResponse) => {
         let storiesList = [];
         apiResponse.forEach(user => {
@@ -77,6 +90,8 @@ const StoryViewerScreen = ({ navigation, route }) => {
                 storiesList.push({
                     ...story,
                     userId: user.user_id,
+                    added_from : user.added_from,
+                    business_id: user.business_id,
                     username: user.user_name,
                     profile: user.user_image,
                 });
@@ -88,40 +103,44 @@ const StoryViewerScreen = ({ navigation, route }) => {
     const fetchStories = async () => {
         if (loading || !hasMore) return;
         setLoading(true);
-
         try {
-            const res = await GetAllStoryRequest({ skip, limit });
-
-            if (res?.status) {
-                // 🔹 Filter only my stories
-                const myStoriesOnly = res.result.filter(user => user.user_id === userInfo.id);
-
-                const newStories = transformStories(myStoriesOnly);
-                const updatedStories = [...stories, ...newStories];
-
-                setStories(prev => [...prev, ...newStories]);
-                setSkip(prev => prev + limit);
-
-                // ✅ auto-select passed storyId
-                if (storyId && updatedStories.length > 0) {
-                    const foundIndex = updatedStories.findIndex(st => st.id === storyId);
-                    if (foundIndex !== -1) {
-                        setSelectedStoryIndex(foundIndex);
-                    }
-                }
-
-                if (newStories.length < limit) {
-                    setHasMore(false);
-                }
+            let url = { skip, limit };
+          const res = await GetAllStoryRequest();
+          if (res?.status) {
+            // 🔹 Filter only my stories
+            const myStoriesOnly = res.result.filter(
+              user => user.user_id === userInfo.id
+            );
+      
+            // 🔹 Transform to flat list (API order maintain karega)
+            const newStories = transformStories(myStoriesOnly);
+      
+            setStories(newStories);
+      
+            // ✅ storyId ke basis pe correct index select karo
+            if (storyId && newStories.length > 0) {
+              const foundIndex = newStories.findIndex(st => st.id === storyId);
+              console.log({foundIndex})
+              if (foundIndex !== -1) {
+                setSelectedStoryIndex(foundIndex);
+              } else {
+                setSelectedStoryIndex(0); // agar nahi mila to first story
+              }
+            } else {
+              setSelectedStoryIndex(0); // default first story
             }
+      
+            if (newStories.length < limit) {
+              setHasMore(false);
+            }
+          }
         } catch (err) {
-            console.log("Error fetching stories:", err);
+          console.log("Error fetching stories:", err);
         }
-
         setLoading(false);
     };
-
-
+      
+   
     useEffect(() => {
         fetchStories();
     }, [storyId]);

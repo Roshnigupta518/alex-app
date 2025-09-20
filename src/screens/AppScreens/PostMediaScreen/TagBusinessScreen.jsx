@@ -137,7 +137,7 @@ const TagBusinessScreen = ({navigation}) => {
               flex: 1,
               marginTop: wp(30),
             }}>
-            <FlatList
+            {/* <FlatList
               data={searchedBusiness}
               renderItem={({item, index}) => {
                 return (
@@ -238,7 +238,103 @@ const TagBusinessScreen = ({navigation}) => {
                   </TouchableOpacity>
                 );
               }}
+            /> */}
+
+<FlatList
+  data={searchedBusiness}
+  keyExtractor={(item, index) => item?._id || item?.place_id || index.toString()}
+  renderItem={({item}) => {
+    const isSelected =
+      (selectedBusiness?._id && selectedBusiness?._id === item?._id) ||
+      (selectedBusiness?.place_id && selectedBusiness?.place_id === item?.place_id);
+
+    return (
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={() => setSelectedBusiness(isSelected ? null : item)}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          backgroundColor: colors.white,
+          borderRadius: 10,
+          marginVertical: wp(6),
+          // marginHorizontal: wp(12),
+          // paddingVertical: wp(12),
+          // paddingHorizontal: wp(14),
+          shadowColor: colors.black,
+          shadowOffset: {width: 0, height: 2},
+          shadowOpacity: 0.1,
+          shadowRadius: 4,
+          // elevation: 3,
+          borderWidth:1,
+          borderColor:colors.lightGray
+        }}>
+        
+        {/* Left Accent Line */}
+        <View
+          style={{
+            width: 6,
+            height: '100%',
+            backgroundColor: colors.primaryColor,
+            borderTopLeftRadius: 10,
+            borderBottomLeftRadius: 10,
+            // marginRight: wp(12),
+          }}
+        />
+
+        {/* Business Info */}
+        <View style={{flex: 1, padding: wp(10),}}>
+          <Text
+            numberOfLines={2}
+            style={{
+              fontFamily: fonts.semiBold,
+              fontSize: wp(15),
+              color: colors.black,
+            }}>
+            {item?.name}
+          </Text>
+
+          <Text
+            numberOfLines={2}
+            style={{
+              fontFamily: fonts.regular,
+              fontSize: wp(12),
+              color: colors.black,
+              marginTop: 4,
+            }}>
+            {item?.address || item?.formatted_address}
+          </Text>
+        </View>
+
+        {/* Selection Indicator */}
+        <View style={{marginHorizontal: wp(10)}}>
+          {isSelected ? (
+            <Image
+              source={ImageConstants.check_round}
+              style={{
+                height: wp(25),
+                width: wp(25),
+                resizeMode: 'contain',
+                tintColor: colors.primaryColor,
+              }}
             />
+          ) : (
+            <View
+              style={{
+                height: wp(25),
+                width: wp(25),
+                borderWidth: 2,
+                borderColor: colors.primaryColor,
+                borderRadius: wp(25) / 2,
+              }}
+            />
+          )}
+        </View>
+      </TouchableOpacity>
+    );
+  }}
+/>
+
 
             <View style={{marginTop: 20}}>
               <CustomButton

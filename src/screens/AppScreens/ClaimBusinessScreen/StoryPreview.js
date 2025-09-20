@@ -5,7 +5,7 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  ActivityIndicator, SafeAreaView, Platform, TextInput, ScrollView
+  ActivityIndicator, SafeAreaView, Platform, TextInput, ScrollView, DeviceEventEmitter
 } from 'react-native';
 import Video from 'react-native-video';
 import BackHeader from '../../../components/BackHeader';
@@ -23,6 +23,7 @@ import { clearBusinessAction } from '../../../redux/Slices/TagBusinessSlice';
 
 const StoryPreview = ({ route, navigation }) => {
   const { media } = route.params;
+  // console.log({media})
   const [uploading, setUploading] = React.useState(false);
   const [videoThumbnail, setVideoThumbnail] = useState();
   const [caption, setCaption] = useState('');
@@ -31,9 +32,9 @@ const StoryPreview = ({ route, navigation }) => {
     place_id: '',
   });
   const tagBusinessList = useSelector(state => state.TagBusinessSlice?.data);
-
+  const userInfo = useSelector(state => state.UserInfoSlice.data);
   // console.log({ media })
-  const businessItem = route?.params?.businessItem
+  // const businessItem = route?.params?.businessItem
 
   const { location } = useCheckLocation()
   const dispatch = useDispatch()
@@ -82,11 +83,11 @@ const StoryPreview = ({ route, navigation }) => {
   }, [media]);
 
   useEffect(()=>{
-    let id = tagBusinessList?._id || tagBusinessList?.place_id || businessItem?.place_id || businessItem?._id;
+    let id = tagBusinessList?._id || tagBusinessList?.place_id || media?.businessItem?.place_id || media?.businessItem?._id;
     setLocationState(prevState => ({
       ...prevState,
       place_id: id,
-      name: tagBusinessList?.name || businessItem?.name,
+      name: tagBusinessList?.name || media?.businessItem?.name,
     }));
   },[tagBusinessList])
 
@@ -120,7 +121,7 @@ const StoryPreview = ({ route, navigation }) => {
         );
       }
 
-      { media.business_id && formdata.append("business_id", media.business_id) }
+      { media?.businessItem && formdata.append("business_id", media?.businessItem._id) }
 
       if (videoThumbnail != null) {
         formdata.append('strory_thumbnail', videoThumbnail);
@@ -150,6 +151,26 @@ const StoryPreview = ({ route, navigation }) => {
         })
         dispatch(clearBusinessAction())
         Toast.success('Story', result?.message);
+
+         // 🔹 Emit event with new story
+         const newStory = {
+          id: result.result?.id,                // story id
+          storyId: result.result?.id,          // for consistency
+          mediaType: media.type === 'image' ? 'image' : 'video',
+          source: { uri: media.uri },
+          caption: caption,
+          duration: media.duration || 30,
+          is_seen: false,
+          is_liked: false,
+          tagBusiness: locationState?.place_id ? [{ place_id: locationState.place_id, name: locationState.name }] : [],
+          added_from: media.added_from,        // '1' or '2'
+          originalId: userInfo.id,             // ye important hai eye icon ke liye
+          user_id: userInfo.id,
+        };
+        
+
+  DeviceEventEmitter.emit('STORY_UPLOADED', newStory);
+
         navigation.navigate('Home', { shouldScrollTopReel: true });
       } else {
         Toast.error('Story', result?.message);
@@ -272,7 +293,7 @@ const StoryPreview = ({ route, navigation }) => {
   
         {/* Tag Business */}
         <TouchableOpacity
-          disabled={!!businessItem}
+          disabled={!!media?.businessItem}
           onPress={() => navigation.navigate('TagBusinessScreen')}
           style={{ marginTop: wp(20) }}
         >

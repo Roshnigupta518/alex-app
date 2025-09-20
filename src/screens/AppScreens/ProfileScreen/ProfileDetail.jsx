@@ -28,9 +28,11 @@ import NotFoundAnime from '../../../components/NotFoundAnime';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { useFocusEffect } from '@react-navigation/native';
 import { SocialLinks } from '../../../components/social';
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const ProfileDetail = ({ navigation, route }) => {
   const isFocused = useIsFocused();
+  const insets = useSafeAreaInsets();
 
   const userInfo = useSelector(state => state.UserInfoSlice.data);
   const [userDetails, setUserDetails] = useState(null);
@@ -160,7 +162,7 @@ const ProfileDetail = ({ navigation, route }) => {
 
   return (
     <>
-      <SafeAreaView style={styles.container}>
+     <SafeAreaView style={[styles.container, { paddingBottom: insets.bottom > 0 ? insets.bottom : 20 }]}>
         <BackHeader label="Profile Details"
           onPress={() => navigation.navigate('HomeScreen')}
           rightView={() => <TouchableOpacity onPress={() => navigation.navigate('Setting')} >

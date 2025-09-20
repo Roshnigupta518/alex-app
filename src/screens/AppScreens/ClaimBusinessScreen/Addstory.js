@@ -25,8 +25,8 @@ const StoryCaptureScreen = ({route}) => {
   const [ready, setReady] = useState(false);
 const recordingInterval = useRef(null);
 
-const {added_from, business_id} = route?.params
-  console.log({added_from, business_id})
+const {added_from, businessItem} = route?.params //businessItem
+  console.log({added_from, businessItem})
 
   const devices = useCameraDevices();
   // const device = devices[cameraPosition];
@@ -90,7 +90,7 @@ const {added_from, business_id} = route?.params
         qualityPrioritization: 'quality',
       });
       navigation.navigate('StoryPreview', { media: { type: 'image', uri: 'file://' + photo.path, 
-        added_from, business_id, duration: 5} });
+        added_from, businessItem, duration: 5} });
     } catch (err) {
       console.error('Photo capture error:', err);
     }
@@ -111,7 +111,7 @@ const {added_from, business_id} = route?.params
           setIsRecording(false);
           stopRecordingTimer(); // Stop timer after recording ends
           navigation.navigate('StoryPreview', {
-            media: { type: 'video', uri: 'file://' + video.path, added_from, business_id,
+            media: { type: 'video', uri: 'file://' + video.path, added_from, businessItem,
               duration: video.duration, 
              },
           });
@@ -192,11 +192,11 @@ const {added_from, business_id} = route?.params
           alert('Please select a video of 30 seconds or less.')
         } else {
           navigation.navigate('StoryPreview', { media: { uri: file.path, type: 'video', mediaType : file.mime,
-             added_from, business_id,  duration: Math.ceil(file.duration / 1000)} });
+             added_from, businessItem,  duration: Math.ceil(file.duration / 1000)} });
         }
       } else {
         navigation.navigate('StoryPreview', { media: { uri: file.path, type: 'image', mediaType : file.mime, 
-          added_from, business_id, duration: 5  } });
+          added_from, businessItem, duration: 5  } });
       }
     } catch (err) {
       console.warn('Gallery pick error:', err);

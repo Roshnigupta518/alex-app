@@ -7,19 +7,19 @@ import {
   StyleSheet,
   Text,
   ImageBackground,
-  Image,
+  Image, Platform
 } from 'react-native';
 import {WIDTH, colors, fonts, wp} from '../constants';
 import {useDispatch, useSelector} from 'react-redux';
 import ImageConstants from '../constants/ImageConstants';
 import {ReelIndexAction} from '../redux/Slices/ReelIndexSlice';
 import { ChatReadAction } from '../redux/Slices/ChatReadSlice';
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const {width} = Dimensions.get('window');
 function timeAgo(timestamp) {
   const now = new Date();
   const seconds = Math.floor((now - timestamp) / 1000);
-
   const intervals = {
     year: Math.floor(seconds / 31536000),
     month: Math.floor(seconds / 2592000),
@@ -33,6 +33,7 @@ const CustomBottomTab = ({state, descriptors, navigation}) => {
   const chatInfo = useSelector(state => state.ChatListSlice.data);
   const chatRead = useSelector(state => state.ChatReadSlice.data);
   const userInfo = useSelector(state => state.UserInfoSlice.data);
+  const insets = useSafeAreaInsets();
 
   const navigationUserScreens = [
     'Home',
@@ -175,8 +176,20 @@ const CustomBottomTab = ({state, descriptors, navigation}) => {
       setUserList([...self_data]);
     }
   };
+  // Fallback if inset is 0 (Realme issue)
+  const bottomInset = insets.bottom > 0 ? insets.bottom : (Platform.OS === "android" ? 20 : 0);
   return (
-    <View style={styles.mainContainer}>
+    <View style={[
+      // styles.mainContainer,
+      {
+     
+      flexDirection: "row",
+      backgroundColor: "#fff",
+      paddingBottom: bottomInset,   // 👈 fix here
+      height: 60 + bottomInset,     // 👈 adjust height
+      borderTopWidth: 0.5,
+      borderTopColor: "#ccc",
+    }]}>
       {state.routes.map((route, index) => {
         if (showingScreen?.includes(route?.name)) {
           const {options} = descriptors[route.key];

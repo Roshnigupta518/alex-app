@@ -17,12 +17,12 @@ function BottomTabStack() {
     <Tab.Navigator
       initialRouteName={'Home'}
       screenOptions={{headerShown: false}}
-      // tabBar={props => <CustomBottomTab {...props} />}
-      tabBar={props => (
-        <SafeAreaView edges={['bottom']} style={{ backgroundColor: '#fff' }}>
-          <CustomBottomTab {...props} />
-        </SafeAreaView>
-      )}
+      tabBar={props => <CustomBottomTab {...props} />}
+      // tabBar={props => (
+      //   <SafeAreaView edges={['bottom']} style={{ backgroundColor: '#fff' }}>
+      //     <CustomBottomTab {...props} />
+      //   </SafeAreaView>
+      // )}
       >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="ChatScreen" component={ChatScreen} />

@@ -512,10 +512,12 @@ import TabsHeader from '../../../components/TabsHeader';
 import NotFoundAnime from '../../../components/NotFoundAnime';
 import MediaItem from '../../../components/GridView';
 import { SocialLinks } from '../../../components/social';
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const UserProfileDetail = ({ navigation, route }) => {
   const userInfo = useSelector(state => state.UserInfoSlice.data);
   const chatInfo = useSelector(state => state.ChatListSlice.data);
+  const insets = useSafeAreaInsets();
 
   const [userDetails, setUserDetails] = useState(null);
   const [isFollowLoading, setIsFollowLoading] = useState(true);
@@ -792,7 +794,7 @@ const UserProfileDetail = ({ navigation, route }) => {
             index={index}
           />
         )}
-        contentContainerStyle={{ padding: 15 }}
+        contentContainerStyle={{ padding: 15, paddingBottom: insets.bottom + 20,  }}
         ListHeaderComponent={renderHeader}
         ListEmptyComponent={<NotFoundAnime isLoading={isLoading} />}
         showsVerticalScrollIndicator={false}

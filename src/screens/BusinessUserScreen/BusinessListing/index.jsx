@@ -169,7 +169,7 @@ const BusinessUserListingScreen = ({ navigation, route }) => {
             flex: 1,
             margin: 10,
           }}>
-          <Text numberOfLines={2} adjustsFontSizeToFit
+          <Text numberOfLines={2} 
             style={{
               fontFamily: fonts.semiBold,
               fontSize: wp(14),
